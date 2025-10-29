@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magang Kominfo - Modul Pembelajaran Mandiri</title>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <style>
+        /* General Styling */
+        :root {
+            --primary-color: #0056b3; /* Biru Pemerintah */
+            --secondary-color: #f8f9fa;
+            --text-color: #333;
+            --border-color: #dee2e6;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --font-family: 'Inter', sans-serif;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Inconsolata:wght@400;700&display=swap');
+
+        body {
+            font-family: var(--font-family);
+            margin: 0;
+            background-color: #f4f7f9;
+            color: var(--text-color);
+            line-height: 1.7;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Module Selection Container */
+        #module-selection-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .module-card {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .module-card h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .module-card p {
+            flex-grow: 1;
+            margin-bottom: 1rem;
+        }
+
+        .module-progress {
+            font-weight: 600;
+            color: #6c757d;
+            background-color: #e9ecef;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            align-self: flex-start;
+        }
+        
+        .module-progress.completed {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        /* Lesson View Container */
+        #lesson-view-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        #lesson-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 1rem;
+            margin-top: 0;
+        }
+        
+        .lesson-image {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 8px;
+            margin: 1.5rem auto;
+            display: block;
+            background-color: #eee;
+        }
+
+        #lesson-references {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        #lesson-references h4 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+        
+        #lesson-references ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin: 0;
+        }
+        
+        #lesson-references a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        #lesson-references a:hover {
+            text-decoration: underline;
+        }
+
+        /* Buttons */
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: var(--font-family);
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        #back-to-modules {
+            background-color: #6c757d;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+        #back-to-modules:hover {
+            background-color: #5a6268;
+        }
+
+        #lesson-navigation {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #prev-lesson, #next-lesson {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        #prev-lesson:hover, #next-lesson:hover {
+            background-color: #004494;
+        }
+
+        /* Interactive Area */
+        #lesson-interactive-area {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            min-height: 50px;
+        }
+
+        /* CLI Terminal */
+        .cli-terminal {
+            background-color: #212529;
+            color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 5px;
+            font-family: 'Inconsolata', monospace;
+        }
+
+        .cli-prompt {
+            display: flex;
+            align-items: center;
+        }
+
+        .cli-prompt span {
+            color: #20c997; /* Teal prompt symbol */
+            margin-right: 0.5rem;
+        }
+
+        .cli-input {
+            background: transparent;
+            border: none;
+            color: #f8f9fa;
+            font-family: 'Inconsolata', monospace;
+            font-size: 1rem;
+            flex-grow: 1;
+        }
+
+        .cli-input:focus {
+            outline: none;
+        }
+
+        .cli-feedback {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .feedback-success {
+            color: var(--success-color);
+        }
+
+        .feedback-error {
+            color: var(--error-color);
+        }
+
+        #lottie-animation-container {
+            margin-top: 1rem;
+            max-width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .complete-button {
+            background-color: var(--success-color);
+            color: white;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        .complete-button:hover:not(:disabled) {
+            background-color: #218838;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            main {
+                padding: 1rem;
+            }
+            header h1 {
+                font-size: 1.5rem;
+            }
+            #module-selection-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Magang Kominfo - Modul Pembelajaran Mandiri</h1>
+    </header>
+
+    <main>
+        <div id="module-selection-container"></div>
+        <div id="lesson-view-container" style="display: none;">
+            <button id="back-to-modules">Kembali ke Daftar Modul</button>
+            <h2 id="lesson-title"></h2>
+            <div id="lesson-media-container"></div>
+            <p id="lesson-content"></p>
+            <div id="lesson-interactive-area"></div>
+            <div id="lesson-references"></div>
+            <div id="lesson-navigation">
+                <button id="prev-lesson">Sebelumnya</button>
+                <button id="next-lesson">Berikutnya</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 1. DATA SOURCE
+        const appData = {
+          modules: [
+            // MODUL 1
+            {
+              id: 1, title: "Pondasi Transformasi Digital Pemda", description: "Mempelajari dasar-dasar arsitektur digital untuk layanan publik dari nol.",
+              lessons: [
+                { id: 101, title: "Slide 1/12: Apa Itu Transformasi Digital?", type: "TEXT", content: "Transformasi digital adalah proses fundamental dalam mengubah cara sebuah organisasi, dalam hal ini pemerintah daerah, beroperasi dan memberikan nilai kepada warganya. Ini bukan sekadar memindahkan formulir kertas ke format PDF. Ini adalah tentang memikirkan ulang seluruh proses layanan dari sudut pandang warga. Bayangkan proses pembuatan KTP yang tadinya memakan waktu berhari-hari dengan antrian panjang, kini bisa diajukan dari rumah melalui aplikasi dan selesai dalam hitungan jam. Itulah inti dari transformasi digital: menciptakan layanan publik yang proaktif, efisien, dan berpusat pada masyarakat (citizen-centric).", image_url: "https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Transformasi Digital Sektor Publik - Kominfo", url:"https://www.kominfo.go.id/content/detail/33756/transformasi-digital-sektor-publik-perlu-dipercepat/0/artikel_gpr"}, {title: "Digital Government: A Primer - World Bank", url:"https://www.worldbank.org/en/topic/digitaldevelopment/publication/digital-government-primer"}] },
+                { id: 102, title: "Slide 2/12: Kenapa Pemda Perlu Berubah?", type: "TEXT", content: "Di era modern, ekspektasi masyarakat terhadap layanan publik semakin tinggi. Mereka terbiasa dengan kemudahan layanan swasta seperti Gojek atau Tokopedia. Pemerintah tidak bisa lagi bertahan dengan proses yang lambat dan birokratis. Alasan utamanya adalah untuk mengatasi 'penyakit' lama: birokrasi berbelit, potensi pungutan liar (pungli), data yang tidak akurat dan tersebar, serta pemborosan anggaran. Dengan digitalisasi, Pemda dapat mencapai efisiensi anggaran, membuat kebijakan berbasis data yang akurat (data-driven policy), meningkatkan transparansi, dan yang terpenting, membangun kembali kepercayaan publik.", image_url: "https://images.pexels.com/photos/6801648/pexels-photo-6801648.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Indeks SPBE (Sistem Pemerintahan Berbasis Elektronik)", url:"https://spbe.go.id/"}, {title: "Laporan E-Government Survey - PBB", url:"https://publicadministration.un.org/egovkb/en-us/reports/un-e-government-survey-2022"}] },
+                { id: 103, title: "Slide 3/12: Arsitektur Digital - Blueprint Bangunan", type: "TEXT", content: "Membangun layanan digital tanpa rencana yang matang akan menghasilkan kekacauan. Setiap dinas akan membuat aplikasi sendiri-sendiri yang tidak saling terhubung (ego sektoral). Di sinilah peran Arsitektur Digital atau Arsitektur Enterprise. Ia berfungsi sebagai cetak biru (blueprint) utama yang menyelaraskan strategi bisnis (visi Pemda) dengan teknologi. Blueprint ini mendefinisikan standar untuk data, aplikasi, dan infrastruktur teknologi (seperti server dan jaringan) yang akan digunakan, memastikan semua 'bangunan' digital dapat 'berbicara' satu sama lain. Di Indonesia, ini diatur dalam kerangka Sistem Pemerintahan Berbasis Elektronik (SPBE).", image_url: "https://images.pexels.com/photos/313690/pexels-photo-313690.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Peraturan Presiden No. 95 Tahun 2018 tentang SPBE", url:"https://peraturan.bpk.go.id/Home/Details/96534/perpres-no-95-tahun-2018"}, {title: "Pengenalan Arsitektur Enterprise (TOGAF)", url:"https://www.opengroup.org/togaf"}] },
+                { id: 104, title: "Slide 4/12: Mengenal Server - 'Ruang Mesin'", type: "TEXT", content: "Setiap aplikasi atau website yang Anda akses di internet berjalan di atas sebuah komputer khusus yang disebut server. Server dirancang untuk bekerja non-stop 24/7, memiliki kekuatan proses (CPU), memori (RAM), dan penyimpanan (storage) yang jauh lebih besar dari laptop biasa. Ada dua jenis utama: server fisik (on-premise) yang diletakkan di data center milik sendiri, dan server virtual di cloud (IaaS - Infrastructure as a Service) yang kita sewa dari penyedia seperti TelkomCloud, AWS, atau Google Cloud. Server adalah 'rumah' atau 'ruang mesin' tempat aplikasi kita tinggal dan melayani permintaan dari pengguna.", image_url: "https://images.pexels.com/photos/325229/pexels-photo-325229.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Apa itu Server? - Mozilla Developer Network", url:"https://developer.mozilla.org/en-US/docs/Learn/Common_questions/What_is_a_web_server"}, {title: "Pengenalan Cloud Computing - AWS", url:"https://aws.amazon.com/what-is-cloud-computing/"}] },
+                { id: 105, title: "Slide 5/12: Mengenal Database - 'Lemari Arsip'", type: "TEXT", content: "Database adalah sistem yang dirancang khusus untuk menyimpan, mengelola, dan mengambil data dalam jumlah besar secara efisien dan aman. Anggaplah ini sebagai 'lemari arsip' digital super canggih. Data kependudukan, pajak, perizinan, semua tersimpan di sini. Ada dua kategori utama: database SQL (seperti MySQL, PostgreSQL) yang menyimpan data dalam format tabel terstruktur seperti Excel, dan NoSQL (seperti MongoDB) yang lebih fleksibel untuk data tidak terstruktur. Integritas dan keamanan data adalah kunci utama dalam pengelolaan database pemerintah.", image_url: "https://images.pexels.com/photos/5926395/pexels-photo-5926395.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Dasar-Dasar Database untuk Pemula - freeCodeCamp", url:"https://www.freecodecamp.org/news/sql-and-databases-for-beginners/"}, {title: "SQL vs NoSQL: Apa Bedanya?", url:"https://www.mongodb.com/nosql-explained/sql-vs-nosql"}] },
+                { id: 106, title: "Slide 6/12: Mengenal Aplikasi - 'Loket Pelayanan'", type: "TEXT", content: "Aplikasi adalah program yang menjadi jembatan antara pengguna (warga) dan data di server. Secara umum, aplikasi web terbagi dua: Frontend dan Backend. Frontend adalah segala sesuatu yang Anda lihat dan berinteraksi di layar (tata letak, tombol, formulir), dibangun dengan teknologi seperti HTML, CSS, dan JavaScript. Backend adalah 'otak' di balik layar yang tidak terlihat oleh pengguna. Ia bertugas memproses logika bisnis, mengelola data dari database, dan memastikan keamanan. Analogi sederhananya: Frontend adalah etalase dan kasir di toko, sementara Backend adalah gudang dan sistem manajemennya.", image_url: "https://images.pexels.com/photos/39284/macbook-apple-imac-computer-39284.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Perbedaan Frontend, Backend, dan Fullstack - GeeksforGeeks", url:"https://www.geeksforgeeks.org/frontend-vs-backend-vs-full-stack/"}] },
+                { id: 107, title: "Slide 7/12: Lingkungan Development - 'Area Simulasi'", type: "TEXT", content: "Seorang developer tidak pernah menulis kode langsung di server publik. Hal itu sangat berisiko. Sebagai gantinya, mereka menggunakan beberapa lingkungan kerja. Pertama, lingkungan Development (Lokal) di laptop masing-masing, tempat kode ditulis dan diuji coba pertama kali. Kedua, lingkungan Staging, yaitu server yang merupakan replika identik dari server publik. Di sini, aplikasi diuji secara menyeluruh untuk menemukan bug sebelum dirilis. Terakhir, lingkungan Production, yaitu server 'live' yang diakses oleh masyarakat. Alur kerja Dev -> Staging -> Prod ini adalah standar industri untuk memastikan kualitas dan stabilitas aplikasi.", image_url: "https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Memahami Lingkungan Deployment dalam Software Engineering", url:"https://www.atlassian.com/continuous-delivery/principles/environments-and-deployment-strategies"}] },
+                { id: 108, title: "Slide 8/12: Command Line (CLI) - 'Berbicara' dengan Komputer", type: "TEXT", content: "Meskipun kita terbiasa dengan antarmuka grafis (GUI) yang menggunakan mouse dan ikon, para profesional IT sering menggunakan Command Line Interface (CLI) atau Terminal. Ini adalah cara berinteraksi dengan komputer menggunakan perintah berbasis teks. Mengapa? Karena CLI sangat cepat, efisien untuk otomatisasi tugas-tugas berulang (scripting), dan memberikan kontrol penuh atas sistem. Bagi seorang developer atau sysadmin, menguasai CLI seperti memiliki 'jalur cepat' untuk mengelola file, menginstal software, dan mengkonfigurasi server.", image_url: "https://images.pexels.com/photos/270348/pexels-photo-270348.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Tutorial Perintah Dasar Linux untuk Pemula", url:"https://www.digitalocean.com/community/tutorials/a-linux-command-line-primer"}] },
+                { id: 109, title: "Slide 9/12: Framework Laravel - 'Kerangka Siap Pakai'", type: "TEXT", content: "Membangun aplikasi web dari nol sangatlah kompleks dan memakan waktu. Oleh karena itu, developer menggunakan 'Framework', yaitu kumpulan kode, library, dan aturan yang menyediakan kerangka kerja siap pakai. Laravel adalah salah satu framework berbasis bahasa PHP yang sangat populer. Ia menyediakan solusi untuk hal-hal umum seperti routing (mengatur URL), interaksi database, dan keamanan, sehingga developer bisa fokus pada logika bisnis spesifik aplikasi mereka. Laravel mengikuti pola arsitektur MVC (Model-View-Controller) yang memisahkan data, tampilan, dan logika, membuat kode lebih terstruktur dan mudah dikelola.", image_url: "https://images.pexels.com/photos/11035471/pexels-photo-11035471.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Dokumentasi Resmi Laravel", url:"https://laravel.com/docs"}, {title: "Apa itu Pola Desain MVC?", url:"https://developer.mozilla.org/en-US/docs/Glossary/MVC"}] },
+                { id: 110, title: "Slide 10/12: Praktik CLI - Melihat Isi Folder", type: "INTERACTIVE_CLI", content: "Saatnya mencoba CLI. Perintah 'ls' (list) digunakan untuk melihat isi dari direktori (folder) saat ini. Dengan menambahkan flag '-la', kita meminta detail lebih: '-l' untuk format daftar panjang (long listing) yang menampilkan izin akses, pemilik, ukuran, dan tanggal modifikasi, dan '-a' untuk menampilkan semua file, termasuk yang tersembunyi (all). Ini adalah salah satu perintah yang paling sering digunakan. Ketik 'ls -la' di bawah ini.", correct_command: "ls -la", animation_file: "https://lottie.host/80a31a08-168f-4328-91a5-85c5b2c73007/2M9k5F9nwM.json", references: [{title: "Penjelasan Perintah 'ls' di Linux", url:"https://man7.org/linux/man-pages/man1/ls.1.html"}] },
+                { id: 111, title: "Slide 11/12: Praktik CLI - Pindah Folder", type: "INTERACTIVE_CLI", content: "Untuk bernavigasi antar direktori, kita menggunakan perintah 'cd' (change directory). Perintah ini memungkinkan Anda untuk masuk ke sub-direktori atau kembali ke direktori induk. Dalam simulasi ini, anggaplah ada sebuah folder bernama 'proyek-pemda' di lokasi Anda saat ini. Untuk masuk ke dalamnya, Anda hanya perlu mengetik nama perintah diikuti dengan nama folder tujuan. Ketik: cd proyek-pemda", correct_command: "cd proyek-pemda", animation_file: "https://lottie.host/9939a8df-631d-4022-b13c-0d31553e6f03/C2Y5h32g0Q.json", references: [{title: "Cara Menggunakan Perintah 'cd'", url:"https://man7.org/linux/man-pages/man1/cd.1p.html"}] },
+                { id: 112, title: "Slide 12/12: Praktik CLI - Menjalankan Server", type: "INTERACTIVE_CLI", content: "Setelah masuk ke direktori proyek Laravel, Anda dapat menjalankan server development bawaan. Perintah 'php artisan serve' adalah perintah khusus Laravel yang akan memulai server web lokal di komputer Anda, biasanya di alamat http://127.0.0.1:8000. 'Artisan' adalah nama dari command-line interface yang disertakan dengan Laravel. Perintah ini memungkinkan developer untuk melihat dan menguji aplikasi mereka secara langsung di browser. Ini adalah langkah akhir untuk 'menghidupkan' proyek di lingkungan lokal Anda.", correct_command: "php artisan serve", animation_file: "https://lottie.host/25ada1ea-2461-420a-8f19-4c0ce84b4202/N5e5a2iE0N.json", references: [{title: "Mengenal Laravel Artisan Console", url:"https://laravel.com/docs/artisan"}] }
+              ]
+            },
+            // MODUL 2
+            {
+              id: 2, title: "Standarisasi Aplikasi dengan Dockerfile", description: "Memastikan semua 'bangunan' aplikasi sesuai standar nasional (SNI).",
+              lessons: [
+                { id: 201, title: "Slide 1/12: Masalah Klasik: 'Di Laptop Saya Jalan'", type: "TEXT", content: "Setiap developer pernah mengalami ini: aplikasi berjalan sempurna di laptop mereka, tapi error saat dipindahkan ke server atau laptop rekan kerja. Masalah ini terjadi karena perbedaan lingkungan: versi sistem operasi, library yang terinstal, atau konfigurasi lainnya. Ini membuang banyak waktu dan menyebabkan frustrasi. Bayangkan membangun rumah dengan meteran yang berbeda-beda, hasilnya pasti tidak akan presisi.", image_url: "https://images.pexels.com/photos/442150/pexels-photo-442150.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "The 'Works on My Machine' Problem", url:"https://wiki.c2.com/?ItWorksOnMyMachine"}] },
+                { id: 202, title: "Slide 2/12: Solusi: Kontainerisasi", type: "TEXT", content: "Kontainerisasi adalah solusi untuk masalah tersebut. Bayangkan Anda mengirim barang pecah belah. Anda tidak hanya menaruhnya di truk, tapi membungkusnya dalam sebuah kotak kontainer yang kokoh, lengkap dengan busa pelindung. Di dunia software, aplikasi Anda adalah barang pecah belah, dan Docker adalah 'kotak kontainer' tersebut. Kontainer membungkus aplikasi beserta semua kebutuhannya (kode, library, file konfigurasi) menjadi satu paket tunggal yang terisolasi.", image_url: "https://images.pexels.com/photos/111131/pexels-photo-111131.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "What is Containerization? - Docker", url:"https://www.docker.com/resources/what-container/"}] },
+                { id: 203, title: "Slide 3/12: Apa itu Docker?", type: "TEXT", content: "Docker adalah platform open-source terpopuler untuk membangun, mengirim, dan menjalankan aplikasi di dalam kontainer. Docker memungkinkan kita untuk memisahkan aplikasi dari infrastruktur dasarnya. Artinya, sekali Anda 'mengemas' aplikasi Anda ke dalam kontainer Docker, Anda bisa menjalankannya di mana saja: di laptop Windows, server Linux di data center, atau di cloud, dan hasilnya dijamin akan sama persis. Ini menciptakan standarisasi yang sangat dibutuhkan.", image_url: "https://images.unsplash.com/photo-1628549323758-f4b6a5509a22?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600", references: [{title: "Docker Overview", url:"https://docs.docker.com/get-started/overview/"}] },
+                { id: 204, title: "Slide 4/12: Image vs Kontainer", type: "TEXT", content: "Ada dua konsep penting di Docker: Image dan Kontainer. Docker Image adalah 'blueprint' atau 'cetakan'. Ini adalah sebuah paket yang berisi semua instruksi dan file yang dibutuhkan untuk menjalankan aplikasi. Image bersifat read-only (tidak dapat diubah). Docker Container adalah 'instansi' atau 'hasil cetakan' yang berjalan dari sebuah Image. Anda bisa membuat banyak sekali Kontainer dari satu Image yang sama, sama seperti Anda bisa mencetak banyak rumah dari satu blueprint yang sama. Kontainer inilah yang benar-benar menjalankan aplikasi Anda.", image_url: "https://images.pexels.com/photos/893796/pexels-photo-893796.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Docker Images and Containers Explained", url:"https://www.docker.com/blog/docker-images-and-containers-for-beginners-a-full-guide/"}] },
+                { id: 205, title: "Slide 5/12: Mengenal Dockerfile", type: "TEXT", content: "Bagaimana cara membuat sebuah Docker Image? Jawabannya adalah dengan menulis sebuah file resep bernama 'Dockerfile'. Dockerfile adalah sebuah file teks sederhana yang berisi serangkaian instruksi langkah-demi-langkah. Setiap instruksi (seperti FROM, COPY, RUN, CMD) memberitahu Docker bagaimana cara membangun Image. Misalnya: 'ambil sistem operasi Ubuntu', 'salin kode aplikasi ke dalamnya', 'instal library yang dibutuhkan', dan 'jalankan perintah ini saat kontainer dimulai'.", image_url: "https://images.pexels.com/photos/2653362/pexels-photo-2653362.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Dockerfile Reference - Docker Docs", url:"https://docs.docker.com/engine/reference/builder/"}] },
+                { id: 206, title: "Slide 6/12: Instruksi FROM dan WORKDIR", type: "TEXT", content: "Setiap Dockerfile harus dimulai dengan instruksi `FROM`. Instruksi ini menentukan 'base image' atau fondasi yang akan kita gunakan. Misalnya, `FROM php:8.1-fpm` berarti kita memulai dari image resmi yang sudah berisi PHP versi 8.1. Instruksi `WORKDIR /var/www` menetapkan direktori kerja di dalam kontainer. Perintah-perintah selanjutnya (seperti `COPY` atau `RUN`) akan dieksekusi dari direktori ini. Ini seperti kita masuk ke sebuah ruangan sebelum mulai bekerja.", image_url: "https://images.pexels.com/photos/69435/pexels-photo-69435.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Dockerfile FROM instruction", url:"https://docs.docker.com/engine/reference/builder/#from"}, {title: "Dockerfile WORKDIR instruction", url:"https://docs.docker.com/engine/reference/builder/#workdir"}] },
+                { id: 207, title: "Slide 7/12: Instruksi COPY dan RUN", type: "TEXT", content: "Instruksi `COPY` digunakan untuk menyalin file atau folder dari komputer kita (host) ke dalam image. Contoh: `COPY . .` menyalin semua file dari direktori saat ini ke direktori kerja di dalam image. Instruksi `RUN` digunakan untuk mengeksekusi perintah di dalam image selama proses build. Ini biasanya digunakan untuk menginstal paket atau library. Contoh: `RUN apt-get update && apt-get install -y git` akan mengupdate daftar paket dan menginstal Git di dalam image.", image_url: "https://images.pexels.com/photos/1036804/pexels-photo-1036804.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Dockerfile COPY instruction", url:"https://docs.docker.com/engine/reference/builder/#copy"}, {title: "Dockerfile RUN instruction", url:"https://docs.docker.com/engine/reference/builder/#run"}] },
+                { id: 208, title: "Slide 8/12: Instruksi CMD dan EXPOSE", type: "TEXT", content: "Instruksi `CMD` (command) menentukan perintah default yang akan dijalankan saat sebuah kontainer dimulai dari image ini. Hanya boleh ada satu `CMD` dalam Dockerfile. Contoh: `CMD [\"php\", \"artisan\", \"serve\"]`. Instruksi `EXPOSE` memberitahu Docker bahwa kontainer akan 'mendengarkan' pada port jaringan tertentu. Ini tidak secara otomatis membuka port tersebut ke dunia luar, tapi berfungsi sebagai dokumentasi dan informasi bagi pengguna image. Contoh: `EXPOSE 8000`.", image_url: "https://images.pexels.com/photos/7989045/pexels-photo-7989045.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Dockerfile CMD instruction", url:"https://docs.docker.com/engine/reference/builder/#cmd"}, {title: "Dockerfile EXPOSE instruction", url:"https://docs.docker.com/engine/reference/builder/#expose"}] },
+                { id: 209, title: "Slide 9/12: File .dockerignore", type: "TEXT", content: "Mirip seperti `.gitignore`, file `.dockerignore` digunakan untuk memberitahu Docker file atau folder mana yang harus diabaikan saat proses build. Ini sangat penting untuk menjaga ukuran image tetap kecil dan mempercepat proses build. Kita tidak perlu menyalin folder seperti `node_modules` atau file log ke dalam image. Dengan mengabaikannya, kita memastikan image hanya berisi hal-hal yang benar-benar dibutuhkan untuk menjalankan aplikasi.", image_url: "https://images.pexels.com/photos/606541/pexels-photo-606541.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Best Practices for Writing Dockerfiles", url:"https://docs.docker.com/develop/develop-images/dockerfile_best-practices/"}] },
+                { id: 210, title: "Slide 10/12: Praktik - Membuat Dockerfile", type: "INTERACTIVE_CLI", content: "Mari kita buat Dockerfile sederhana. Perintah `touch` di Linux digunakan untuk membuat file kosong. Buatlah file dengan nama 'Dockerfile' (huruf D besar di awal sangat penting). Ketik perintah di bawah ini.", correct_command: "touch Dockerfile", animation_file: "https://lottie.host/5b21a364-3249-491c-8273-3f8c82300b46/S222f0k26A.json", references: [{title: "Linux touch command", url:"https://man7.org/linux/man-pages/man1/touch.1.html"}] },
+                { id: 211, title: "Slide 11/12: Praktik - Membangun Image", type: "INTERACTIVE_CLI", content: "Sekarang setelah 'resep' (Dockerfile) siap, saatnya 'memasak' atau membangun image. Gunakan perintah `docker build`. Flag `-t` (tag) digunakan untuk memberi nama pada image kita, formatnya adalah `nama:versi`. Titik `.` di akhir memberitahu Docker untuk mencari Dockerfile di direktori saat ini. Ketik: `docker build -t govtech-app:1.0 .`", correct_command: "docker build -t govtech-app:1.0 .", animation_file: "https://lottie.host/e285d9de-94b0-4632-a968-1e751239999a/uAbm0P1a4A.json", references: [{title: "docker build command reference", url:"https://docs.docker.com/engine/reference/commandline/build/"}] },
+                { id: 212, title: "Slide 12/12: Praktik - Menjalankan Kontainer", type: "INTERACTIVE_CLI", content: "Image sudah jadi! Sekarang, mari kita jalankan sebagai sebuah kontainer. Gunakan `docker run`. Flag `-d` (detach) menjalankan kontainer di background. Flag `-p` (publish) memetakan port dari komputer kita ke port di dalam kontainer (format `host:container`). Ketik: `docker run -d -p 8080:8000 govtech-app:1.0`", correct_command: "docker run -d -p 8080:8000 govtech-app:1.0", animation_file: "https://lottie.host/f35359a3-5353-4414-9b34-80c5c24b61a7/i49V0g0V5L.json", references: [{title: "docker run command reference", url:"https://docs.docker.com/engine/reference/commandline/run/"}] }
+              ]
+            },
+            // MODUL 3
+            {
+              id: 3, title: "Manajemen Multi-Kontainer dengan Docker Compose", description: "Mengelola 'kompleks perkantoran' yang terdiri dari banyak aplikasi.",
+              lessons: [
+                { id: 301, title: "Slide 1/12: Keterbatasan Satu Kontainer", type: "TEXT", content: "Aplikasi modern jarang sekali berdiri sendiri. Sebuah aplikasi web biasanya membutuhkan komponen lain, seperti database untuk menyimpan data, atau Redis untuk caching. Mengelola setiap komponen ini sebagai kontainer terpisah menggunakan perintah `docker run` satu per satu akan sangat merepotkan, terutama dalam mengatur jaringan dan volume agar mereka bisa saling 'berbicara'. Ini seperti mencoba mengatur orkestra di mana setiap musisi membaca partitur yang berbeda.", image_url: "https://images.pexels.com/photos/450059/pexels-photo-450059.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Networking in Docker", url:"https://docs.docker.com/network/"}] },
+                { id: 302, title: "Slide 2/12: Solusi: Docker Compose", type: "TEXT", content: "Docker Compose adalah alat (tool) yang dirancang untuk mendefinisikan dan menjalankan aplikasi Docker multi-kontainer. Dengan Compose, Anda menggunakan sebuah file konfigurasi berformat YAML untuk mendefinisikan semua layanan (services) yang membentuk aplikasi Anda. Kemudian, dengan satu perintah, Anda bisa membuat dan memulai semua layanan tersebut sekaligus. Ini seperti seorang dirigen yang memiliki satu partitur utama (file YAML) untuk memandu seluruh orkestra (semua kontainer).", image_url: "https://images.pexels.com/photos/3184423/pexels-photo-3184423.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Overview of Docker Compose", url:"https://docs.docker.com/compose/"}] },
+                { id: 303, title: "Slide 3/12: File `docker-compose.yml`", type: "TEXT", content: "Jantung dari Docker Compose adalah file `docker-compose.yml`. Ini adalah file teks tempat Anda mendefinisikan 'master plan' aplikasi Anda. File ini memiliki tiga bagian utama di level teratas: `version` (versi sintaks Compose yang digunakan, biasanya '3.8' atau lebih), `services` (daftar semua kontainer yang akan dijalankan), dan `volumes` atau `networks` (opsional, untuk konfigurasi penyimpanan dan jaringan yang lebih kompleks).", image_url: "https://images.pexels.com/photos/4021262/pexels-photo-4021262.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Compose file version 3 reference", url:"https://docs.docker.com/compose/compose-file/compose-file-v3/"}] },
+                { id: 304, title: "Slide 4/12: Mendefinisikan `services`", type: "TEXT", content: "Di bawah kunci `services`, Anda mendaftar setiap komponen aplikasi Anda. Misalnya, `app` untuk aplikasi utama dan `db` untuk database. Setiap layanan ini adalah sebuah kontainer. Anda bisa mendefinisikan properti untuk setiap layanan, seperti `image` (image Docker yang akan digunakan), `build` (jika Anda ingin membangun image dari Dockerfile), `ports` (pemetaan port), dan `volumes` (untuk penyimpanan data persisten).", image_url: "https://images.pexels.com/photos/3153198/pexels-photo-3153198.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Compose File Services Top-level Element", url:"https://docs.docker.com/compose/compose-file/05-services/"}] },
+                { id: 305, title: "Slide 5/12: Contoh: Layanan Aplikasi (`app`)", type: "TEXT", content: "Sebuah definisi layanan `app` bisa terlihat seperti ini: `build: .` (bangun image dari Dockerfile di direktori ini), `ports: - \"8000:8000\"` (petakan port 8000 di host ke 8000 di kontainer), `volumes: - .:/var/www` (sinkronkan kode di direktori saat ini dengan direktori `/var/www` di dalam kontainer). Sinkronisasi volume ini sangat berguna saat development, karena setiap perubahan kode di laptop Anda akan langsung terlihat di dalam kontainer tanpa perlu membangun ulang image.", image_url: "https://images.pexels.com/photos/5775854/pexels-photo-5775854.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Volumes in Docker Compose", url:"https://docs.docker.com/storage/volumes/"}] },
+                { id: 306, title: "Slide 6/12: Contoh: Layanan Database (`db`)", type: "TEXT", content: "Untuk layanan `db`, kita tidak perlu `build`. Kita bisa langsung menggunakan image resmi, contoh: `image: mysql:8.0`. Yang terpenting adalah `volumes`. Data di dalam database harus persisten; jika kontainer mati, datanya tidak boleh hilang. Kita bisa membuat volume bernama, misalnya `db_data`, dan memetakannya ke direktori data MySQL di dalam kontainer (`/var/lib/mysql`). Kita juga perlu mengatur variabel lingkungan (`environment`) seperti password root MySQL.", image_url: "https://images.pexels.com/photos/614117/pexels-photo-614117.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Environment variables in Compose", url:"https://docs.docker.com/compose/environment-variables/"}] },
+                { id: 307, title: "Slide 7/12: Jaringan Otomatis", type: "TEXT", content: "Salah satu keajaiban Docker Compose adalah ia secara otomatis membuat sebuah jaringan (network) privat untuk semua layanan yang didefinisikan dalam satu file `docker-compose.yml`. Ini berarti layanan `app` bisa berkomunikasi dengan layanan `db` hanya dengan menggunakan nama layanannya. Dari dalam kontainer `app`, Anda bisa terhubung ke database di alamat `host: db`, bukan alamat IP yang rumit. Compose menangani semua resolusi DNS internal ini untuk Anda.", image_url: "https://images.pexels.com/photos/3861958/pexels-photo-3861958.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Networking in Compose", url:"https://docs.docker.com/compose/networking/"}] },
+                { id: 308, title: "Slide 8/12: Variabel Lingkungan (`.env`)", type: "TEXT", content: "Menulis kredensial sensitif seperti password database langsung di `docker-compose.yml` adalah praktik yang buruk. Docker Compose dapat secara otomatis membaca file bernama `.env` di direktori yang sama. Di dalam file `.env` ini, Anda bisa mendefinisikan variabel seperti `DB_PASSWORD=rahasia`. Kemudian di file `docker-compose.yml`, Anda bisa menggunakan variabel ini dengan sintaks `${DB_PASSWORD}`. File `.env` ini tidak boleh dimasukkan ke dalam sistem kontrol versi seperti Git.", image_url: "https://images.pexels.com/photos/163064/play-stone-network-networked-163064.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Using .env files in Docker Compose", url:"https://docs.docker.com/compose/environment-variables/set-environment-variables/#use-the-env-file"}] },
+                { id: 309, title: "Slide 9/12: Perintah-Perintah Dasar Compose", type: "TEXT", content: "Ada beberapa perintah utama yang perlu Anda ketahui. `docker-compose up` akan membangun (jika perlu), membuat, dan memulai semua kontainer. Menambahkan flag `-d` (`docker-compose up -d`) akan menjalankannya di background. `docker-compose down` akan menghentikan dan menghapus semua kontainer, jaringan, dan volume yang terkait. `docker-compose ps` akan menampilkan status semua kontainer yang sedang berjalan. `docker-compose logs -f app` akan menampilkan log secara real-time dari layanan `app`.", image_url: "https://images.pexels.com/photos/669619/pexels-photo-669619.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "docker-compose CLI reference", url:"https://docs.docker.com/compose/reference/"}] },
+                { id: 310, title: "Slide 10/12: Praktik - Membuat File Compose", type: "INTERACTIVE_CLI", content: "Sama seperti sebelumnya, mari kita buat file konfigurasinya terlebih dahulu. Nama file default yang dicari oleh Docker Compose adalah `docker-compose.yml`. Gunakan perintah `touch` untuk membuatnya. Ketik: `touch docker-compose.yml`", correct_command: "touch docker-compose.yml", animation_file: "https://lottie.host/5b21a364-3249-491c-8273-3f8c82300b46/S222f0k26A.json", references: [{title: "Getting Started with Docker Compose", url:"https://docs.docker.com/compose/gettingstarted/"}] },
+                { id: 311, title: "Slide 11/12: Praktik - Menjalankan Semua Layanan", type: "INTERACTIVE_CLI", content: "Dengan file `docker-compose.yml` yang sudah terisi (anggap saja sudah kita isi), sekarang kita bisa menghidupkan seluruh 'kompleks perkantoran' kita dengan satu perintah. Gunakan perintah `up` dengan flag `-d` untuk menjalankannya di background agar terminal Anda tetap bebas. Ketik: `docker-compose up -d`", correct_command: "docker-compose up -d", animation_file: "https://lottie.host/3e851a70-137b-4d43-8588-1f417f73ce5f/L2ydh4yZ5M.json", references: [{title: "docker-compose up command", url:"https://docs.docker.com/compose/reference/up/"}] },
+                { id: 312, title: "Slide 12/12: Praktik - Menghentikan Semua Layanan", type: "INTERACTIVE_CLI", content: "Setelah selesai bekerja, penting untuk mematikan dan membersihkan lingkungan Anda untuk menghemat sumber daya komputer. Perintah `down` akan melakukan hal ini secara bersih, menghentikan dan menghapus kontainer serta jaringan yang dibuat oleh `up`. Ketik: `docker-compose down`", correct_command: "docker-compose down", animation_file: "https://lottie.host/e82b3a0e-a14a-4229-868e-f145f8f04758/ZZoV4a2v0n.json", references: [{title: "docker-compose down command", url:"https://docs.docker.com/compose/reference/down/"}] }
+              ]
+            },
+            // MODUL 4
+            {
+              id: 4, title: "Publikasi dan Keamanan Image di Container Registry", description: "Menyimpan 'arsip' aplikasi di gudang logistik digital yang aman.",
+              lessons: [
+                { id: 401, title: "Slide 1/12: Apa itu Container Registry?", type: "TEXT", content: "Setelah kita berhasil membuat Docker Image, lalu di mana kita menyimpannya? Jawabannya adalah di Container Registry. Registry adalah sebuah sistem penyimpanan dan distribusi terpusat untuk Docker Image. Anggap saja ini seperti 'GitHub untuk Docker Image' atau 'gudang arsip digital'. Di sinilah kita menyimpan semua 'blueprint' aplikasi kita agar bisa diakses oleh tim lain atau oleh server produksi kita.", image_url: "https://images.pexels.com/photos/1181298/pexels-photo-1181298.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Docker Registry Overview", url:"https://docs.docker.com/registry/"}] },
+                { id: 402, title: "Slide 2/12: Registry Publik vs Privat (Konteks GitLab Jatim)", type: "TEXT", content: "Ada dua jenis utama registry. Registry Publik, seperti Docker Hub, berisi ribuan image open-source. Namun untuk kebutuhan internal pemerintah, kita menggunakan Registry Privat. GitLab Jatim menyediakan Container Registry terintegrasi untuk setiap proyek. Ini memastikan bahwa 'blueprint' aplikasi Pemprov Jatim disimpan secara aman dan hanya bisa diakses oleh pihak yang berwenang, selaras dengan alur kerja CI/CD yang akan kita pelajari.", image_url: "https://images.pexels.com/photos/4348401/pexels-photo-4348401.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "GitLab Container Registry", url:"https://docs.gitlab.com/ee/user/packages/container_registry/"}, {title: "Docker Hub", url:"https://hub.docker.com/"}] },
+                { id: 403, title: "Slide 3/12: Anatomi Nama Image di GitLab", type: "TEXT", content: "Nama image di GitLab Registry memiliki format yang spesifik: `<registry_hostname>/<group>/<project>/<image_name>:<tag>`. Contoh: `registry.jatimprov.go.id/diskominfo/aplikasi-satu-data/main:latest`. `registry.jatimprov.go.id` adalah alamat registry GitLab Jatim. `diskominfo` adalah nama grup atau sub-grup. `aplikasi-satu-data` adalah nama proyek. `main` adalah nama image (opsional), dan `latest` adalah tag versinya.", image_url: "https://images.pexels.com/photos/270404/pexels-photo-270404.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "GitLab Container Registry Image Naming Convention", url:"https://docs.gitlab.com/ee/user/packages/container_registry/#image-naming-convention"}] },
+                { id: 404, title: "Slide 4/12: Perintah `docker login` ke GitLab", type: "TEXT", content: "Sebelum kita bisa mengirim (push) image ke GitLab Registry, kita harus melakukan otentikasi. Perintahnya adalah `docker login registry.jatimprov.go.id`. Anda akan diminta memasukkan username GitLab Anda dan sebuah Personal Access Token (PAT) atau Deploy Token sebagai password. Menggunakan token lebih aman daripada menggunakan password akun utama Anda.", image_url: "https://images.pexels.com/photos/5082576/pexels-photo-5082576.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "GitLab Docs: Authenticate with the Container Registry", url:"https://docs.gitlab.com/ee/user/packages/container_registry/index.html#authenticate-with-the-container-registry"}] },
+                { id: 405, title: "Slide 5/12: Memberi Tag pada Image untuk GitLab", type: "TEXT", content: "Misalkan kita punya image lokal bernama `govtech-app:1.0`. Sebelum di-push, kita harus memberinya tag sesuai format nama registry GitLab Jatim. Perintahnya: `docker tag govtech-app:1.0 registry.jatimprov.go.id/diskominfo/govtech-app:1.0`. Perintah ini tidak membuat salinan image, hanya menambahkan 'label alamat' baru ke image yang sudah ada.", image_url: "https://images.pexels.com/photos/6214476/pexels-photo-6214476.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Best practices for tagging images", url:"https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#tagging-images"}] },
+                { id: 406, title: "Slide 6/12: Mendorong Image ke GitLab Registry (`docker push`)", type: "TEXT", content: "Setelah image diberi tag yang benar, kita bisa mengunggahnya ke GitLab Registry menggunakan perintah `docker push`. Contoh: `docker push registry.jatimprov.go.id/diskominfo/govtech-app:1.0`. Proses ini akan mengirim 'blueprint' aplikasi kita ke gudang pusat di GitLab Jatim, dan secara otomatis terintegrasi dengan proyek kita.", image_url: "https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "docker push command reference", url:"https://docs.docker.com/engine/reference/commandline/push/"}] },
+                { id: 407, title: "Slide 7/12: Mengambil Image dari GitLab Registry (`docker pull`)", type: "TEXT", content: "Di server produksi atau di komputer rekan kerja, kita bisa mengambil image yang sudah di-push tadi dengan perintah `docker pull`. Perintah ini akan mengunduh image dari registry ke mesin lokal. Contoh: `docker pull registry.jatimprov.go.id/diskominfo/govtech-app:1.0`. Setelah di-pull, image tersebut siap dijalankan sebagai kontainer.", image_url: "https://images.pexels.com/photos/326503/pexels-photo-326503.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "docker pull command reference", url:"https://docs.docker.com/engine/reference/commandline/pull/"}] },
+                { id: 408, title: "Slide 8/12: Keamanan Image: Pemindaian Kerentanan", type: "TEXT", content: "Image yang kita bangun tidak hanya berisi kode kita, tapi juga fondasi dari base image (misal: Ubuntu atau PHP) yang mungkin memiliki kerentanan keamanan (vulnerabilities). Sangat penting untuk memindai image kita secara rutin. GitLab Premium/Ultimate memiliki fitur pemindaian keamanan terintegrasi yang dapat menemukan kerentanan di dalam image Anda langsung dari pipeline CI/CD.", image_url: "https://images.pexels.com/photos/60504/security-protection-anti-virus-software-60504.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "GitLab Container Scanning", url:"https://docs.gitlab.com/ee/user/application_security/container_scanning/"}] },
+                { id: 409, title: "Slide 9/12: Best Practice: Gunakan Base Image Spesifik", type: "TEXT", content: "Hindari menggunakan tag `:latest` pada base image di Dockerfile Anda (misal: `FROM ubuntu:latest`). Tag `latest` bisa berubah sewaktu-waktu, menyebabkan build Anda menjadi tidak konsisten atau bahkan gagal di masa depan. Selalu gunakan versi spesifik, misalnya `FROM ubuntu:22.04`. Ini memastikan bahwa build Anda dapat direproduksi (reproducible) dan lebih dapat diprediksi. Untuk keamanan dan ukuran yang lebih kecil, pertimbangkan juga menggunakan base image minimalis seperti `alpine`.", image_url: "https://images.pexels.com/photos/1181244/pexels-photo-1181244.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Dockerfile Best Practices", url:"https://docs.docker.com/develop/develop-images/dockerfile_best-practices/"}] },
+                { id: 410, title: "Slide 10/12: Praktik - Login ke GitLab Registry", type: "INTERACTIVE_CLI", content: "Mari kita simulasikan login ke GitLab Jatim. Dalam skenario nyata, Anda akan diminta memasukkan username dan token. Untuk simulasi ini, cukup ketik perintahnya dengan alamat registry yang benar. Ketik: `docker login registry.jatimprov.go.id`", correct_command: "docker login registry.jatimprov.go.id", animation_file: "https://lottie.host/4934a571-5527-44a7-8919-20f71ed4e28e/65g8HPvG0k.json", references: [{title: "Docker login documentation", url:"https://docs.docker.com/engine/reference/commandline/login/"}] },
+                { id: 411, title: "Slide 11/12: Praktik - Memberi Tag pada Image", type: "INTERACTIVE_CLI", content: "Kita punya image lokal `govtech-app:1.0`. Beri tag pada image ini agar siap di-push ke GitLab Jatim di bawah grup `diskominfo`. Ketik: `docker tag govtech-app:1.0 registry.jatimprov.go.id/diskominfo/govtech-app:1.0`", correct_command: "docker tag govtech-app:1.0 registry.jatimprov.go.id/diskominfo/govtech-app:1.0", animation_file: "https://lottie.host/5a9143b4-1e52-498c-84a5-89f5397f3b8b/jSNxnaaQk2.json", references: [{title: "Docker tag documentation", url:"https://docs.docker.com/engine/reference/commandline/tag/"}] },
+                { id: 412, title: "Slide 12/12: Praktik - Mendorong Image", type: "INTERACTIVE_CLI", content: "Image sudah diberi tag dengan benar. Langkah terakhir adalah mendorongnya ke GitLab Registry. Gunakan perintah `push` diikuti dengan nama image yang sudah lengkap. Ketik: `docker push registry.jatimprov.go.id/diskominfo/govtech-app:1.0`", correct_command: "docker push registry.jatimprov.go.id/diskominfo/govtech-app:1.0", animation_file: "https://lottie.host/575a6c37-cb9a-4a88-8abe-3b32036c1e54/m3BYC3626a.json", references: [{title: "Docker push documentation", url:"https://docs.docker.com/engine/reference/commandline/push/"}] }
+              ]
+            },
+            // MODUL 5
+            {
+              id: 5, title: "Otomatisasi dengan CI/CD GitLab Jatim", description: "Menciptakan alur kerja birokrasi yang otomatis, cepat, dan tanpa jeda.",
+              lessons: [
+                { id: 501, title: "Slide 1/12: Apa itu CI/CD?", type: "TEXT", content: "CI/CD adalah singkatan dari Continuous Integration (Integrasi Berkelanjutan) dan Continuous Deployment/Delivery (Penyebaran/Pengiriman Berkelanjutan). Ini adalah sebuah praktik DevOps untuk mengotomatisasi proses pembangunan, pengujian, dan perilisan software. Tujuannya adalah untuk merilis perubahan kecil secara sering dan andal, daripada merilis perubahan besar yang berisiko tinggi secara jarang. Bayangkan ini sebagai alur kerja dokumen otomatis di kantor: setiap revisi kecil langsung diperiksa, disetujui, dan didistribusikan tanpa campur tangan manual.", image_url: "https://images.pexels.com/photos/8721340/pexels-photo-8721340.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "What is CI/CD? - Red Hat", url:"https://www.redhat.com/en/topics/devops/what-is-ci-cd"}] },
+                { id: 502, title: "Slide 2/12: Continuous Integration (CI)", type: "TEXT", content: "CI adalah praktik di mana developer secara rutin menggabungkan (merge) perubahan kode mereka ke dalam repositori pusat di GitLab Jatim. Setelah setiap penggabungan, proses otomatis akan berjalan untuk membangun (build) aplikasi dan menjalankan serangkaian tes. Tujuannya adalah untuk menemukan dan memperbaiki bug secepat mungkin. Jika tes gagal, tim akan segera diberi tahu, mencegah masalah masuk lebih jauh ke dalam sistem.", image_url: "https://images.pexels.com/photos/3184424/pexels-photo-3184424.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Continuous Integration Explained - Martin Fowler", url:"https://martinfowler.com/articles/continuousIntegration.html"}] },
+                { id: 503, title: "Slide 3/12: Continuous Delivery vs Deployment", type: "TEXT", content: "Setelah CI berhasil, langkah selanjutnya adalah Continuous Delivery (CDel). Ini berarti setiap perubahan yang lolos semua tes secara otomatis dirilis ke lingkungan staging atau pra-produksi. Perilisan ke produksi bisa dilakukan dengan satu klik tombol. Continuous Deployment (CDep) adalah langkah lebih lanjut: setiap perubahan yang lolos tes secara otomatis langsung dirilis ke produksi tanpa intervensi manusia sama sekali. Di lingkungan Pemprov Jatim, Continuous Delivery seringkali menjadi pilihan yang lebih aman.", image_url: "https://images.pexels.com/photos/160107/pexels-photo-160107.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Continuous Delivery vs Continuous Deployment", url:"https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment"}] },
+                { id: 504, title: "Slide 4/12: Konsep Utama GitLab CI/CD", type: "TEXT", content: "GitLab CI/CD, yang digunakan di GitLab Jatim, memiliki beberapa konsep utama. **Pipeline** adalah alur kerja lengkap. **Stage** adalah tahapan dalam pipeline (misal: build, test, deploy) yang berjalan berurutan. **Job** adalah tugas spesifik di dalam sebuah stage yang berjalan paralel. Dan **Runner** adalah agen (server atau kontainer) yang menjalankan job tersebut. Semua ini didefinisikan dalam satu file: `.gitlab-ci.yml`.", image_url: "https://images.unsplash.com/photo-1633241049343-945281a8f668?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600", references: [{title: "Introduction to GitLab CI/CD", url:"https://docs.gitlab.com/ee/ci/introduction/"}] },
+                { id: 505, title: "Slide 5/12: Membedah `.gitlab-ci.yml` - Stages", type: "TEXT", content: "File `.gitlab-ci.yml` dimulai dengan mendefinisikan `stages`. Ini adalah urutan eksekusi pipeline kita. Contoh dari materi Diskominfo Jatim adalah: `stages: - build - test - deploy`. Ini berarti GitLab akan menjalankan semua job di stage `build` terlebih dahulu. Jika semua berhasil, ia akan melanjutkan ke `test`. Jika `test` berhasil, barulah ia akan menjalankan stage `deploy`. Jika ada satu job yang gagal di salah satu stage, pipeline akan berhenti.", image_url: "https://images.pexels.com/photos/2102416/pexels-photo-2102416.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: ".gitlab-ci.yml keyword reference - stages", url:"https://docs.gitlab.com/ee/ci/yaml/#stages"}] },
+                { id: 506, title: "Slide 6/12: Job `build_image`", type: "TEXT", content: "Job pertama dalam pipeline kita adalah `build_image`. Job ini berjalan di stage `build`. Ia menggunakan `image: docker:latest` dan `services: - docker:dind` untuk menciptakan lingkungan 'Docker-in-Docker'. Script di dalamnya akan melakukan `docker login` ke GitLab Registry, kemudian menjalankan `docker build` untuk membuat image aplikasi, dan terakhir memberinya tag dengan versi commit dan 'latest'.", image_url: "https://images.pexels.com/photos/159306/construction-site-build-construction-work-159306.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Building Docker images with GitLab CI/CD", url:"https://docs.gitlab.com/ee/ci/docker/using_docker_build.html"}] },
+                { id: 507, title: "Slide 7/12: Job `run_tests` (Opsional)", type: "TEXT", content: "Job kedua, `run_tests`, berjalan di stage `test`. Job ini menggunakan image yang baru saja dibuat pada tahap `build` (`image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA`). Script di dalamnya akan menjalankan perintah tes, misalnya `npm test` atau `php artisan test`. Opsi `allow_failure: true` bisa ditambahkan jika kegagalan tes tidak boleh menghentikan seluruh pipeline, meskipun ini tidak selalu direkomendasikan.", image_url: "https://images.pexels.com/photos/7176026/pexels-photo-7176026.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Testing in GitLab CI/CD", url:"https://docs.gitlab.com/ee/ci/testing/"}] },
+                { id: 508, title: "Slide 8/12: Job `deploy_image_to_registry`", type: "TEXT", content: "Job terakhir, `deploy_image_to_registry`, berjalan di stage `deploy`. Job ini juga membutuhkan lingkungan Docker-in-Docker. Script di dalamnya akan melakukan `docker login` lagi, kemudian menjalankan `docker push` untuk mengunggah image yang sudah diberi tag ke GitLab Container Registry. Job ini adalah puncak dari pipeline CI, menghasilkan 'artefak' berupa Docker image yang siap digunakan.", image_url: "https://images.pexels.com/photos/3861964/pexels-photo-3861964.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Pushing images to GitLab Container Registry", url:"https://docs.gitlab.com/ee/user/packages/container_registry/index.html#build-and-push-images-by-using-gitlab-cicd"}] },
+                { id: 509, title: "Slide 9/12: Aturan (`rules`) dan Ketergantungan (`needs`)", type: "TEXT", content: "Dua kata kunci penting dalam `.gitlab-ci.yml` adalah `needs` dan `rules`. `needs: [\"build_image\"]` berarti sebuah job hanya akan berjalan setelah job `build_image` selesai, tanpa harus menunggu seluruh stage sebelumnya selesai. `rules: - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'` berarti job tersebut hanya akan berjalan jika ada push ke branch utama (misalnya `main` atau `master`). Ini mencegah image di-deploy dari branch development.", image_url: "https://images.pexels.com/photos/3277806/pexels-photo-3277806.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "GitLab CI/CD `needs` keyword", url:"https://docs.gitlab.com/ee/ci/yaml/index.html#needs"}, {title: "GitLab CI/CD `rules` keyword", url:"https://docs.gitlab.com/ee/ci/yaml/index.html#rules"}] },
+                { id: 510, title: "Slide 10/12: Praktik - Memicu Pipeline", type: "INTERACTIVE_CLI", content: "Alur kerja CI/CD dimulai saat developer mendorong kode ke repositori. Mari kita simulasikan perintah dasar untuk mengirim perubahan ke GitLab. Ketik: `git push origin main`", correct_command: "git push origin main", animation_file: "https://lottie.host/575a6c37-cb9a-4a88-8abe-3b32036c1e54/m3BYC3626a.json", references: [{title: "Git Push Command", url:"https://git-scm.com/docs/git-push"}] },
+                { id: 511, title: "Slide 11/12: Praktik - Menjalankan Unit Test", type: "INTERACTIVE_CLI", content: "Unit test memeriksa fungsi-fungsi individual dalam kode Anda. Di Laravel, perintah untuk menjalankan seluruh suite tes adalah `php artisan test`. Ini adalah perintah kunci dalam stage `test` di pipeline CI/CD Anda. Ketik perintahnya di bawah ini.", correct_command: "php artisan test", animation_file: "https://lottie.host/96b9114f-34d9-4934-9340-02e0714b6d07/Q2jS3i3j0g.json", references: [{title: "Running Tests in Laravel", url:"https://laravel.com/docs/testing#running-tests"}] },
+                { id: 512, title: "Slide 12/12: Praktik - Menjalankan Deployment Script", type: "INTERACTIVE_CLI", content: "Anggap kita punya sebuah script kustom bernama `deploy.sh` yang berisi semua langkah untuk deployment (SSH, pull, restart). Dalam job deployment, kita hanya perlu mengeksekusi script ini. Ketik: `./deploy.sh production`", correct_command: "./deploy.sh production", animation_file: "https://lottie.host/f35359a3-5353-4414-9b34-80c5c24b61a7/i49V0g0V5L.json", references: [{title: "Automating Deployments", url:"https://www.digitalocean.com/community/tutorials/how-to-automate-deployments-with-git-and-a-vps"}] }
+              ]
+            },
+            // MODUL 6
+            {
+              id: 6, title: "Mengelola Server Hibrida (cPanel & Docker)", description: "Mengelola aset digital lama (cPanel) dan baru (Docker) secara berdampingan.",
+              lessons: [
+                { id: 601, title: "Slide 1/12: Dua Dunia, Satu Server", type: "TEXT", content: "Di banyak instansi pemerintah, transformasi digital tidak terjadi dalam semalam. Seringkali, ada aplikasi-aplikasi lama (legacy) yang masih berjalan di infrastruktur tradisional seperti shared hosting dengan cPanel, sementara aplikasi-aplikasi baru dikembangkan menggunakan teknologi modern seperti Docker. Lingkungan Hibrida adalah kondisi di mana kedua jenis infrastruktur ini—tradisional dan modern—harus hidup berdampingan dan dikelola secara bersamaan. Ini adalah tantangan umum dalam proses modernisasi.", image_url: "https://images.pexels.com/photos/1714205/pexels-photo-1714205.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "What is Hybrid Cloud? - Red Hat", url:"https://www.redhat.com/en/topics/cloud-computing/what-is-hybrid-cloud"}] },
+                { id: 602, title: "Slide 2/12: Peran cPanel vs Docker", type: "TEXT", content: "cPanel berperan sebagai manajer server dengan antarmuka grafis yang mudah digunakan. Ia mengelola web server, email, database, dan DNS secara terstruktur. Di sisi lain, Docker berfokus pada isolasi, fleksibilitas, dan portabilitas aplikasi. cPanel memberikan kemudahan konfigurasi, sementara Docker memberikan konsistensi lingkungan. Keduanya memiliki peran yang berbeda namun bisa hidup berdampingan.", image_url: "https://images.pexels.com/photos/3059632/pexels-photo-3059632.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "cPanel vs Docker: Which is right for you?", url:"https://www.hostinger.com/tutorials/cpanel-vs-docker"}] },
+                { id: 603, title: "Slide 3/12: Strategi Modernisasi Bertahap", type: "TEXT", content: "Memindahkan semua aplikasi dari cPanel ke Docker sekaligus adalah proyek yang besar dan berisiko. Seperti yang disarankan dalam materi Anda, pendekatan yang lebih baik adalah modernisasi bertahap. Mulailah dengan mengkontainerisasi aplikasi baru. Kemudian, identifikasi aplikasi lama yang paling kritis atau paling sering bermasalah dan migrasikan satu per satu. Ini mengurangi risiko dan membangun momentum untuk modernisasi yang lebih luas.", image_url: "https://images.pexels.com/photos/5940721/pexels-photo-5940721.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Strangler Fig Application Pattern", url:"https://martinfowler.com/bliki/StranglerFigApplication.html"}] },
+                { id: 604, title: "Slide 4/12: Potensi Konflik: Port Jaringan", type: "TEXT", content: "Masalah paling umum saat menjalankan cPanel dan Docker bersamaan adalah konflik port. cPanel (melalui web server Apache/Nginx) biasanya menggunakan port 80 (HTTP) dan 443 (HTTPS). Jika Anda mencoba menjalankan kontainer Docker dan memetakannya langsung ke port 80 atau 443 di server, akan terjadi error 'port is already allocated'. Keduanya tidak bisa menggunakan port yang sama secara bersamaan.", image_url: "https://images.pexels.com/photos/340152/pexels-photo-340152.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "How to fix Docker port conflicts", url:"https://www.baeldung.com/docker-port-already-allocated"}] },
+                { id: 605, title: "Slide 5/12: Potensi Konflik: Firewall", type: "TEXT", content: "Docker memanipulasi aturan `iptables` di Linux untuk mengatur jaringan kontainernya. Di sisi lain, cPanel seringkali menggunakan firewall seperti CSF (ConfigServer Security & Firewall) yang juga mengelola `iptables`. Jika tidak dikonfigurasi dengan benar, CSF bisa saja memblokir lalu lintas jaringan yang dibutuhkan oleh Docker, atau sebaliknya. Ini bisa menyebabkan kontainer tidak bisa diakses dari luar atau bahkan tidak bisa mengakses internet.", image_url: "https://images.pexels.com/photos/209224/pexels-photo-209224.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Docker and iptables - Docker Docs", url:"https://docs.docker.com/network/iptables/"}] },
+                { id: 606, title: "Slide 6/12: Solusi: Reverse Proxy", type: "TEXT", content: "Solusi terbaik untuk mengatasi konflik port adalah dengan menggunakan Reverse Proxy. Dalam skenario ini, web server cPanel (Apache/Nginx) tetap berjalan di port 80/443 dan bertindak sebagai 'resepsionis'. Aplikasi Docker kita jalankan di port internal yang tidak terpakai (misalnya 5000). Kita kemudian mengkonfigurasi cPanel untuk meneruskan (proxy) permintaan untuk domain tertentu (misal: `app.domainanda.com`) ke alamat internal kontainer Docker (`127.0.0.1:5000`). Pengguna mengakses domain seperti biasa, dan cPanel yang mengarahkan lalu lintasnya.", image_url: "https://images.pexels.com/photos/5380590/pexels-photo-5380590.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "What is a Reverse Proxy? - Nginx", url:"https://www.nginx.com/resources/glossary/reverse-proxy/"}] },
+                { id: 607, title: "Slide 7/12: Mengkonfigurasi Firewall (CSF) untuk Docker", type: "TEXT", content: "Untuk mengatasi konflik firewall, CSF menyediakan opsi konfigurasi khusus. Anda perlu mengedit file `/etc/csf/csf.conf` dan mengubah pengaturan `DOCKER = \"0\"` menjadi `DOCKER = \"1\"`. Opsi ini memberitahu CSF untuk secara otomatis mengizinkan antarmuka jaringan default Docker dan menambahkan aturan `iptables` yang diperlukan agar keduanya bisa bekerja sama tanpa saling memblokir. Setelah mengubah konfigurasi, firewall harus di-restart.", image_url: "https://images.pexels.com/photos/4218883/pexels-photo-4218883.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Configuring CSF with Docker", url:"https://download.configserver.com/csf/readme.txt"}] },
+                { id: 608, title: "Slide 8/12: Menjalankan Kontainer untuk Reverse Proxy", type: "TEXT", content: "Saat menjalankan kontainer yang akan diakses melalui reverse proxy, kita harus memetakan port kontainer ke alamat `127.0.0.1` (localhost) di server, bukan ke alamat IP publik. Contoh: `docker run -d -p 127.0.0.1:5000:3000 my-app-image`. Ini memastikan bahwa kontainer hanya bisa diakses dari dalam server itu sendiri (oleh cPanel), bukan langsung dari internet. Ini adalah langkah keamanan yang penting.", image_url: "https://images.pexels.com/photos/1181673/pexels-photo-1181673.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Binding Docker ports to localhost", url:"https://docs.docker.com/engine/reference/commandline/run/#publish-or-expose-port--p---expose"}] },
+                { id: 609, title: "Slide 9/12: Membuat Konfigurasi Proxy di cPanel", type: "TEXT", content: "Untuk membuat aturan reverse proxy, kita perlu membuat file konfigurasi khusus untuk domain yang dituju. Di cPanel, path-nya biasanya `/etc/apache2/conf.d/userdata/ssl/2_4/user/app.domain.com/proxy.conf`. Isi dari file ini adalah arahan seperti `ProxyPass / http://127.0.0.1:5000/` yang memberitahu Apache untuk meneruskan semua permintaan ke alamat internal kontainer kita. Setelah file dibuat, konfigurasi Apache harus dibangun ulang dan di-restart.", image_url: "https://images.pexels.com/photos/270632/pexels-photo-270632.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Apache Reverse Proxy Guide", url:"https://httpd.apache.org/docs/2.4/howto/reverse_proxy.html"}] },
+                { id: 610, title: "Slide 10/12: Praktik - Mengaktifkan Integrasi Docker di Firewall", type: "INTERACTIVE_CLI", content: "Anda perlu mengedit file konfigurasi CSF. Gunakan editor teks `nano` untuk membuka file tersebut. Dalam simulasi ini, cukup ketik perintah untuk membuka file. Ketik: `nano /etc/csf/csf.conf`", correct_command: "nano /etc/csf/csf.conf", animation_file: "https://lottie.host/5b21a364-3249-491c-8273-3f8c82300b46/S222f0k26A.json", references: [{title: "Using nano text editor", url:"https://www.nano-editor.org/dist/v2.2/nano.html"}] },
+                { id: 611, title: "Slide 11/12: Praktik - Merestart Firewall", type: "INTERACTIVE_CLI", content: "Setelah mengubah konfigurasi CSF dan menyimpannya, Anda harus me-restart layanan firewall agar perubahan diterapkan. Perintah untuk me-restart CSF adalah `csf -r`. Ketik perintah tersebut.", correct_command: "csf -r", animation_file: "https://lottie.host/b049a43a-2396-4888-82a8-9279092497e5/0aFKeQ2G4i.json", references: [{title: "Restarting CSF", url:"https://download.configserver.com/csf/readme.txt"}] },
+                { id: 612, title: "Slide 12/12: Praktik - Membangun Ulang Konfigurasi Apache", type: "INTERACTIVE_CLI", content: "Setelah Anda menambahkan file `proxy.conf`, cPanel perlu membangun ulang file konfigurasi utama Apache agar aturan baru Anda disertakan. Script cPanel untuk melakukan ini adalah `/usr/local/cpanel/scripts/rebuildhttpdconf`. Ketik perintah ini.", correct_command: "/usr/local/cpanel/scripts/rebuildhttpdconf", animation_file: "https://lottie.host/e285d9de-94b0-4632-a968-1e751239999a/uAbm0P1a4A.json", references: [{title: "cPanel Scripts: rebuildhttpdconf", url:"https://api.docs.cpanel.net/cpanel/scripts/rebuildhttpdconf/"}] }
+              ]
+            },
+            // MODUL 7
+            {
+              id: 7, title: "Strategi Keamanan Siber untuk Aset Digital Negara", description: "Berperan sebagai Paspampres untuk melindungi data dan aset digital.",
+              lessons: [
+                { id: 701, title: "Slide 1/12: Pentingnya Keamanan Siber di Sektor Publik", type: "TEXT", content: "Aset digital pemerintah adalah target utama serangan siber. Data kependudukan, keuangan negara, dan infrastruktur kritis adalah informasi yang sangat sensitif. Kebocoran data atau kelumpuhan layanan publik dapat menyebabkan kerugian finansial, mengganggu stabilitas nasional, dan meruntuhkan kepercayaan publik. Oleh karena itu, keamanan siber (cybersecurity) bukanlah sebuah pilihan, melainkan sebuah kewajiban mutlak dalam transformasi digital sektor publik.", image_url: "https://images.pexels.com/photos/5380664/pexels-photo-5380664.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Laporan Tahunan BSSN", url:"https://bssn.go.id/publikasi-2/"}, {title: "Cybersecurity for Governments - Deloitte", url:"https://www2.deloitte.com/global/en/pages/public-sector/solutions/cyber-for-government.html"}] },
+                { id: 702, title: "Slide 2/12: Prinsip Pertahanan Berlapis (Defense in Depth)", type: "TEXT", content: "Tidak ada satu pun alat atau teknologi yang bisa menjamin keamanan 100%. Strategi keamanan yang efektif mengadopsi pendekatan berlapis atau 'Defense in Depth'. Bayangkan Istana Negara: ada pagar luar, pos penjagaan, Paspampres, pemeriksaan keamanan, dan protokol internal. Di dunia digital, lapisannya bisa berupa: keamanan jaringan (Firewall), keamanan server (Hardening), keamanan aplikasi (Secure Coding), dan keamanan data (Enkripsi), serta kesadaran pengguna (Human Factor). Jika satu lapisan berhasil ditembus, masih ada lapisan lain yang melindungi.", image_url: "https://images.pexels.com/photos/129207/pexels-photo-129207.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Defense in Depth - SANS Institute", url:"https://www.sans.org/security-resources/posters/defense-in-depth/13/download"}] },
+                { id: 703, title: "Slide 3/12: Keamanan Jaringan: Firewall & WAF", type: "TEXT", content: "Firewall adalah 'penjaga gerbang' jaringan Anda. Ia memonitor lalu lintas data yang masuk dan keluar, dan memutuskan untuk mengizinkan atau memblokirnya berdasarkan seperangkat aturan keamanan. Web Application Firewall (WAF) adalah jenis firewall yang lebih spesifik, dirancang untuk melindungi aplikasi web dari serangan umum seperti SQL Injection dan Cross-Site Scripting (XSS) dengan menganalisis lalu lintas HTTP/HTTPS.", image_url: "https://images.pexels.com/photos/209224/pexels-photo-209224.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "What is a Firewall? - Cloudflare", url:"https://www.cloudflare.com/learning/security/what-is-a-firewall/"}, {title: "What is a WAF?", url:"https://www.cloudflare.com/learning/ddos/glossary/web-application-firewall-waf/"}] },
+                { id: 704, title: "Slide 4/12: Keamanan Server: Hardening", type: "TEXT", content: "Server hardening adalah proses mengamankan server dengan mengurangi 'permukaan serangan' (attack surface). Ini melibatkan beberapa tindakan: menonaktifkan port dan layanan yang tidak perlu, menerapkan kebijakan password yang kuat, menjaga sistem operasi dan software selalu terupdate (patching), dan mengkonfigurasi hak akses dengan prinsip 'hak paling minim' (least privilege), di mana setiap pengguna atau layanan hanya diberi akses yang benar-benar mereka butuhkan untuk melakukan tugasnya.", image_url: "https://images.pexels.com/photos/113850/pexels-photo-113850.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "CIS Benchmarks for Server Hardening", url:"https://www.cisecurity.org/cis-benchmarks/"}] },
+                { id: 705, title: "Slide 5/12: Keamanan Aplikasi: Secure Coding", type: "TEXT", content: "Banyak kerentanan berasal dari kesalahan dalam kode aplikasi itu sendiri. Praktik 'Secure Coding' berarti developer menulis kode dengan mempertimbangkan keamanan sejak awal. Ini termasuk: memvalidasi semua input dari pengguna (jangan pernah percaya input pengguna!), menggunakan parameterized queries untuk mencegah SQL Injection, dan melakukan sanitasi output untuk mencegah XSS. Kerangka kerja seperti OWASP Top 10 menyediakan daftar risiko keamanan aplikasi web yang paling kritis sebagai panduan.", image_url: "https://images.pexels.com/photos/943096/pexels-photo-943096.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "OWASP Top 10", url:"https://owasp.org/www-project-top-ten/"}] },
+                { id: 706, title: "Slide 6/12: Keamanan Data: Enkripsi", type: "TEXT", content: "Enkripsi adalah proses mengubah data menjadi format kode yang tidak dapat dibaca untuk melindunginya dari akses tidak sah. Ada dua kondisi utama di mana enkripsi sangat penting. Enkripsi saat transit (in-transit), seperti menggunakan HTTPS (SSL/TLS), melindungi data saat dikirim melalui jaringan. Enkripsi saat diam (at-rest) melindungi data saat disimpan di database atau di disk. Jika seorang peretas berhasil mencuri data, tanpa kunci enkripsi, data tersebut tidak akan ada artinya.", image_url: "https://images.pexels.com/photos/247968/pexels-photo-247968.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "What is Encryption? - AWS", url:"https://aws.amazon.com/what-is/encryption/"}] },
+                { id: 707, title: "Slide 7/12: Manajemen Akses", type: "TEXT", content: "Otentikasi adalah proses memverifikasi identitas seseorang ('Siapa Anda?'). Ini bisa berupa password, biometrik, atau Multi-Factor Authentication (MFA). Otorisasi terjadi setelah otentikasi berhasil; ini adalah proses menentukan hak akses apa yang dimiliki oleh pengguna tersebut ('Apa yang boleh Anda lakukan?'). Menerapkan kontrol akses berbasis peran (Role-Based Access Control - RBAC) adalah praktik standar untuk memastikan pengguna hanya dapat mengakses data dan fungsi yang sesuai dengan peran mereka.", image_url: "https://images.pexels.com/photos/5668473/pexels-photo-5668473.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Authentication vs. Authorization - Okta", url:"https://www.okta.com/identity-101/authentication-vs-authorization/"}] },
+                { id: 708, title: "Slide 8/12: Keamanan Kontainer", type: "TEXT", content: "Meskipun kontainer memberikan isolasi, mereka tidak kebal terhadap masalah keamanan. Keamanan kontainer meliputi beberapa area: mengamankan Dockerfile (misalnya, tidak menjalankan sebagai user `root`), memindai kerentanan image seperti yang telah kita bahas, mengamankan Docker daemon itu sendiri, dan menggunakan alat keamanan runtime untuk memantau perilaku kontainer yang sedang berjalan dan mendeteksi anomali.", image_url: "https://images.pexels.com/photos/1036808/pexels-photo-1036808.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Docker Security Best Practices", url:"https://docs.docker.com/engine/security/"}] },
+                { id: 709, title: "Slide 9/12: Faktor Manusia: Phishing", type: "TEXT", content: "Seringkali, titik terlemah dalam rantai keamanan bukanlah teknologi, melainkan manusia. Serangan phishing (email palsu yang mencoba mencuri kredensial) dan social engineering (memanipulasi orang untuk mendapatkan informasi rahasia) sangat umum terjadi. Pelatihan kesadaran keamanan (security awareness training) secara rutin bagi seluruh pegawai adalah lapisan pertahanan yang sangat krusial untuk membangun budaya sadar keamanan.", image_url: "https://images.pexels.com/photos/802024/pexels-photo-802024.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Social Engineering - BSSN", url:"https://bssn.go.id/social-engineering/"}] },
+                { id: 710, title: "Slide 10/12: Praktik - Memindai Kerentanan Image", type: "INTERACTIVE_CLI", content: "Sebelum men-deploy sebuah image, kita harus memindainya. Docker menyediakan perintah `scan` yang terintegrasi dengan Snyk untuk melakukan ini. Mari kita pindai image `govtech-app:latest` yang sudah kita buat. Ketik: `docker scan govtech-app:latest`", correct_command: "docker scan govtech-app:latest", animation_file: "https://lottie.host/4c374fab-a236-4700-910f-1a13e73815a5/Q5i1Y53h2g.json", references: [{title: "Docker Scan Command", url:"https://docs.docker.com/engine/scan/"}] },
+                { id: 711, title: "Slide 11/12: Praktik - Memeriksa Port Terbuka", type: "INTERACTIVE_CLI", content: "Di server, kita perlu tahu port jaringan mana yang sedang 'mendengarkan' koneksi. Perintah `ss` (socket statistics) atau `netstat` yang lebih tua digunakan untuk ini. Flag `-tulpn` adalah kombinasi populer: TCP, UDP, Listen, Program name, Numeric. Mari kita periksa port mana yang terbuka. Ketik: `ss -tulpn`", correct_command: "ss -tulpn", animation_file: "https://lottie.host/43977e5e-c15c-4399-a41e-55255c276326/F93g0g9V5L.json", references: [{title: "Linux ss command tutorial", url:"https://www.redhat.com/sysadmin/ss-command"}] },
+                { id: 712, title: "Slide 12/12: Praktik - Mengubah Hak Akses File", type: "INTERACTIVE_CLI", content: "Mengatur hak akses file dengan benar sangat penting. File konfigurasi sensitif tidak boleh bisa dibaca oleh semua orang. Perintah `chmod` (change mode) digunakan untuk ini. Mari kita ubah hak akses file `kunci_rahasia.txt` agar hanya pemiliknya yang bisa membaca dan menulis (kode: 600). Ketik: `chmod 600 kunci_rahasia.txt`", correct_command: "chmod 600 kunci_rahasia.txt", animation_file: "https://lottie.host/80a31a08-168f-4328-91a5-85c5b2c73007/2M9k5F9nwM.json", references: [{title: "Understanding Linux File Permissions with chmod", url:"https://www.digitalocean.com/community/tutorials/linux-permissions-basics-and-how-to-use-chmod-in-a-shell"}] }
+              ]
+            },
+            // MODUL 8
+            {
+              id: 8, title: "Operasional dan Monitoring Harian Kontainer", description: "Melakukan inspeksi harian seperti Satpol PP untuk memastikan ketertiban.",
+              lessons: [
+                { id: 801, title: "Slide 1/12: Mengapa Monitoring Penting?", type: "TEXT", content: "Setelah aplikasi di-deploy, pekerjaan belum selesai. Fase operasional dan monitoring sama pentingnya dengan development. Monitoring adalah proses mengumpulkan dan menganalisis data secara terus-menerus untuk memahami kesehatan dan kinerja sistem kita. Tanpa monitoring, kita seperti pilot yang terbang tanpa panel instrumen. Kita tidak tahu jika ada masalah sampai semuanya sudah terlambat. Monitoring yang baik memungkinkan kita untuk proaktif, bukan reaktif.", image_url: "https://images.pexels.com/photos/3760067/pexels-photo-3760067.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "What is Monitoring? - Grafana Labs", url:"https://grafana.com/docs/grafana/latest/introduction/what-is-monitoring/"}] },
+                { id: 802, title: "Slide 2/12: Tiga Pilar Observabilitas", type: "TEXT", content: "Monitoring modern sering dibingkai dalam konsep 'Observabilitas', yang terdiri dari tiga pilar. 1) **Logs**: Catatan kejadian berbasis teks yang menjawab 'Apa yang terjadi?'. 2) **Metrics**: Data numerik yang diukur dari waktu ke waktu (misalnya, penggunaan CPU, jumlah request per detik) yang menjawab 'Bagaimana kondisinya?'. 3) **Traces**: Rekaman perjalanan sebuah request saat melewati berbagai layanan, yang menjawab 'Di mana masalahnya?'. Menggabungkan ketiganya memberikan gambaran lengkap tentang sistem.", image_url: "https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "The Three Pillars of Observability - Elastic", url:"https://www.elastic.co/what-is/three-pillars-of-observability"}] },
+                { id: 803, title: "Slide 3/12: Perintah Dasar Operasional Docker", type: "TEXT", content: "Untuk operasional harian, ada beberapa perintah Docker yang akan Anda gunakan terus-menerus. `docker ps` untuk melihat kontainer yang sedang berjalan. `docker logs <nama_kontainer>` untuk melihat log dari sebuah kontainer. `docker exec -it <nama_kontainer> bash` untuk masuk ke dalam shell interaktif di dalam kontainer (sangat berguna untuk debugging). `docker restart <nama_kontainer>` untuk memulai ulang kontainer.", image_url: "https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Docker CLI Reference", url:"https://docs.docker.com/engine/reference/commandline/cli/"}] },
+                { id: 804, title: "Slide 4/12: Melihat Log Kontainer", type: "TEXT", content: "Setiap aplikasi di dalam kontainer biasanya mengirim output-nya ke 'standard output' dan 'standard error'. Docker menangkap semua output ini dan menyediakannya melalui perintah `docker logs`. Ini adalah cara pertama dan termudah untuk melihat apa yang sedang dilakukan aplikasi Anda atau mencari pesan error. Menambahkan flag `-f` atau `--follow` akan men-stream log secara real-time, sangat berguna saat Anda ingin melihat apa yang terjadi saat ini juga.", image_url: "https://images.pexels.com/photos/4050315/pexels-photo-4050315.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "docker logs command reference", url:"https://docs.docker.com/engine/reference/commandline/logs/"}] },
+                { id: 805, title: "Slide 5/12: Masuk ke Dalam Kontainer", type: "TEXT", content: "Terkadang, melihat log saja tidak cukup. Anda mungkin perlu masuk ke dalam kontainer untuk memeriksa file, melihat proses yang berjalan, atau menjalankan perintah diagnostik. Perintah `docker exec -it <nama_kontainer> bash` memungkinkan Anda melakukan ini. `-i` (interactive) menjaga STDIN tetap terbuka, dan `-t` (tty) mengalokasikan pseudo-TTY, yang secara gabungan memberikan Anda sesi shell interaktif seolah-olah Anda login langsung ke dalam 'mesin virtual' kecil tersebut.", image_url: "https://images.pexels.com/photos/4050303/pexels-photo-4050303.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "docker exec command reference", url:"https://docs.docker.com/engine/reference/commandline/exec/"}] },
+                { id: 806, title: "Slide 6/12: Memeriksa Penggunaan Sumber Daya", type: "TEXT", content: "Untuk melihat penggunaan CPU, memori, jaringan, dan I/O disk secara real-time untuk semua kontainer yang berjalan, Docker menyediakan perintah `docker stats`. Perintah ini memberikan pandangan cepat seperti 'Task Manager' atau 'Activity Monitor', tetapi khusus untuk kontainer. Ini sangat berguna untuk mengidentifikasi kontainer mana yang mungkin menjadi 'rakus' sumber daya dan menyebabkan masalah kinerja.", image_url: "https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "docker stats command reference", url:"https://docs.docker.com/engine/reference/commandline/stats/"}] },
+                { id: 807, title: "Slide 7/12: Alat Monitoring: Prometheus", type: "TEXT", content: "Melihat statistik di terminal bagus untuk pemeriksaan cepat, tetapi untuk monitoring jangka panjang, kita butuh solusi terpusat. Prometheus adalah alat monitoring open-source yang sangat populer di ekosistem cloud-native. Ia bekerja dengan cara 'menarik' (pull) metrik dari berbagai target (aplikasi, server, database) secara berkala dan menyimpannya dalam database time-series. Prometheus sangat kuat dalam hal querying (dengan bahasa PromQL) dan alerting.", image_url: "https://images.pexels.com/photos/169573/pexels-photo-169573.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Prometheus Overview", url:"https://prometheus.io/docs/introduction/overview/"}] },
+                { id: 808, title: "Slide 8/12: Visualisasi dengan Grafana", type: "TEXT", content: "Data metrik yang dikumpulkan oleh Prometheus paling baik divisualisasikan menggunakan dashboard. Grafana adalah platform visualisasi open-source terdepan yang dapat terhubung ke berbagai sumber data, termasuk Prometheus. Dengan Grafana, Anda bisa membuat dashboard yang indah dan informatif, menampilkan grafik penggunaan CPU, RAM, jumlah request, tingkat error, dan metrik penting lainnya dari waktu ke waktu. Ini mengubah data mentah menjadi wawasan yang dapat ditindaklanjuti.", image_url: "https://images.pexels.com/photos/3782166/pexels-photo-3782166.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "What is Grafana?", url:"https://grafana.com/docs/grafana/latest/introduction/"}] },
+                { id: 809, title: "Slide 9/12: Logging Terpusat: ELK Stack", type: "TEXT", content: "Melihat log dengan `docker logs` menjadi tidak praktis jika Anda memiliki banyak kontainer di banyak server. Solusinya adalah logging terpusat. ELK Stack (Elasticsearch, Logstash, Kibana) adalah kombinasi populer untuk ini. Logstash (atau agen yang lebih ringan seperti Fluentd) mengumpulkan log dari semua kontainer, Elasticsearch mengindeks dan menyimpannya untuk pencarian cepat, dan Kibana menyediakan antarmuka web yang kuat untuk mencari, memfilter, dan memvisualisasikan log tersebut. Ini seperti memiliki 'Google' untuk semua log sistem Anda.", image_url: "https://images.pexels.com/photos/6802042/pexels-photo-6802042.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "What is the ELK Stack?", url:"https://www.elastic.co/what-is/elk-stack"}] },
+                { id: 810, title: "Slide 10/12: Praktik - Melihat Kontainer yang Berjalan", type: "INTERACTIVE_CLI", content: "Ini adalah perintah yang paling sering digunakan dalam operasional harian. Gunakan `docker ps` untuk melihat daftar semua kontainer yang sedang aktif, beserta ID, image, status, dan port yang mereka gunakan. Menambahkan flag `-a` (`docker ps -a`) akan menampilkan semua kontainer, termasuk yang sudah berhenti. Ketik: `docker ps`", correct_command: "docker ps", animation_file: "https://lottie.host/80a31a08-168f-4328-91a5-85c5b2c73007/2M9k5F9nwM.json", references: [{title: "docker ps command", url:"https://docs.docker.com/engine/reference/commandline/ps/"}] },
+                { id: 811, title: "Slide 11/12: Praktik - Mengikuti Log Kontainer", type: "INTERACTIVE_CLI", content: "Bayangkan ada kontainer bernama `aplikasi_warga`. Kita ingin melihat log-nya secara real-time untuk melihat request yang masuk. Gunakan perintah `logs` dengan flag `--follow`. Ketik: `docker logs --follow aplikasi_warga`", correct_command: "docker logs --follow aplikasi_warga", animation_file: "https://lottie.host/80a31a08-168f-4328-91a5-85c5b2c73007/2M9k5F9nwM.json", references: [{title: "Following container logs", url:"https://docs.docker.com/engine/reference/commandline/logs/"}] },
+                { id: 812, title: "Slide 12/12: Praktik - Memeriksa Penggunaan Sumber Daya", type: "INTERACTIVE_CLI", content: "Mari kita lihat statistik penggunaan sumber daya untuk semua kontainer yang sedang berjalan. Perintah ini akan terus memperbarui tampilannya sampai Anda menghentikannya (dengan Ctrl+C). Ketik: `docker stats`", correct_command: "docker stats", animation_file: "https://lottie.host/d19c35b0-2f3b-4c0c-a111-5e933e147e0a/4g3g3g3g3g.json", references: [{title: "docker stats command", url:"https://docs.docker.com/engine/reference/commandline/stats/"}] }
+              ]
+            },
+            // MODUL 9
+            {
+              id: 9, title: "Optimasi Teknis SEO dalam Aplikasi Laravel", description: "Memastikan layanan publik digital mudah ditemukan oleh masyarakat di internet.",
+              lessons: [
+                { id: 901, title: "Slide 1/12: Apa itu SEO?", type: "TEXT", content: "SEO (Search Engine Optimization) adalah serangkaian praktik untuk meningkatkan visibilitas sebuah website di hasil pencarian organik mesin pencari seperti Google. Bagi pemerintah, ini bukan tentang menjual produk, tapi tentang melayani publik. Tujuannya adalah ketika seorang warga mencari 'cara mengurus IMB' atau 'jadwal SIM keliling', website resmi pemerintah yang akurat dan terpercaya muncul di peringkat teratas, bukan calo atau situs web yang tidak jelas. SEO memastikan informasi publik mudah diakses oleh mereka yang membutuhkannya.", image_url: "https://images.pexels.com/photos/4974915/pexels-photo-4974915.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "What is SEO? - Moz", url:"https://moz.com/beginners-guide-to-seo"}] },
+                { id: 902, title: "Slide 2/12: Tiga Pilar SEO", type: "TEXT", content: "Strategi SEO yang solid berdiri di atas tiga pilar. 1) **Technical SEO**: Memastikan website dapat di-crawl dan diindeks oleh mesin pencari dengan mudah. Ini adalah fondasi teknisnya. 2) **On-Page SEO**: Mengoptimalkan konten dan elemen HTML di setiap halaman (seperti judul, heading, dan teks) agar relevan dengan kata kunci yang ditargetkan. 3) **Off-Page SEO**: Membangun otoritas dan kepercayaan website melalui tautan (backlink) dari situs web lain yang berkualitas. Ketiganya harus bekerja sama untuk hasil yang optimal.", image_url: "https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "The Three Pillars of SEO - Ahrefs", url:"https://ahrefs.com/blog/seo-basics/"}] },
+                { id: 903, title: "Slide 3/12: Technical SEO: Kecepatan Halaman", type: "TEXT", content: "Kecepatan memuat halaman adalah salah satu faktor peringkat terpenting. Pengguna (dan Google) tidak suka menunggu. Di Laravel, kecepatan dapat dioptimalkan dengan beberapa cara: mengoptimalkan query database (menghindari query N+1), menggunakan caching (menyimpan hasil yang sering diakses di memori), mengkompresi aset (CSS, JavaScript, gambar), dan menggunakan Content Delivery Network (CDN) untuk menyajikan aset dari server yang lebih dekat dengan lokasi pengguna.", image_url: "https://images.pexels.com/photos/4164418/pexels-photo-4164418.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Google PageSpeed Insights", url:"https://pagespeed.web.dev/"}, {title: "Laravel Performance Optimization", url:"https://laravel.com/docs/deployment#optimization"}] },
+                { id: 904, title: "Slide 4/12: Technical SEO: Mobile-Friendliness", type: "TEXT", content: "Saat ini, sebagian besar pencarian dilakukan dari perangkat mobile. Google menggunakan 'mobile-first indexing', artinya mereka menilai versi mobile dari sebuah situs untuk menentukan peringkat. Website pemerintah harus responsif, artinya tampilannya harus beradaptasi dengan baik di berbagai ukuran layar, dari desktop hingga smartphone. Teks harus mudah dibaca dan tombol harus mudah diklik tanpa perlu zoom.", image_url: "https://images.pexels.com/photos/47261/pexels-photo-47261.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Google's Mobile-Friendly Test", url:"https://search.google.com/test/mobile-friendly"}] },
+                { id: 905, title: "Slide 5/12: Technical SEO: Sitemap.xml", type: "TEXT", content: "Sitemap adalah sebuah file XML yang berisi daftar semua URL penting di website Anda. Ini berfungsi sebagai 'peta' bagi mesin pencari, membantu mereka menemukan dan memahami struktur situs Anda dengan lebih efisien, terutama untuk situs besar dengan banyak halaman. Banyak paket Laravel, seperti `spatie/laravel-sitemap`, dapat secara otomatis membuat dan memperbarui sitemap ini untuk Anda.", image_url: "https://images.pexels.com/photos/6801874/pexels-photo-6801874.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Learn about sitemaps - Google Search Central", url:"https://developers.google.com/search/docs/advanced/sitemaps/overview"}] },
+                { id: 906, title: "Slide 6/12: Technical SEO: Robots.txt", type: "TEXT", content: "File `robots.txt` adalah file teks yang ditempatkan di root direktori website. Fungsinya adalah untuk memberikan instruksi kepada crawler mesin pencari (disebut 'robots' atau 'spiders') tentang halaman atau direktori mana yang tidak boleh mereka akses. Misalnya, Anda mungkin ingin memblokir akses ke halaman admin atau hasil pencarian internal agar tidak muncul di Google. Ini membantu mengarahkan crawler ke konten yang paling penting.", image_url: "https://images.pexels.com/photos/735911/pexels-photo-735911.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Introduction to Robots.txt - Google Search Central", url:"https://developers.google.com/search/docs/advanced/robots/intro"}] },
+                { id: 907, title: "Slide 7/12: On-Page SEO: Meta Tags", type: "TEXT", content: "Di dalam tag `<head>` HTML, ada dua meta tag yang sangat penting untuk SEO. **Title Tag** (`<title>`) adalah judul halaman yang muncul di tab browser dan sebagai judul utama di hasil pencarian Google. **Meta Description** (`<meta name=\"description\">`) adalah ringkasan singkat (sekitar 155-160 karakter) tentang isi halaman. Meskipun tidak secara langsung mempengaruhi peringkat, meta description yang menarik dapat meningkatkan Click-Through Rate (CTR) dari hasil pencarian.", image_url: "https://images.pexels.com/photos/167684/pexels-photo-167684.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "SEO Meta Tags - Semrush", url:"https://www.semrush.com/blog/meta-tags/"}] },
+                { id: 908, title: "Slide 8/12: On-Page SEO: Struktur Heading", type: "TEXT", content: "Menggunakan tag heading (H1, H2, H3, dst.) dengan benar membantu mesin pencari (dan pengguna) memahami struktur dan hierarki konten Anda. Harus ada tepat satu tag `<h1>` per halaman, yang biasanya sama atau mirip dengan Title Tag. Sub-topik harus menggunakan `<h2>`, sub-sub-topik menggunakan `<h3>`, dan seterusnya. Ini seperti membuat outline atau daftar isi untuk halaman Anda.", image_url: "https://images.pexels.com/photos/5926382/pexels-photo-5926382.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "How to Use Header Tags for SEO", url:"https://moz.com/learn/seo/title-tag"}] },
+                { id: 909, title: "Slide 9/12: Perintah Artisan untuk Optimasi", type: "TEXT", content: "Laravel menyediakan beberapa perintah Artisan yang sangat berguna untuk optimasi teknis. `php artisan config:cache` menggabungkan semua file konfigurasi menjadi satu file untuk loading yang lebih cepat. `php artisan route:cache` melakukan hal yang sama untuk file routing. `php artisan view:cache` mengkompilasi semua template Blade. Menjalankan perintah-perintah ini sebagai bagian dari proses deployment Anda adalah praktik yang sangat baik untuk meningkatkan performa aplikasi di lingkungan produksi.", image_url: "https://images.pexels.com/photos/11035544/pexels-photo-11035544.jpeg?auto=compress&cs=tinysrgb&w=600", references: [{title: "Laravel Deployment - Caching", url:"https://laravel.com/docs/deployment#optimization"}] },
+                { id: 910, title: "Slide 10/12: Praktik - Membersihkan Semua Cache", type: "INTERACTIVE_CLI", content: "Saat melakukan perubahan pada konfigurasi, routing, atau view, cache yang lama perlu dibersihkan. Laravel menyediakan perintah praktis untuk membersihkan semua jenis cache sekaligus. Ini adalah perintah yang aman untuk dijalankan selama development. Ketik: `php artisan optimize:clear`", correct_command: "php artisan optimize:clear", animation_file: "https://lottie.host/914a2418-62a8-4443-85d1-e636f45543c7/D6k8Y5a2v0.json", references: [{title: "Clearing Caches in Laravel", url:"https://laravel.com/docs/artisan#clearing-caches"}] },
+                { id: 911, title: "Slide 11/12: Praktik - Membuat Cache Konfigurasi", type: "INTERACTIVE_CLI", content: "Di lingkungan produksi, untuk mempercepat aplikasi, kita harus membuat cache dari file-file konfigurasi. Ini akan membuat Laravel tidak perlu membaca banyak file kecil setiap kali ada request. Perintah ini hanya boleh dijalankan saat deployment, bukan saat development. Ketik: `php artisan config:cache`", correct_command: "php artisan config:cache", animation_file: "https://lottie.host/e285d9de-94b0-4632-a968-1e751239999a/uAbm0P1a4A.json", references: [{title: "Configuration Caching", url:"https://laravel.com/docs/deployment#configuration-caching"}] },
+                { id: 912, title: "Slide 12/12: Praktik - Menjalankan Proses Optimasi Produksi", type: "INTERACTIVE_CLI", content: "Laravel menyediakan satu perintah 'ajaib' yang menggabungkan beberapa langkah caching (`config:cache` dan `route:cache`) menjadi satu. Ini adalah perintah yang ideal untuk dijalankan sebagai langkah terakhir dalam skrip deployment Anda untuk mendapatkan performa maksimal. Ketik: `php artisan optimize`", correct_command: "php artisan optimize", animation_file: "https://lottie.host/a3b7a58a-3e3c-486a-8b8a-3e3c486a8b8a/9V5L3g0g0g.json", references: [{title: "The `php artisan optimize` command", url:"https://laravel.com/docs/deployment#optimization"}] }
+              ]
+            }
+          ]
+        };
+        
+        // 2. STATE MANAGEMENT
+        let userProgress = { completedLessons: [] };
+        let currentState = { activeModuleId: null, activeLessonIndex: null };
+
+        // 3. DOM ELEMENTS
+        const moduleSelectionContainer = document.getElementById('module-selection-container');
+        const lessonViewContainer = document.getElementById('lesson-view-container');
+        const backToModulesBtn = document.getElementById('back-to-modules');
+        const lessonTitle = document.getElementById('lesson-title');
+        const lessonMediaContainer = document.getElementById('lesson-media-container');
+        const lessonContent = document.getElementById('lesson-content');
+        const lessonInteractiveArea = document.getElementById('lesson-interactive-area');
+        const lessonReferences = document.getElementById('lesson-references');
+        const prevLessonBtn = document.getElementById('prev-lesson');
+        const nextLessonBtn = document.getElementById('next-lesson');
+
+        // 4. FUNCTIONS
+        function updateNavigationButtons() {
+            const module = appData.modules.find(m => m.id === currentState.activeModuleId);
+            if (!module) return;
+            
+            const currentLesson = module.lessons[currentState.activeLessonIndex];
+            const isCompleted = userProgress.completedLessons.includes(currentLesson.id);
+            
+            prevLessonBtn.disabled = currentState.activeLessonIndex === 0;
+
+            if (currentLesson.type === 'TEXT') {
+                 nextLessonBtn.disabled = currentState.activeLessonIndex === module.lessons.length - 1;
+            } else {
+                 nextLessonBtn.disabled = !isCompleted || currentState.activeLessonIndex === module.lessons.length - 1;
+            }
+        }
+
+        function markLessonComplete(lessonId) {
+            if (!userProgress.completedLessons.includes(lessonId)) {
+                userProgress.completedLessons.push(lessonId);
+            }
+            updateNavigationButtons();
+        }
+
+        function renderModuleSelection() {
+            moduleSelectionContainer.innerHTML = '';
+            appData.modules.forEach(module => {
+                const completedCount = module.lessons.filter(l => userProgress.completedLessons.includes(l.id)).length;
+                const totalLessons = module.lessons.length;
+                const isCompleted = completedCount === totalLessons;
+
+                const card = document.createElement('div');
+                card.className = 'module-card';
+                card.dataset.moduleId = module.id;
+                card.innerHTML = `
+                    <h3>${module.title}</h3>
+                    <p>${module.description}</p>
+                    <span class="module-progress ${isCompleted ? 'completed' : ''}">${completedCount}/${totalLessons} Selesai</span>
+                `;
+                card.addEventListener('click', () => handleModuleClick(module.id));
+                moduleSelectionContainer.appendChild(card);
+            });
+        }
+
+        function handleModuleClick(moduleId) {
+            currentState.activeModuleId = moduleId;
+            currentState.activeLessonIndex = 0;
+            moduleSelectionContainer.style.display = 'none';
+            lessonViewContainer.style.display = 'block';
+            renderLesson(moduleId, 0);
+        }
+
+        function renderLesson(moduleId, lessonIndex) {
+            const module = appData.modules.find(m => m.id === moduleId);
+            if (!module) return;
+            const lesson = module.lessons[lessonIndex];
+            if (!lesson) return;
+            
+            currentState.activeLessonIndex = lessonIndex;
+            lessonTitle.textContent = lesson.title;
+            lessonContent.textContent = lesson.content;
+            
+            // Render Gambar
+            lessonMediaContainer.innerHTML = '';
+            if (lesson.image_url) {
+                const img = document.createElement('img');
+                img.src = lesson.image_url;
+                img.alt = lesson.title;
+                img.className = 'lesson-image';
+                img.onerror = () => { img.src = 'https://placehold.co/600x300/cccccc/ffffff?text=Gambar+Gagal+Dimuat'; };
+                lessonMediaContainer.appendChild(img);
+            }
+
+            // Render Area Interaktif
+            lessonInteractiveArea.innerHTML = '';
+            if (lesson.type === 'TEXT') {
+                lessonInteractiveArea.innerHTML = '<i>Klik "Berikutnya" untuk melanjutkan.</i>';
+            } else if (lesson.type === 'INTERACTIVE_CLI') {
+                const terminal = document.createElement('div');
+                terminal.className = 'cli-terminal';
+                terminal.innerHTML = `
+                    <form id="cli-form">
+                        <div class="cli-prompt">
+                            <span>$</span>
+                            <input type="text" class="cli-input" placeholder="Ketik perintah di sini..." autocomplete="off" autofocus>
+                        </div>
+                    </form>
+                    <div class="cli-feedback"></div>
+                    <div id="lottie-animation-container"></div>
+                `;
+                lessonInteractiveArea.appendChild(terminal);
+                document.getElementById('cli-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    handleCliSubmit(lesson);
+                });
+            }
+            
+            // Render Sumber Pustaka
+            lessonReferences.innerHTML = '';
+            if (lesson.references && lesson.references.length > 0) {
+                let referencesHTML = '<h4>Sumber Pustaka & Bacaan Lanjutan</h4><ul>';
+                lesson.references.forEach(ref => {
+                    referencesHTML += `<li><a href="${ref.url}" target="_blank" rel="noopener noreferrer">${ref.title}</a></li>`;
+                });
+                referencesHTML += '</ul>';
+                lessonReferences.innerHTML = referencesHTML;
+            }
+
+            updateNavigationButtons();
+            window.scrollTo(0, 0); // Scroll ke atas setiap ganti slide
+        }
+        
+        function handleCliSubmit(lesson) {
+            const input = lessonInteractiveArea.querySelector('.cli-input');
+            const feedback = lessonInteractiveArea.querySelector('.cli-feedback');
+            const lottieContainer = document.getElementById('lottie-animation-container');
+            
+            if (input.value.trim() === lesson.correct_command) {
+                feedback.textContent = 'Perintah Benar! Kerja bagus.';
+                feedback.className = 'cli-feedback feedback-success';
+                input.disabled = true;
+                markLessonComplete(lesson.id);
+                
+                // PERBAIKAN: Membuat elemen Lottie Player secara terprogram
+                lottieContainer.innerHTML = ''; // Kosongkan kontainer dulu
+                const player = document.createElement('lottie-player');
+                player.setAttribute('src', lesson.animation_file);
+                player.setAttribute('background', 'transparent');
+                player.setAttribute('speed', '1');
+                player.style.width = '100%';
+                player.style.height = 'auto';
+                player.setAttribute('autoplay', '');
+                lottieContainer.appendChild(player);
+
+            } else {
+                feedback.textContent = `Perintah Salah. Coba lagi.`;
+                feedback.className = 'cli-feedback feedback-error';
+            }
+        }
+
+        function showModuleSelection() {
+            moduleSelectionContainer.style.display = 'grid';
+            lessonViewContainer.style.display = 'none';
+            currentState.activeModuleId = null;
+            currentState.activeLessonIndex = null;
+            renderModuleSelection();
+        }
+
+        // 5. EVENT LISTENERS
+        backToModulesBtn.addEventListener('click', showModuleSelection);
+        
+        prevLessonBtn.addEventListener('click', () => {
+            if (currentState.activeLessonIndex > 0) {
+                renderLesson(currentState.activeModuleId, currentState.activeLessonIndex - 1);
+            }
+        });
+        
+        nextLessonBtn.addEventListener('click', () => {
+            const module = appData.modules.find(m => m.id === currentState.activeModuleId);
+            if (!module) return;
+
+            const currentLesson = module.lessons[currentState.activeLessonIndex];
+            if (currentLesson.type === 'TEXT') {
+                markLessonComplete(currentLesson.id);
+            }
+
+            if (currentState.activeLessonIndex < module.lessons.length - 1) {
+                renderLesson(currentState.activeModuleId, currentState.activeLessonIndex + 1);
+            }
+        });
+
+        // 6. INITIALIZATION
+        document.addEventListener('DOMContentLoaded', () => {
+            renderModuleSelection();
+        });
+    </script>
+</body>
+</html>
