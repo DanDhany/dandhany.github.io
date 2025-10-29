@@ -1,0 +1,35 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ParallaxSection from "../components/ParallaxSection.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import projects from "../data/projects.json";
+import { fetchProjectsFromCMS } from "../lib/cms";
+const cmsProjects = await fetchProjectsFromCMS();
+const list = cmsProjects ?? projects;
+---
+<BaseLayout title="DanDhany — Portofolio" description="Portofolio Astro paralaks dengan Plus Jakarta Sans">
+  <ParallaxSection image="linear-gradient(135deg, #182031 0%, #0b0c0f 60%, #1f2a44 100%)" height="100vh">
+    <div class="container">
+      <h1 class="hero-title">DanDhany — Designer & Developer</h1>
+      <p class="hero-subtitle">Eksplorasi karya, eksperimen UI, dan catatan proses.</p>
+    </div>
+  </ParallaxSection>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="title">Proyek Terpilih</h2>
+      <p class="subtitle">Versi dummy. Nanti diisi atau dikoneksikan ke CMS.</p>
+      <div class="grid" style="margin-top: 24px;">
+        {list.map((p) => (
+          <ProjectCard title={p.title} excerpt={p.excerpt} cover={p.cover} href={`/projects/${p.slug}/`} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <ParallaxSection image="linear-gradient(135deg, #0b0c0f 0%, #142034 50%, #0b0c0f 100%)" height="60vh">
+    <div class="container">
+      <p class="hero-subtitle">Tetap sederhana, fokus tipografi dan pengalaman visual.</p>
+    </div>
+  </ParallaxSection>
+</BaseLayout>

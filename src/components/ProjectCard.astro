@@ -1,0 +1,16 @@
+---
+interface Props {
+  title: string;
+  excerpt: string;
+  cover: string;
+  href: string;
+}
+const { title, excerpt, cover, href } = Astro.props as Props;
+---
+<a href={href} class="card">
+  <img src={cover} alt={title} loading="lazy" />
+  <div class="card-content">
+    <h3 class="card-title">{title}</h3>
+    <p class="card-desc">{excerpt}</p>
+  </div>
+</a>
