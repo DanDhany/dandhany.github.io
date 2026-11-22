@@ -17,6 +17,10 @@ const radioMood = document.getElementById("radio-mood");
 const panel = document.getElementById("panel");
 const panelClose = document.getElementById("panel-close");
 const copyBtn = document.getElementById("copy-mail");
+const pause = document.getElementById("pause");
+const pauseScroll = document.getElementById("pause-scroll");
+const menuClose = document.getElementById("menu-close");
+const menuTabs = Array.from(document.querySelectorAll(".pause-tabs [data-menu-tab]"));
 
 const MOOD_LABELS = ["Matahari terbenam", "Biru malam", "Neon penuh"];
 const MAX_SPEED = 30;
@@ -137,6 +141,78 @@ function closePanel() {
 
 panelClose.addEventListener("click", closePanel);
 
+/* ------------------------------------------------------------- pause menu */
+
+let menuIsOpen = false;
+const MENU_SECTIONS = ["proyek", "tentang", "kontak"];
+
+function setMenuTab(name) {
+  menuTabs.forEach((tab) => {
+    tab.setAttribute("aria-selected", String(tab.dataset.menuTab === name));
+  });
+  const section = document.getElementById(name);
+  if (section) {
+    pauseScroll.scrollTop = Math.max(0, section.offsetTop - 6);
+  }
+}
+
+function openMenu(name = "proyek") {
+  closePanel();
+  if (!menuIsOpen) {
+    lastFocus = document.activeElement;
+  }
+  menuIsOpen = true;
+  state.parked = true;
+  state.speed = 0;
+  pause.hidden = false;
+  document.body.dataset.menu = "open";
+  setMenuTab(name);
+  menuClose.focus({ preventScroll: true });
+}
+
+function closeMenu(options = {}) {
+  if (!menuIsOpen) return;
+  const restore = options.restoreFocus !== false;
+  menuIsOpen = false;
+  pause.hidden = true;
+  document.body.dataset.menu = "closed";
+  if (restore && lastFocus && typeof lastFocus.focus === "function") {
+    lastFocus.focus({ preventScroll: true });
+  }
+}
+
+menuClose.addEventListener("click", () => closeMenu());
+
+menuTabs.forEach((tab) => {
+  tab.addEventListener("click", () => setMenuTab(tab.dataset.menuTab));
+});
+
+document.querySelectorAll("[data-menu-link]").forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    openMenu(link.dataset.menuLink);
+  });
+});
+
+/* The tab that matches the section under the menu bar stays lit. */
+pauseScroll.addEventListener("scroll", () => {
+  const top = pauseScroll.scrollTop + 90;
+  let active = MENU_SECTIONS[0];
+  MENU_SECTIONS.forEach((name) => {
+    const section = document.getElementById(name);
+    if (section && section.offsetTop <= top) {
+      active = name;
+    }
+  });
+  /* The last section is too short to reach the top, so it owns the bottom. */
+  if (pauseScroll.scrollTop + pauseScroll.clientHeight >= pauseScroll.scrollHeight - 6) {
+    active = MENU_SECTIONS[MENU_SECTIONS.length - 1];
+  }
+  menuTabs.forEach((tab) => {
+    tab.setAttribute("aria-selected", String(tab.dataset.menuTab === active));
+  });
+});
+
 /* ------------------------------------------------------------- start car */
 
 function startEngine() {
@@ -151,11 +227,12 @@ function startEngine() {
 }
 
 startBtn.addEventListener("click", (event) => {
-  /* Without a scene the link keeps its default jump to the project list. */
+  event.preventDefault();
+  /* Without a scene the menu is still the full way in. */
   if (!world) {
+    openMenu("proyek");
     return;
   }
-  event.preventDefault();
   startEngine();
 });
 
@@ -168,14 +245,12 @@ function driveTo(index, openOnArrival = true) {
   const stop = stops[index];
   if (!stop) return;
   if (!world) {
-    document.getElementById("proyek").scrollIntoView({ behavior: state.reduced ? "auto" : "smooth" });
+    openMenu("proyek");
     return;
   }
 
   closePanel();
-  /* The hero is the first element, so pin to the document top instead of
-     scrollIntoView, which can stop short when the panel steals focus. */
-  window.scrollTo({ top: 0, behavior: state.reduced ? "auto" : "smooth" });
+  closeMenu({ restoreFocus: false });
   startEngine();
   state.parked = false;
   state.lookTarget = 0;
@@ -387,7 +462,7 @@ function frame(now) {
   const dt = Math.min(0.05, Math.max(0, (now - last) / 1000));
   last = now;
 
-  if (!world || !state.heroActive || document.hidden) {
+  if (!world || !state.heroActive || document.hidden || menuIsOpen) {
     return;
   }
 
@@ -434,7 +509,19 @@ window.addEventListener("keydown", (event) => {
   }
 
   if (key === "escape") {
-    closePanel();
+    if (!panel.hidden) {
+      closePanel();
+      return;
+    }
+    if (menuIsOpen) {
+      closeMenu();
+      return;
+    }
+    openMenu("proyek");
+    return;
+  }
+
+  if (menuIsOpen) {
     return;
   }
 
@@ -512,7 +599,12 @@ canvas.addEventListener("pointermove", (event) => {
   }
   const dx = event.clientX - dragX;
   dragX = event.clientX;
-  state.parked = false;
+  if (state.parked) {
+    /* Stopped at a resto: dragging looks around the building instead of
+       steering, so the place can be explored without moving the car. */
+    state.lookTarget = clamp(state.lookTarget + dx * 0.008, -1.2, 1.2);
+    return;
+  }
   state.lookTarget = 0;
   state.lateral = clamp(state.lateral + dx * 0.012, -4.4, 4.4);
 });
@@ -528,7 +620,7 @@ function endDrag(event) {
     if (hit && typeof hit.project === "number") {
       openPanel(hit.project);
     } else if (hit && hit.contact) {
-      document.getElementById("kontak").scrollIntoView({ behavior: state.reduced ? "auto" : "smooth" });
+      openMenu("kontak");
     }
   }
 }
@@ -602,17 +694,6 @@ if (copyBtn) {
 }
 
 /* ------------------------------------------------------------ visibility */
-
-if ("IntersectionObserver" in window) {
-  new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        state.heroActive = entry.isIntersecting;
-      });
-    },
-    { threshold: 0.12 }
-  ).observe(hero);
-}
 
 window.addEventListener("resize", () => {
   if (world) {

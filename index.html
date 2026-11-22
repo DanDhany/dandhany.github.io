@@ -4,24 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ramadhany Krismaliq Sjamdra · Fullstack Developer</title>
-  <meta name="description" content="Portofolio Ramadhany Krismaliq Sjamdra, fullstack developer Laravel di Sidoarjo. Dua belas proyek sebagai resto di satu jalan pesisir yang bisa disusuri dengan Three.js.">
+  <meta name="description" content="Portofolio Ramadhany Krismaliq Sjamdra, IT di instansi pemerintah dan fullstack developer Laravel. Tujuh belas proyek sebagai resto di satu jalan pesisir yang bisa disusuri dengan Three.js.">
   <meta name="theme-color" content="#0a0812">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@500;600&family=Barlow:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body data-panel="closed">
+<body data-panel="closed" data-menu="closed">
 
-  <a class="skip" href="#proyek">Lewati ke daftar proyek</a>
+  <a class="skip" href="#proyek" data-menu-link="proyek">Lewati ke daftar proyek</a>
 
   <header class="topbar">
     <a class="brand" href="#atas"><b>DANDHANY</b><span>Web Developer</span></a>
     <nav class="topnav" aria-label="Navigasi utama">
-      <a href="#atas">Jalan</a>
-      <a href="#proyek">Proyek</a>
-      <a href="#tentang">Tentang</a>
-      <a href="#kontak">Kontak</a>
+      <a href="#proyek" data-menu-link="proyek">Proyek</a>
+      <a href="#tentang" data-menu-link="tentang">Tentang</a>
+      <a href="#kontak" data-menu-link="kontak">Kontak</a>
+      <button class="menu-btn" type="button" data-menu-link="proyek">Menu</button>
     </nav>
   </header>
 
@@ -34,18 +34,18 @@
       <div class="hero-copy">
         <p class="eyebrow">Portofolio · Sidoarjo, Jawa Timur</p>
         <h1 id="nama">Ramadhany<br>Krismaliq<br><em>Sjamdra</em></h1>
-        <p class="hero-role">Fullstack developer · Laravel, server, database</p>
-        <p class="hero-lede">Dua belas proyek berdiri sebagai resto di satu jalan pesisir. Nyalakan mesin, susuri jalannya, dan berhenti di tiap bangunan untuk melihat apa yang saya bangun.</p>
+        <p class="hero-role">IT di instansi pemerintah · Laravel, server, database</p>
+        <p class="hero-lede">Tujuh belas proyek berdiri sebagai resto di satu jalan pesisir. Nyalakan mesin dan susuri jalannya, atau buka menu kalau ingin membaca semuanya tanpa mengemudi.</p>
         <div class="hero-actions">
           <a class="btn-primary" href="#proyek" id="start">Nyalakan mesin</a>
-          <a class="btn-ghost" href="#proyek">Lihat daftar proyek</a>
+          <a class="btn-ghost" href="#proyek" data-menu-link="proyek">Buka menu</a>
         </div>
       </div>
 
       <div class="hud hud-objective">
         <div class="hud-row">
           <span>Resto</span>
-          <span class="hud-count"><b id="obj-index">01</b> / <span id="obj-total">12</span></span>
+          <span class="hud-count"><b id="obj-index">01</b> / <span id="obj-total">17</span></span>
         </div>
         <p class="hud-sign" id="obj-sign">DINAS</p>
         <p class="hud-line" id="obj-line">Papan nama pertama ada di sisi kiri jalan.</p>
@@ -53,24 +53,24 @@
 
       <div class="hud hud-radio">
         <div class="hud-row">
-          <span>Radio</span>
-          <span id="radio-mood">Matahari terbenam</span>
+          <span>Suasana</span>
+          <span id="radio-mood">Senja</span>
         </div>
-        <div class="radio-list" role="group" aria-label="Pilih waktu lewat radio">
+        <div class="radio-list" role="group" aria-label="Pilih suasana cahaya">
           <button class="radio" type="button" data-mood="0" aria-pressed="true">
-            <span class="radio-freq">88.1</span><span>Shore</span>
+            <span class="radio-freq">01</span><span>Senja</span>
           </button>
           <button class="radio" type="button" data-mood="1" aria-pressed="false">
-            <span class="radio-freq">96.4</span><span>Palm Noir</span>
+            <span class="radio-freq">02</span><span>Pesisir</span>
           </button>
           <button class="radio" type="button" data-mood="2" aria-pressed="false">
-            <span class="radio-freq">101.7</span><span>Night Shift</span>
+            <span class="radio-freq">03</span><span>Malam</span>
           </button>
         </div>
       </div>
 
       <div class="hud hud-radar">
-        <canvas id="radar" width="176" height="176" role="img" aria-label="Radar jalan. Titik menandai resto di depan. Gunakan daftar proyek untuk melompat ke resto tertentu."></canvas>
+        <canvas id="radar" width="176" height="176" role="img" aria-label="Peta jalan. Titik menandai resto di depan. Gunakan menu proyek untuk melompat ke resto tertentu."></canvas>
         <div class="dash">
           <span id="speed">0</span><span>km/j</span>
           <span class="odo" id="odo">0.00 km</span>
@@ -88,335 +88,473 @@
         <button class="pedal" type="button" data-pedal="right" aria-label="Belok kanan">Kanan</button>
       </div>
 
-      <p class="hud-help" id="help">W / S gas dan rem · A / D belok · E masuk resto · Esc tutup panel</p>
-    </section>
-
-    <section class="section section-index" id="proyek" aria-labelledby="judul-proyek">
-      <div class="section-inner">
-        <div class="section-head">
-          <p class="marker"><span class="marker-num">01</span> Indeks proyek</p>
-          <h2 id="judul-proyek">Dua belas bangunan di sepanjang jalan</h2>
-          <p class="section-lede">Tiap baris adalah satu resto. Tekan tombolnya dan kamera membawa Anda ke bangunan itu, lalu panel detailnya terbuka.</p>
-        </div>
-
-        <ol class="index-list">
-          <li>
-            <article class="stop-row" data-project data-sign="DINAS" data-accent="#FF2F7E" data-image="assets/projects/sipeno.jpg">
-              <div class="row-thumb">
-                <img src="assets/projects/sipeno.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar SIPENO: surat tugas, rincian biaya, dan rekap perjalanan dinas.">
-              </div>
-              <div class="row-main">
-                <p class="row-kicker">01 · Laravel 8</p>
-                <h3>SIPENO <span>Sistem Perjalanan Dinas</span></h3>
-                <p class="row-tagline">Surat tugas dan rincian biaya, rapi dalam satu meja.</p>
-                <p class="row-desc">Sistem web untuk Biro Umum Sekretariat Daerah Provinsi Jawa Timur. Mengurus pembuatan dan rekapitulasi bulanan dokumen pertanggungjawaban perjalanan dinas: surat tugas, nota dinas, surat perintah perjalanan dinas, dan rincian biaya tiap perjalanan.</p>
-                <ul class="tags">
-                  <li>Laravel 8</li><li>Bootstrap</li><li>MySQL</li><li>PhpOffice</li><li>Calendar API</li>
-                </ul>
-              </div>
-              <div class="row-go">
-                <button class="btn-plate" type="button" data-drive="0">Kemudikan ke sini</button>
-                <p class="row-note">Resto 01</p>
-              </div>
-            </article>
-          </li>
-
-          <li>
-            <article class="stop-row" data-project data-sign="BIRO" data-accent="#FFB03A" data-image="assets/projects/biro-umum.jpg">
-              <div class="row-thumb">
-                <img src="assets/projects/biro-umum.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar situs Biro Umum: halaman informasi dan daftar dokumen.">
-              </div>
-              <div class="row-main">
-                <p class="row-kicker">02 · Laravel 8</p>
-                <h3>Website Biro Umum <span>Informasi dan dokumen daerah</span></h3>
-                <p class="row-tagline">Informasi biro dan dokumen resmi, tinggal unduh.</p>
-                <p class="row-desc">Situs tempat sekretariat daerah dan instansi lain membaca informasi terbaru biro, sekaligus mengunduh dokumen pendukung seperti peraturan daerah dan hasil survei kepuasan masyarakat.</p>
-                <ul class="tags">
-                  <li>Laravel 8</li><li>Bootstrap</li><li>MySQL</li><li>Adobe PDF API</li>
-                </ul>
-              </div>
-              <div class="row-go">
-                <button class="btn-plate" type="button" data-drive="1">Kemudikan ke sini</button>
-                <p class="row-note">Resto 02</p>
-              </div>
-            </article>
-          </li>
-
-          <li>
-            <article class="stop-row" data-project data-sign="360 GRILL" data-accent="#12C2B0" data-image="assets/projects/performapp360.jpg">
-              <div class="row-thumb">
-                <img src="assets/projects/performapp360.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar PerformAPP360: dasbor penilaian, angket, dan grafik kinerja.">
-              </div>
-              <div class="row-main">
-                <p class="row-kicker">03 · PHP native</p>
-                <h3>PerformAPP360 <span>Penilaian kinerja 360 derajat</span></h3>
-                <p class="row-tagline">Penilaian dari segala arah, direkap otomatis.</p>
-                <p class="row-desc">Sistem informasi penilaian kinerja dengan umpan balik 360 derajat dari atasan langsung. Banyak penilai, banyak kriteria dan subkriteria, dengan grafik interaktif untuk membaca tren kinerja serta rekap nilai rata-rata per karyawan dan per divisi.</p>
-                <ul class="tags">
-                  <li>PHP native</li><li>Bootstrap</li><li>MySQL</li><li>jQuery</li>
-                </ul>
-              </div>
-              <div class="row-go">
-                <button class="btn-plate" type="button" data-drive="2">Kemudikan ke sini</button>
-                <p class="row-note">Resto 03</p>
-              </div>
-            </article>
-          </li>
-
-          <li>
-            <article class="stop-row" data-project data-sign="ABSEN" data-accent="#FF7A2B" data-image="assets/projects/presensi-syahid.jpg">
-              <div class="row-thumb">
-                <img src="assets/projects/presensi-syahid.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar Presensi Syahid: dasbor admin dan aplikasi absensi Android.">
-              </div>
-              <div class="row-main">
-                <p class="row-kicker">04 · PHP native</p>
-                <h3>Presensi Syahid <span>Absensi karyawan</span></h3>
-                <p class="row-tagline">Absen dari ponsel, rekap langsung jadi.</p>
-                <p class="row-desc">Aplikasi absensi pengganti mesin checklock. Karyawan mengajukan izin dan melihat rekap absensi bulanan dari ponsel, sementara admin menyusun data absensi, izin, dan cuti tiap karyawan serta mengatur hari khusus.</p>
-                <ul class="tags">
-                  <li>PHP native</li><li>Bootstrap</li><li>MySQL</li><li>jQuery</li><li>Android (Java)</li>
-                </ul>
-              </div>
-              <div class="row-go">
-                <button class="btn-plate" type="button" data-drive="3">Kemudikan ke sini</button>
-                <p class="row-note">Resto 04</p>
-              </div>
-            </article>
-          </li>
-
-          <li>
-            <article class="stop-row" data-project data-sign="NEWTOWN" data-accent="#FF2F7E" data-image="assets/projects/newtown.jpg">
-              <div class="row-thumb">
-                <img src="assets/projects/newtown.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar Newtown App: dasbor kasir, laporan penjualan, dan laporan stok.">
-              </div>
-              <div class="row-main">
-                <p class="row-kicker">05 · PHP native</p>
-                <h3>Newtown App <span>Kasir toko bangunan</span></h3>
-                <p class="row-tagline">Toko bangunan: jual, beli, stok, cetak nota.</p>
-                <p class="row-desc">Aplikasi point of sale desktop untuk toko bangunan UMKM. Mencatat transaksi penjualan dan pembelian, mengelola stok, barang, pelanggan, dan pemasok, lalu mencetak nota transaksi serta laporan stok.</p>
-                <ul class="tags">
-                  <li>PHP native</li><li>Bootstrap</li><li>MySQL</li><li>jQuery</li>
-                </ul>
-              </div>
-              <div class="row-go">
-                <button class="btn-plate" type="button" data-drive="4">Kemudikan ke sini</button>
-                <p class="row-note">Resto 05</p>
-              </div>
-            </article>
-          </li>
-
-          <li>
-            <article class="stop-row" data-project data-sign="FOODER" data-accent="#F6E7CE" data-image="assets/projects/fooder.jpg">
-              <div class="row-thumb">
-                <img src="assets/projects/fooder.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar Fooder: menu pelanggan dan halaman pesanan restoran.">
-              </div>
-              <div class="row-main">
-                <p class="row-kicker">06 · Java</p>
-                <h3>Fooder <span>Pesanan dari meja</span></h3>
-                <p class="row-tagline">Pesan dari meja, langsung ke dapur.</p>
-                <p class="row-desc">Aplikasi manajemen restoran desktop. Pelanggan memesan sendiri lewat komputer di tiap meja, pesanan langsung masuk ke koki, dan pelanggan cukup membawa struk ke kasir untuk membayar.</p>
-                <ul class="tags">
-                  <li>Java</li><li>MySQL</li>
-                </ul>
-              </div>
-              <div class="row-go">
-                <button class="btn-plate" type="button" data-drive="5">Kemudikan ke sini</button>
-                <p class="row-note">Resto 06</p>
-              </div>
-            </article>
-          </li>
-
-          <li>
-            <article class="stop-row" data-project data-sign="MEDIAFOOD" data-accent="#12C2B0" data-image="assets/projects/mediafood.jpg">
-              <div class="row-thumb">
-                <img src="assets/projects/mediafood.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar Mediafood: pesanan dari ponsel dan halaman pesanan masuk.">
-              </div>
-              <div class="row-main">
-                <p class="row-kicker">07 · PHP native</p>
-                <h3>Mediafood <span>Pesan lewat barcode</span></h3>
-                <p class="row-tagline">Pindai barcode, pesan dari ponsel sendiri.</p>
-                <p class="row-desc">Versi lanjutan dari Fooder. Pelanggan memesan lewat ponsel masing-masing dengan memindai barcode di meja, jadi restoran tidak perlu menyediakan satu perangkat per meja. Pelayan juga bisa memantau pesanan yang masih menunggu di dapur.</p>
-                <ul class="tags">
-                  <li>PHP native</li><li>Bootstrap</li><li>MySQL</li><li>jQuery</li><li>Android (Java)</li>
-                </ul>
-              </div>
-              <div class="row-go">
-                <button class="btn-plate" type="button" data-drive="6">Kemudikan ke sini</button>
-                <p class="row-note">Resto 07</p>
-              </div>
-            </article>
-          </li>
-
-          <li>
-            <article class="stop-row" data-project data-sign="PLAYFORGE" data-accent="#12C2B0" data-image="assets/projects/playforgex.jpg" data-repo="PlayForgeX">
-              <div class="row-thumb">
-                <img src="assets/projects/playforgex.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub PlayForgeX.">
-              </div>
-              <div class="row-main">
-                <p class="row-kicker">08 · TypeScript</p>
-                <h3>PlayForgeX <span>Migrasi playlist antar layanan musik</span></h3>
-                <p class="row-tagline">Pindahkan playlist antar layanan musik, simpan di server sendiri.</p>
-                <p class="row-desc">Aplikasi self-hosted untuk memindahkan, menggabungkan, dan menyusun ulang playlist lintas YouTube Music, YouTube, Apple Music, Spotify, SoundCloud, Deezer, dan file lokal (M3U, CSV, JSON). Bisa menghubungkan beberapa akun sekaligus, memisahkan data antar pengguna, dan menyimpan semua kredensial di database lokal.</p>
-                <ul class="tags">
-                  <li>TypeScript</li><li>Node.js</li><li>MySQL</li><li>Docker</li>
-                </ul>
-              </div>
-              <div class="row-go">
-                <button class="btn-plate" type="button" data-drive="7">Kemudikan ke sini</button>
-                <p class="row-note">Resto 08</p>
-              </div>
-            </article>
-          </li>
-
-          <li>
-            <article class="stop-row" data-project data-sign="FORGE" data-accent="#FFB03A" data-image="assets/projects/forgex.jpg" data-repo="forgex-fullstack-engineer">
-              <div class="row-thumb">
-                <img src="assets/projects/forgex.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub ForgeX Full-Stack Engineer.">
-              </div>
-              <div class="row-main">
-                <p class="row-kicker">09 · Node.js</p>
-                <h3>ForgeX <span>Skill untuk agen koding</span></h3>
-                <p class="row-tagline">Satu skill untuk agen koding yang membangun lintas stack.</p>
-                <p class="row-desc">Skill terbuka untuk agen koding seperti Claude Code, Codex, dan Cursor. Isinya panduan kerja yang menekankan UI/UX lebih dulu, konsistensi antar stack, pengujian, keamanan, dan serah terima pekerjaan antar sesi. Dirilis dengan lisensi MIT dan terdaftar di skills.sh.</p>
-                <ul class="tags">
-                  <li>Node.js 20+</li><li>AI coding agent</li><li>MIT</li>
-                </ul>
-              </div>
-              <div class="row-go">
-                <button class="btn-plate" type="button" data-drive="8">Kemudikan ke sini</button>
-                <p class="row-note">Resto 09</p>
-              </div>
-            </article>
-          </li>
-
-          <li>
-            <article class="stop-row" data-project data-sign="LAMP" data-accent="#FF7A2B" data-image="assets/projects/lamp-debian.jpg" data-repo="LAMP-stack-debian">
-              <div class="row-thumb">
-                <img src="assets/projects/lamp-debian.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub LAMP stack Debian.">
-              </div>
-              <div class="row-main">
-                <p class="row-kicker">10 · Shell</p>
-                <h3>LAMP Stack Debian <span>Panel server dan multi-PHP</span></h3>
-                <p class="row-tagline">Debian 12 bersih jadi server web multi-PHP, satu perintah.</p>
-                <p class="row-desc">Skrip otomasi yang mengubah Debian 12 menjadi server pengembangan lengkap dengan panel kontrol berbasis web: monitoring CPU, RAM, dan penyimpanan, file manager, web SSH, phpMyAdmin, serta manajemen beberapa versi PHP (7.4 dan 8.2) yang bisa dijalankan terpisah per proyek.</p>
-                <ul class="tags">
-                  <li>Shell</li><li>Debian 12</li><li>Apache</li><li>PHP 7.4 dan 8.2</li><li>MariaDB</li>
-                </ul>
-              </div>
-              <div class="row-go">
-                <button class="btn-plate" type="button" data-drive="9">Kemudikan ke sini</button>
-                <p class="row-note">Resto 10</p>
-              </div>
-            </article>
-          </li>
-
-          <li>
-            <article class="stop-row" data-project data-sign="DOCKER" data-accent="#FF2F7E" data-image="assets/projects/docker-dev-base.jpg" data-repo="docker-dev-base">
-              <div class="row-thumb">
-                <img src="assets/projects/docker-dev-base.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub Docker Dev Base.">
-              </div>
-              <div class="row-main">
-                <p class="row-kicker">11 · Docker Compose</p>
-                <h3>Docker Dev Base <span>Kerangka server PHP</span></h3>
-                <p class="row-tagline">Kerangka Docker Compose untuk server PHP.</p>
-                <p class="row-desc">Template docker-compose untuk menyiapkan jaringan kontainer pengembangan dan produksi: Nginx atau Apache, PHP, MySQL atau PostgreSQL, Adminer, Filebrowser, dan Mailpit untuk menangkap surel saat pengujian.</p>
-                <ul class="tags">
-                  <li>Docker Compose</li><li>PHP</li><li>Nginx</li><li>MySQL</li><li>PostgreSQL</li>
-                </ul>
-              </div>
-              <div class="row-go">
-                <button class="btn-plate" type="button" data-drive="10">Kemudikan ke sini</button>
-                <p class="row-note">Resto 11</p>
-              </div>
-            </article>
-          </li>
-
-          <li>
-            <article class="stop-row" data-project data-sign="SWITCH" data-accent="#F6E7CE" data-image="assets/projects/php-switcher.jpg" data-repo="windows-php-switcher">
-              <div class="row-thumb">
-                <img src="assets/projects/php-switcher.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub PHP Version Switcher.">
-              </div>
-              <div class="row-main">
-                <p class="row-kicker">12 · Batch</p>
-                <h3>PHP Switcher <span>Ganti versi PHP di Windows</span></h3>
-                <p class="row-tagline">Ganti versi PHP di Windows dengan satu perintah.</p>
-                <p class="row-desc">Utilitas command line untuk berpindah versi PHP di Windows tanpa mengatur environment variable secara manual. Berguna saat beberapa proyek menuntut versi PHP berbeda di satu komputer.</p>
-                <ul class="tags">
-                  <li>Batch</li><li>Windows</li><li>PHP</li>
-                </ul>
-              </div>
-              <div class="row-go">
-                <button class="btn-plate" type="button" data-drive="11">Kemudikan ke sini</button>
-                <p class="row-note">Resto 12</p>
-              </div>
-            </article>
-          </li>
-
-        </ol>
-      </div>
-    </section>
-
-    <section class="section section-about" id="tentang" aria-labelledby="judul-tentang">
-      <div class="section-inner">
-        <p class="marker"><span class="marker-num">02</span> Tentang</p>
-        <h2 id="judul-tentang">Yang saya kerjakan di balik layar</h2>
-
-        <div class="about-grid">
-          <div class="about-bio">
-            <p class="about-lead">Saya membangun sistem web dari sisi database sampai tombol terakhir. Sehari-hari memegang Laravel, PHP, dan MySQL, merawat server Debian, dan menulis aplikasi Android atau desktop ketika pekerjaannya menuntut.</p>
-            <p>Sebagian besar proyek di halaman ini adalah sistem internal untuk pemerintahan dan UMKM: perjalanan dinas, absensi, penilaian kinerja, sampai kasir toko bangunan. Pekerjaannya lebih banyak soal alur kerja yang benar daripada tampilan yang ramai.</p>
-            <p>Kode yang bisa dibuka publik ada di GitHub, dari PlayForgeX dan ForgeX sampai skrip server Debian dan utilitas PHP di Windows.</p>
-            <p>Berdasarkan di Sidoarjo, Jawa Timur. Bekerja sebagai IT Expert Officer, sebelumnya di Biro Umum Sekretariat Daerah Provinsi Jawa Timur.</p>
-          </div>
-
-          <div class="about-facts">
-            <h3>Perangkat kerja</h3>
-            <ul class="fact-list">
-              <li><span>Laravel dan PHP</span><small>Sistem internal</small></li>
-              <li><span>TypeScript dan Node.js</span><small>PlayForgeX dan ForgeX</small></li>
-              <li><span>MySQL, MariaDB, PostgreSQL</span><small>Basis data</small></li>
-              <li><span>Docker dan Docker Compose</span><small>Kontainerisasi</small></li>
-              <li><span>Linux, Nginx, Apache</span><small>Server Debian</small></li>
-              <li><span>Bootstrap dan jQuery</span><small>Antarmuka</small></li>
-              <li><span>Java</span><small>Android dan desktop</small></li>
-              <li><span>Git dan GitHub</span><small>26 repo publik</small></li>
-            </ul>
-
-            <h3>Pendidikan</h3>
-            <ul class="fact-list">
-              <li><span>STIKOM Surabaya</span><small>Sistem Informasi, 2016–2020</small></li>
-              <li><span>SMK Negeri 2 Buduran</span><small>Multimedia, 2013–2016</small></li>
-            </ul>
-
-            <h3>Bahasa</h3>
-            <ul class="fact-list">
-              <li><span>Indonesia</span><small>Penutur asli</small></li>
-              <li><span>Inggris</span><small>Profesional</small></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-contact" id="kontak" aria-labelledby="judul-kontak">
-      <div class="section-inner">
-        <p class="marker"><span class="marker-num">03</span> Kontak</p>
-        <h2 id="judul-kontak">Ada yang perlu dibangun?</h2>
-        <p class="contact-lede">Kirim surel atau telepon langsung. Saya di Sidoarjo, terbuka untuk pekerjaan jarak jauh maupun di tempat.</p>
-
-        <div class="contact-actions">
-          <a class="btn-primary" href="mailto:rino.ramadhani@gmail.com">rino.ramadhani@gmail.com</a>
-          <button class="btn-plate" type="button" id="copy-mail" data-mail="rino.ramadhani@gmail.com">Salin alamat surel</button>
-          <a class="btn-plate" href="tel:+6285155336566">+62 851-5533-6566</a>
-        </div>
-
-        <ul class="contact-links">
-          <li><a href="https://github.com/DanDhany" target="_blank" rel="noopener">GitHub / DanDhany</a></li>
-          <li><a href="https://www.linkedin.com/in/ramadhanyks/" target="_blank" rel="noopener">LinkedIn / ramadhanyks</a></li>
-        </ul>
-      </div>
+      <p class="hud-help" id="help">W / S gas dan rem · A / D belok · E masuk resto · Seret untuk melihat · Esc menu</p>
     </section>
   </main>
+
+  <div class="pause" id="pause" role="dialog" aria-modal="true" aria-labelledby="pause-title" hidden>
+    <div class="pause-bar">
+      <p class="pause-title" id="pause-title"><span>Jeda</span><b>Menu</b></p>
+      <div class="pause-tabs" role="tablist" aria-label="Bagian menu">
+        <button type="button" role="tab" data-menu-tab="proyek" aria-selected="true">Proyek</button>
+        <button type="button" role="tab" data-menu-tab="tentang" aria-selected="false">Tentang</button>
+        <button type="button" role="tab" data-menu-tab="kontak" aria-selected="false">Kontak</button>
+      </div>
+      <button class="pause-close" type="button" id="menu-close">Lanjut <span>Esc</span></button>
+    </div>
+
+    <div class="pause-scroll" id="pause-scroll">
+      <section class="section section-index" id="proyek" aria-labelledby="judul-proyek">
+        <div class="section-inner">
+          <div class="section-head">
+            <p class="marker"><span class="marker-num">01</span> Indeks proyek</p>
+            <h2 id="judul-proyek">Tujuh belas bangunan di sepanjang jalan</h2>
+            <p class="section-lede">Tiap baris adalah satu resto. Tekan tombolnya, menu menutup, dan mobil membawa Anda ke bangunan itu. Panel detailnya terbuka sendiri setelah tiba.</p>
+          </div>
+
+          <ol class="index-list">
+            <li>
+              <article class="stop-row" data-project data-sign="DINAS" data-accent="#FF2F7E" data-image="assets/projects/sipeno.jpg">
+                <div class="row-thumb">
+                  <img src="assets/projects/sipeno.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar SIPENO: surat tugas, rincian biaya, dan rekap perjalanan dinas.">
+                </div>
+                <div class="row-main">
+                  <p class="row-kicker">01 · Laravel 8</p>
+                  <h3>SIPENO <span>Sistem Perjalanan Dinas</span></h3>
+                  <p class="row-tagline">Surat tugas dan rincian biaya, rapi dalam satu meja.</p>
+                  <p class="row-desc">Sistem web perjalanan dinas untuk instansi pemerintah: pembuatan dan rekapitulasi bulanan dokumen pertanggungjawaban, mulai dari surat tugas, nota dinas, surat perintah perjalanan dinas, sampai rincian biaya tiap perjalanan.</p>
+                  <ul class="tags">
+                    <li>Laravel 8</li><li>Bootstrap</li><li>MySQL</li><li>PhpOffice</li><li>Calendar API</li>
+                  </ul>
+                </div>
+                <div class="row-go">
+                  <button class="btn-plate" type="button" data-drive="0">Kemudikan ke sini</button>
+                  <p class="row-note">Resto 01</p>
+                </div>
+              </article>
+            </li>
+
+            <li>
+              <article class="stop-row" data-project data-sign="BIRO" data-accent="#FFB03A" data-image="assets/projects/biro-umum.jpg">
+                <div class="row-thumb">
+                  <img src="assets/projects/biro-umum.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar situs Biro Umum: halaman informasi dan daftar dokumen.">
+                </div>
+                <div class="row-main">
+                  <p class="row-kicker">02 · Laravel 8</p>
+                  <h3>Website Biro Umum <span>Informasi dan dokumen daerah</span></h3>
+                  <p class="row-tagline">Informasi biro dan dokumen resmi, tinggal unduh.</p>
+                  <p class="row-desc">Situs tempat sekretariat daerah dan instansi lain membaca informasi terbaru biro, sekaligus mengunduh dokumen pendukung seperti peraturan daerah dan hasil survei kepuasan masyarakat.</p>
+                  <ul class="tags">
+                    <li>Laravel 8</li><li>Bootstrap</li><li>MySQL</li><li>Adobe PDF API</li>
+                  </ul>
+                </div>
+                <div class="row-go">
+                  <button class="btn-plate" type="button" data-drive="1">Kemudikan ke sini</button>
+                  <p class="row-note">Resto 02</p>
+                </div>
+              </article>
+            </li>
+
+            <li>
+              <article class="stop-row" data-project data-sign="360 GRILL" data-accent="#12C2B0" data-image="assets/projects/performapp360.jpg">
+                <div class="row-thumb">
+                  <img src="assets/projects/performapp360.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar PerformAPP360: dasbor penilaian, angket, dan grafik kinerja.">
+                </div>
+                <div class="row-main">
+                  <p class="row-kicker">03 · PHP native</p>
+                  <h3>PerformAPP360 <span>Penilaian kinerja 360 derajat</span></h3>
+                  <p class="row-tagline">Penilaian dari segala arah, direkap otomatis.</p>
+                  <p class="row-desc">Sistem informasi penilaian kinerja dengan umpan balik 360 derajat dari atasan langsung. Banyak penilai, banyak kriteria dan subkriteria, dengan grafik interaktif untuk membaca tren kinerja serta rekap nilai rata-rata per karyawan dan per divisi.</p>
+                  <ul class="tags">
+                    <li>PHP native</li><li>Bootstrap</li><li>MySQL</li><li>jQuery</li>
+                  </ul>
+                </div>
+                <div class="row-go">
+                  <button class="btn-plate" type="button" data-drive="2">Kemudikan ke sini</button>
+                  <p class="row-note">Resto 03</p>
+                </div>
+              </article>
+            </li>
+
+            <li>
+              <article class="stop-row" data-project data-sign="ABSEN" data-accent="#FF7A2B" data-image="assets/projects/presensi-syahid.jpg">
+                <div class="row-thumb">
+                  <img src="assets/projects/presensi-syahid.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar Presensi Syahid: dasbor admin dan aplikasi absensi Android.">
+                </div>
+                <div class="row-main">
+                  <p class="row-kicker">04 · PHP native</p>
+                  <h3>Presensi Syahid <span>Absensi karyawan</span></h3>
+                  <p class="row-tagline">Absen dari ponsel, rekap langsung jadi.</p>
+                  <p class="row-desc">Aplikasi absensi pengganti mesin checklock. Karyawan mengajukan izin dan melihat rekap absensi bulanan dari ponsel, sementara admin menyusun data absensi, izin, dan cuti tiap karyawan serta mengatur hari khusus.</p>
+                  <ul class="tags">
+                    <li>PHP native</li><li>Bootstrap</li><li>MySQL</li><li>jQuery</li><li>Android (Java)</li>
+                  </ul>
+                </div>
+                <div class="row-go">
+                  <button class="btn-plate" type="button" data-drive="3">Kemudikan ke sini</button>
+                  <p class="row-note">Resto 04</p>
+                </div>
+              </article>
+            </li>
+
+            <li>
+              <article class="stop-row" data-project data-sign="NEWTOWN" data-accent="#FF2F7E" data-image="assets/projects/newtown.jpg">
+                <div class="row-thumb">
+                  <img src="assets/projects/newtown.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar Newtown App: dasbor kasir, laporan penjualan, dan laporan stok.">
+                </div>
+                <div class="row-main">
+                  <p class="row-kicker">05 · PHP native</p>
+                  <h3>Newtown App <span>Kasir toko bangunan</span></h3>
+                  <p class="row-tagline">Toko bangunan: jual, beli, stok, cetak nota.</p>
+                  <p class="row-desc">Aplikasi point of sale desktop untuk toko bangunan UMKM. Mencatat transaksi penjualan dan pembelian, mengelola stok, barang, pelanggan, dan pemasok, lalu mencetak nota transaksi serta laporan stok.</p>
+                  <ul class="tags">
+                    <li>PHP native</li><li>Bootstrap</li><li>MySQL</li><li>jQuery</li>
+                  </ul>
+                </div>
+                <div class="row-go">
+                  <button class="btn-plate" type="button" data-drive="4">Kemudikan ke sini</button>
+                  <p class="row-note">Resto 05</p>
+                </div>
+              </article>
+            </li>
+
+            <li>
+              <article class="stop-row" data-project data-sign="FOODER" data-accent="#F6E7CE" data-image="assets/projects/fooder.jpg">
+                <div class="row-thumb">
+                  <img src="assets/projects/fooder.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar Fooder: menu pelanggan dan halaman pesanan restoran.">
+                </div>
+                <div class="row-main">
+                  <p class="row-kicker">06 · Java</p>
+                  <h3>Fooder <span>Pesanan dari meja</span></h3>
+                  <p class="row-tagline">Pesan dari meja, langsung ke dapur.</p>
+                  <p class="row-desc">Aplikasi manajemen restoran desktop. Pelanggan memesan sendiri lewat komputer di tiap meja, pesanan langsung masuk ke koki, dan pelanggan cukup membawa struk ke kasir untuk membayar.</p>
+                  <ul class="tags">
+                    <li>Java</li><li>MySQL</li>
+                  </ul>
+                </div>
+                <div class="row-go">
+                  <button class="btn-plate" type="button" data-drive="5">Kemudikan ke sini</button>
+                  <p class="row-note">Resto 06</p>
+                </div>
+              </article>
+            </li>
+
+            <li>
+              <article class="stop-row" data-project data-sign="MEDIAFOOD" data-accent="#12C2B0" data-image="assets/projects/mediafood.jpg">
+                <div class="row-thumb">
+                  <img src="assets/projects/mediafood.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar Mediafood: pesanan dari ponsel dan halaman pesanan masuk.">
+                </div>
+                <div class="row-main">
+                  <p class="row-kicker">07 · PHP native</p>
+                  <h3>Mediafood <span>Pesan lewat barcode</span></h3>
+                  <p class="row-tagline">Pindai barcode, pesan dari ponsel sendiri.</p>
+                  <p class="row-desc">Versi lanjutan dari Fooder. Pelanggan memesan lewat ponsel masing-masing dengan memindai barcode di meja, jadi restoran tidak perlu menyediakan satu perangkat per meja. Pelayan juga bisa memantau pesanan yang masih menunggu di dapur.</p>
+                  <ul class="tags">
+                    <li>PHP native</li><li>Bootstrap</li><li>MySQL</li><li>jQuery</li><li>Android (Java)</li>
+                  </ul>
+                </div>
+                <div class="row-go">
+                  <button class="btn-plate" type="button" data-drive="6">Kemudikan ke sini</button>
+                  <p class="row-note">Resto 07</p>
+                </div>
+              </article>
+            </li>
+
+            <li>
+              <article class="stop-row" data-project data-sign="PLAYFORGE" data-accent="#12C2B0" data-image="assets/projects/playforgex.jpg" data-repo="PlayForgeX">
+                <div class="row-thumb">
+                  <img src="assets/projects/playforgex.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub PlayForgeX.">
+                </div>
+                <div class="row-main">
+                  <p class="row-kicker">08 · TypeScript</p>
+                  <h3>PlayForgeX <span>Migrasi playlist antar layanan musik</span></h3>
+                  <p class="row-tagline">Pindahkan playlist antar layanan musik, simpan di server sendiri.</p>
+                  <p class="row-desc">Aplikasi self-hosted untuk memindahkan, menggabungkan, dan menyusun ulang playlist lintas YouTube Music, YouTube, Apple Music, Spotify, SoundCloud, Deezer, dan file lokal (M3U, CSV, JSON). Bisa menghubungkan beberapa akun sekaligus, memisahkan data antar pengguna, dan menyimpan semua kredensial di database lokal.</p>
+                  <ul class="tags">
+                    <li>TypeScript</li><li>Node.js</li><li>MySQL</li><li>Docker</li>
+                  </ul>
+                </div>
+                <div class="row-go">
+                  <button class="btn-plate" type="button" data-drive="7">Kemudikan ke sini</button>
+                  <p class="row-note">Resto 08</p>
+                </div>
+              </article>
+            </li>
+
+            <li>
+              <article class="stop-row" data-project data-sign="FORGE" data-accent="#FFB03A" data-image="assets/projects/forgex.jpg" data-repo="forgex-fullstack-engineer">
+                <div class="row-thumb">
+                  <img src="assets/projects/forgex.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub ForgeX Full-Stack Engineer.">
+                </div>
+                <div class="row-main">
+                  <p class="row-kicker">09 · Node.js</p>
+                  <h3>ForgeX <span>Skill untuk agen koding</span></h3>
+                  <p class="row-tagline">Satu skill untuk agen koding yang membangun lintas stack.</p>
+                  <p class="row-desc">Skill terbuka untuk agen koding seperti Claude Code, Codex, dan Cursor. Isinya panduan kerja yang menekankan UI/UX lebih dulu, konsistensi antar stack, pengujian, keamanan, dan serah terima pekerjaan antar sesi. Dirilis dengan lisensi MIT dan terdaftar di skills.sh.</p>
+                  <ul class="tags">
+                    <li>Node.js 20+</li><li>AI coding agent</li><li>MIT</li>
+                  </ul>
+                </div>
+                <div class="row-go">
+                  <button class="btn-plate" type="button" data-drive="8">Kemudikan ke sini</button>
+                  <p class="row-note">Resto 09</p>
+                </div>
+              </article>
+            </li>
+
+            <li>
+              <article class="stop-row" data-project data-sign="LAMP" data-accent="#FF7A2B" data-image="assets/projects/lamp-debian.jpg" data-repo="LAMP-stack-debian">
+                <div class="row-thumb">
+                  <img src="assets/projects/lamp-debian.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub LAMP stack Debian.">
+                </div>
+                <div class="row-main">
+                  <p class="row-kicker">10 · Shell</p>
+                  <h3>LAMP Stack Debian <span>Panel server dan multi-PHP</span></h3>
+                  <p class="row-tagline">Debian 12 bersih jadi server web multi-PHP, satu perintah.</p>
+                  <p class="row-desc">Skrip otomasi yang mengubah Debian 12 menjadi server pengembangan lengkap dengan panel kontrol berbasis web: monitoring CPU, RAM, dan penyimpanan, file manager, web SSH, phpMyAdmin, serta manajemen beberapa versi PHP (7.4 dan 8.2) yang bisa dijalankan terpisah per proyek.</p>
+                  <ul class="tags">
+                    <li>Shell</li><li>Debian 12</li><li>Apache</li><li>PHP 7.4 dan 8.2</li><li>MariaDB</li>
+                  </ul>
+                </div>
+                <div class="row-go">
+                  <button class="btn-plate" type="button" data-drive="9">Kemudikan ke sini</button>
+                  <p class="row-note">Resto 10</p>
+                </div>
+              </article>
+            </li>
+
+            <li>
+              <article class="stop-row" data-project data-sign="DOCKER" data-accent="#FF2F7E" data-image="assets/projects/docker-dev-base.jpg" data-repo="docker-dev-base">
+                <div class="row-thumb">
+                  <img src="assets/projects/docker-dev-base.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub Docker Dev Base.">
+                </div>
+                <div class="row-main">
+                  <p class="row-kicker">11 · Docker Compose</p>
+                  <h3>Docker Dev Base <span>Kerangka server PHP</span></h3>
+                  <p class="row-tagline">Kerangka Docker Compose untuk server PHP.</p>
+                  <p class="row-desc">Template docker-compose untuk menyiapkan jaringan kontainer pengembangan dan produksi: Nginx atau Apache, PHP, MySQL atau PostgreSQL, Adminer, Filebrowser, dan Mailpit untuk menangkap surel saat pengujian.</p>
+                  <ul class="tags">
+                    <li>Docker Compose</li><li>PHP</li><li>Nginx</li><li>MySQL</li><li>PostgreSQL</li>
+                  </ul>
+                </div>
+                <div class="row-go">
+                  <button class="btn-plate" type="button" data-drive="10">Kemudikan ke sini</button>
+                  <p class="row-note">Resto 11</p>
+                </div>
+              </article>
+            </li>
+
+            <li>
+              <article class="stop-row" data-project data-sign="SWITCH" data-accent="#F6E7CE" data-image="assets/projects/php-switcher.jpg" data-repo="windows-php-switcher">
+                <div class="row-thumb">
+                  <img src="assets/projects/php-switcher.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub PHP Version Switcher.">
+                </div>
+                <div class="row-main">
+                  <p class="row-kicker">12 · Batch</p>
+                  <h3>PHP Switcher <span>Ganti versi PHP di Windows</span></h3>
+                  <p class="row-tagline">Ganti versi PHP di Windows dengan satu perintah.</p>
+                  <p class="row-desc">Utilitas command line untuk berpindah versi PHP di Windows tanpa mengatur environment variable secara manual. Berguna saat beberapa proyek menuntut versi PHP berbeda di satu komputer.</p>
+                  <ul class="tags">
+                    <li>Batch</li><li>Windows</li><li>PHP</li>
+                  </ul>
+                </div>
+                <div class="row-go">
+                  <button class="btn-plate" type="button" data-drive="11">Kemudikan ke sini</button>
+                  <p class="row-note">Resto 12</p>
+                </div>
+              </article>
+            </li>
+
+            <li>
+              <article class="stop-row" data-project data-sign="NEWSIMA" data-accent="#12C2B0" data-image="assets/projects/newsima.jpg" data-repo="newsima">
+                <div class="row-thumb">
+                  <img src="assets/projects/newsima.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub Newsima.">
+                </div>
+                <div class="row-main">
+                  <p class="row-kicker">13 · Laravel</p>
+                  <h3>Newsima <span>Pengajuan dan pemantauan magang</span></h3>
+                  <p class="row-tagline">Peserta magang, lembaga, dan nota dinas dalam satu alur.</p>
+                  <p class="row-desc">Sistem web untuk mengelola pengajuan dan pemantauan peserta magang: data lembaga pendidikan, data peserta, bidang penempatan, balasan pengajuan, nota dinas, sampai laporan akhir. Akses diatur per peran dan menunya bisa disesuaikan dari panel admin.</p>
+                  <ul class="tags">
+                    <li>Laravel</li><li>Blade</li><li>MySQL</li><li>TinyMCE</li><li>DataTables</li>
+                  </ul>
+                </div>
+                <div class="row-go">
+                  <button class="btn-plate" type="button" data-drive="12">Kemudikan ke sini</button>
+                  <p class="row-note">Resto 13</p>
+                </div>
+              </article>
+            </li>
+
+            <li>
+              <article class="stop-row" data-project data-sign="SIMARU" data-accent="#FFB03A" data-image="assets/projects/simaru.jpg" data-repo="simaru-docker">
+                <div class="row-thumb">
+                  <img src="assets/projects/simaru.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub Simaru.">
+                </div>
+                <div class="row-main">
+                  <p class="row-kicker">14 · Laravel API</p>
+                  <h3>Simaru <span>Pemesanan ruangan</span></h3>
+                  <p class="row-tagline">Ruangan, fasilitas, dan jadwal pakai dalam satu API.</p>
+                  <p class="row-desc">API pemesanan ruangan untuk beberapa divisi: katalog ruangan dan fasilitasnya, jadwal booking beserta statusnya, umpan balik pengguna, dan autentikasi berbasis peran. Dijalankan dengan Docker supaya lingkungannya sama di tiap mesin.</p>
+                  <ul class="tags">
+                    <li>Laravel</li><li>REST API</li><li>Docker</li><li>MySQL</li><li>SB Admin 2</li>
+                  </ul>
+                </div>
+                <div class="row-go">
+                  <button class="btn-plate" type="button" data-drive="13">Kemudikan ke sini</button>
+                  <p class="row-note">Resto 14</p>
+                </div>
+              </article>
+            </li>
+
+            <li>
+              <article class="stop-row" data-project data-sign="MATERI" data-accent="#FF7A2B" data-image="assets/projects/materi-ai.jpg" data-repo="materi-ai">
+                <div class="row-thumb">
+                  <img src="assets/projects/materi-ai.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub Materi AI.">
+                </div>
+                <div class="row-main">
+                  <p class="row-kicker">15 · HTML</p>
+                  <h3>Materi AI <span>Presentasi AI vs Guru</span></h3>
+                  <p class="row-tagline">Satu halaman untuk menjelaskan AI kepada guru.</p>
+                  <p class="row-desc">Situs presentasi satu halaman berisi materi pengantar kecerdasan buatan untuk guru: apa yang bisa dibantu AI, apa yang tetap tugas manusia, dan contoh pemakaiannya di kelas. Tanpa server, cukup dibuka di browser.</p>
+                  <ul class="tags">
+                    <li>HTML</li><li>CSS</li><li>Presentasi</li>
+                  </ul>
+                </div>
+                <div class="row-go">
+                  <button class="btn-plate" type="button" data-drive="14">Kemudikan ke sini</button>
+                  <p class="row-note">Resto 15</p>
+                </div>
+              </article>
+            </li>
+
+            <li>
+              <article class="stop-row" data-project data-sign="TES" data-accent="#FF2F7E" data-image="assets/projects/tes-teknis.jpg" data-repo="TesTeknisTA">
+                <div class="row-thumb">
+                  <img src="assets/projects/tes-teknis.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub Tes Teknis TA.">
+                </div>
+                <div class="row-main">
+                  <p class="row-kicker">16 · Vue 3</p>
+                  <h3>Tes Teknis TA <span>Uji teknis frontend</span></h3>
+                  <p class="row-tagline">Uji teknis Vue 3, dari komponen sampai build.</p>
+                  <p class="row-desc">Repo uji teknis frontend dengan Vue 3 dan Vue CLI: komponen, struktur proyek, dan proses build produksi. Dipakai untuk menunjukkan cara kerja saya saat mengerjakan tugas teknis berbatas waktu.</p>
+                  <ul class="tags">
+                    <li>Vue 3</li><li>Vue CLI</li><li>JavaScript</li>
+                  </ul>
+                </div>
+                <div class="row-go">
+                  <button class="btn-plate" type="button" data-drive="15">Kemudikan ke sini</button>
+                  <p class="row-note">Resto 16</p>
+                </div>
+              </article>
+            </li>
+
+            <li>
+              <article class="stop-row" data-project data-sign="WEB" data-accent="#F6E7CE" data-image="assets/projects/portoweb.jpg" data-repo="ramadhany_portoweb">
+                <div class="row-thumb">
+                  <img src="assets/projects/portoweb.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub Portofolio Lama.">
+                </div>
+                <div class="row-main">
+                  <p class="row-kicker">17 · HTML/CSS</p>
+                  <h3>Portofolio Lama <span>Versi pertama situs ini</span></h3>
+                  <p class="row-tagline">Versi pertama portofolio, sebelum dirombak.</p>
+                  <p class="row-desc">Situs portofolio versi pertama: halaman statis dengan CSS dan JavaScript, lampiran CV serta portofolio PDF, dan deploy lewat GitHub Pages. Versi yang sekarang menggantikannya dengan dunia 3D.</p>
+                  <ul class="tags">
+                    <li>HTML</li><li>CSS</li><li>JavaScript</li><li>GitHub Pages</li>
+                  </ul>
+                </div>
+                <div class="row-go">
+                  <button class="btn-plate" type="button" data-drive="16">Kemudikan ke sini</button>
+                  <p class="row-note">Resto 17</p>
+                </div>
+              </article>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section section-about" id="tentang" aria-labelledby="judul-tentang">
+        <div class="section-inner">
+          <p class="marker"><span class="marker-num">02</span> Tentang</p>
+          <h2 id="judul-tentang">Yang saya kerjakan di balik layar</h2>
+
+          <div class="about-grid">
+            <div class="about-bio">
+              <p class="about-lead">Saya membangun sistem web dari sisi database sampai tombol terakhir. Sehari-hari memegang Laravel, PHP, dan MySQL, merawat server Debian, dan menulis aplikasi Android atau desktop ketika pekerjaannya menuntut.</p>
+              <p>Saya bekerja sebagai IT di sebuah instansi pemerintah, dan sebagian besar proyek di halaman ini lahir dari pekerjaan itu: sistem internal untuk pemerintahan, ditambah beberapa aplikasi untuk UMKM. Pekerjaannya lebih banyak soal alur kerja yang benar daripada tampilan yang ramai.</p>
+              <p>Kode yang bisa dibuka publik ada di GitHub, dari PlayForgeX dan ForgeX sampai skrip server Debian dan utilitas PHP di Windows.</p>
+              <p>Berdasarkan di Sidoarjo, Jawa Timur. Terbuka untuk pekerjaan jarak jauh maupun di tempat.</p>
+            </div>
+
+            <div class="about-facts">
+              <h3>Perangkat kerja</h3>
+              <ul class="fact-list">
+                <li><span>Laravel dan PHP</span><small>Sistem internal</small></li>
+                <li><span>TypeScript dan Node.js</span><small>PlayForgeX dan ForgeX</small></li>
+                <li><span>MySQL, MariaDB, PostgreSQL</span><small>Basis data</small></li>
+                <li><span>Docker dan Docker Compose</span><small>Kontainerisasi</small></li>
+                <li><span>Linux, Nginx, Apache</span><small>Server Debian</small></li>
+                <li><span>Bootstrap dan jQuery</span><small>Antarmuka</small></li>
+                <li><span>Java</span><small>Android dan desktop</small></li>
+                <li><span>Git dan GitHub</span><small>26 repo publik</small></li>
+              </ul>
+
+              <h3>Pendidikan</h3>
+              <ul class="fact-list">
+                <li><span>STIKOM Surabaya</span><small>Sistem Informasi, 2016–2020</small></li>
+                <li><span>SMK Negeri 2 Buduran</span><small>Multimedia, 2013–2016</small></li>
+              </ul>
+
+              <h3>Bahasa</h3>
+              <ul class="fact-list">
+                <li><span>Indonesia</span><small>Penutur asli</small></li>
+                <li><span>Inggris</span><small>Profesional</small></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="about-achievements">
+            <p class="marker"><span class="marker-num">03</span> Pencapaian</p>
+            <h3 class="sr-title">Pencapaian</h3>
+            <ul class="fact-list fact-list-wide">
+              <li>
+                <span>Karya ilmiah: Aplikasi Presensi Karyawan Berbasis Android</span>
+                <small>Universitas Dinamika, 2020 · terbit di repositori kampus</small>
+              </li>
+              <li>
+                <span>Karya ilmiah: Sistem Penilaian Kinerja dengan Metode 360 Degree Feedback</span>
+                <small>Universitas Dinamika, 2020 · terindeks Neliti, 1 sitasi</small>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-contact" id="kontak" aria-labelledby="judul-kontak">
+        <div class="section-inner">
+          <p class="marker"><span class="marker-num">04</span> Kontak</p>
+          <h2 id="judul-kontak">Ada yang perlu dibangun?</h2>
+          <p class="contact-lede">Kirim surel atau telepon langsung. Saya di Sidoarjo, terbuka untuk pekerjaan jarak jauh maupun di tempat.</p>
+
+          <div class="contact-actions">
+            <a class="btn-primary" href="mailto:rino.ramadhani@gmail.com">rino.ramadhani@gmail.com</a>
+            <button class="btn-plate" type="button" id="copy-mail" data-mail="rino.ramadhani@gmail.com">Salin alamat surel</button>
+            <a class="btn-plate" href="tel:+6285155336566">+62 851-5533-6566</a>
+          </div>
+
+          <ul class="contact-links">
+            <li><a href="https://github.com/DanDhany" target="_blank" rel="noopener">GitHub / DanDhany</a></li>
+            <li><a href="https://www.linkedin.com/in/ramadhanyks/" target="_blank" rel="noopener">LinkedIn / ramadhanyks</a></li>
+          </ul>
+        </div>
+      </section>
+
+      <footer class="site-foot">
+        <span>Ramadhany Krismaliq Sjamdra · Sidoarjo, Jawa Timur</span>
+        <span>Dibangun dengan Three.js · 2026</span>
+      </footer>
+    </div>
+  </div>
 
   <aside class="panel" id="panel" role="dialog" aria-modal="false" aria-labelledby="panel-title" hidden>
     <button class="panel-x" type="button" id="panel-close" aria-label="Tutup panel">Tutup</button>
@@ -431,11 +569,6 @@
     <a class="panel-link" id="panel-link" href="https://github.com/DanDhany" target="_blank" rel="noopener" hidden>github.com/DanDhany</a>
     <p class="panel-note" id="panel-note">Tangkapan layar asli dari portofolio Ramadhany. Sistemnya dipakai internal, jadi tidak ada demo publik.</p>
   </aside>
-
-  <footer class="site-foot">
-    <span>Ramadhany Krismaliq Sjamdra · Sidoarjo, Jawa Timur</span>
-    <span>Dibangun dengan Three.js · 2026</span>
-  </footer>
 
   <script type="importmap">
     {

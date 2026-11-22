@@ -1489,3 +1489,237 @@ body[data-panel="open"] .hero .pedals {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ------------------------------------------------------------- pause menu */
+
+/* The world owns the viewport; everything else lives in the pause menu. */
+body {
+  overflow: hidden;
+}
+
+main {
+  height: 100svh;
+}
+
+.menu-btn {
+  font-family: var(--cond);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.76rem;
+  padding: 7px 12px;
+  border: 1px solid var(--rule-strong);
+  color: var(--sand);
+  background: transparent;
+}
+
+.menu-btn:hover,
+.menu-btn:focus-visible {
+  background: var(--rose);
+  border-color: var(--rose);
+  color: var(--ink);
+}
+
+.pause {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  background: rgba(10, 8, 18, 0.9);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.pause[hidden] {
+  display: none;
+}
+
+.pause-bar {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 2vw, 26px);
+  flex-wrap: wrap;
+  padding: 10px var(--g);
+  background: var(--ink);
+  border-bottom: 1px solid var(--rule);
+}
+
+.pause-title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.pause-title span {
+  font-family: var(--cond);
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-size: 0.62rem;
+  color: var(--sand-dim);
+}
+
+.pause-title b {
+  font-family: var(--display);
+  font-size: clamp(1.2rem, 2.4vw, 1.6rem);
+  letter-spacing: 0.02em;
+}
+
+.pause-tabs {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.pause-tabs [data-menu-tab] {
+  font-family: var(--cond);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.74rem;
+  padding: 8px 14px;
+  border: 1px solid var(--rule);
+  color: var(--sand-dim);
+}
+
+.pause-tabs [data-menu-tab][aria-selected="true"] {
+  background: var(--rose);
+  border-color: var(--rose);
+  color: var(--ink);
+}
+
+.pause-close {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--rule-strong);
+  font-family: var(--cond);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.74rem;
+  color: var(--sand);
+}
+
+.pause-close span {
+  border: 1px solid var(--rule);
+  padding: 0 5px;
+  font-size: 0.66rem;
+  color: var(--sand-dim);
+}
+
+.pause-close:hover,
+.pause-close:focus-visible {
+  border-color: var(--sand);
+}
+
+.pause-scroll {
+  position: relative;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  background: var(--ink-2);
+}
+
+.pause-scroll .section {
+  padding: clamp(34px, 5vw, 68px) var(--g);
+  border-top: 0;
+}
+
+.pause-scroll .section + .section {
+  border-top: 1px solid var(--ink);
+}
+
+.pause-scroll .site-foot {
+  background: var(--ink);
+}
+
+/* Achievements block sits below the two-column about grid. */
+.about-achievements {
+  margin-top: clamp(28px, 4vw, 44px);
+  padding-top: clamp(20px, 3vw, 30px);
+  border-top: 1px solid rgba(10, 8, 18, 0.2);
+}
+
+.about-achievements .marker {
+  color: rgba(10, 8, 18, 0.6);
+  margin-bottom: 6px;
+}
+
+.about-achievements .marker-num {
+  color: #c4124e;
+}
+
+.sr-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.fact-list-wide li {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px 20px;
+}
+
+.fact-list-wide small {
+  text-align: right;
+}
+
+@media (max-width: 720px) {
+  .pause-tabs {
+    order: 3;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .pause-tabs [data-menu-tab] {
+    flex: 1;
+    text-align: center;
+  }
+
+  .pause-close {
+    margin-left: auto;
+  }
+
+  .fact-list-wide li {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fact-list-wide small {
+    text-align: left;
+  }
+}
+
+/* Contact keeps its warmth but drops the full gradient so the pause menu
+   stays readable at night. */
+.pause-scroll .section-contact {
+  background: linear-gradient(160deg, #2b1022 0%, #1b0f22 58%, #120d1e 100%);
+  color: var(--sand);
+  border-top: 1px solid var(--ink);
+}
+
+.pause-scroll .section-contact .marker,
+.pause-scroll .section-contact .contact-lede {
+  color: rgba(246, 231, 206, 0.66);
+}
+
+.pause-scroll .section-contact .marker-num {
+  color: var(--rose);
+}
+
+.pause-scroll .section-contact .btn-primary {
+  background: var(--rose);
+  border-color: var(--rose);
+  color: var(--ink);
+}
+
+.pause-scroll .section-contact .btn-plate {
+  border-color: var(--rule-strong);
+  color: var(--sand);
+}
+
+.pause-scroll .section-contact .contact-links a {
+  color: var(--sand);
+  border-bottom-color: var(--rule-strong);
+}
