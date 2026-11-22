@@ -1,4 +1,4 @@
-import { createWorld, START_Z, stopZ, STOP_COUNT } from "./world.js";
+import { createWorld, START_Z, stopZ } from "./world.js";
 
 const hero = document.querySelector(".hero");
 const canvas = document.getElementById("scene");
@@ -39,14 +39,12 @@ const stops = articles.map((el, i) => {
     stack: Array.from(el.querySelectorAll(".tags li")).map((li) => li.textContent.trim()),
     src: img.getAttribute("src"),
     alt: img.alt,
+    repo: el.dataset.repo || "",
     side: el.dataset.side || "",
     distance: START_Z - stopZ(i),
   };
 });
 
-if (stops.length !== STOP_COUNT) {
-  console.warn("Jumlah resto di halaman tidak cocok dengan jalur 3D.");
-}
 
 const state = {
   started: false,
@@ -76,6 +74,9 @@ let raf = 0;
 const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
 const pad2 = (n) => String(n).padStart(2, "0");
 
+const objTotal = document.getElementById("obj-total");
+if (objTotal) objTotal.textContent = pad2(stops.length);
+
 /* ----------------------------------------------------------------- panel */
 
 function setPanelFields(stop) {
@@ -87,6 +88,20 @@ function setPanelFields(stop) {
   document.getElementById("panel-tagline").textContent = stop.tagline;
   document.getElementById("panel-desc").textContent = stop.desc;
   document.getElementById("panel-side").textContent = stop.side;
+  const repoLink = document.getElementById("panel-link");
+  const note = document.getElementById("panel-note");
+  const figureTag = document.getElementById("panel-figure-tag");
+  figureTag.textContent = stop.repo ? "Repo GitHub" : "Tangkapan layar";
+  if (stop.repo) {
+    repoLink.href = `https://github.com/DanDhany/${stop.repo}`;
+    repoLink.textContent = `github.com/DanDhany/${stop.repo}`;
+    repoLink.hidden = false;
+    note.textContent = "Kartu repo dari GitHub. Kode, riwayat, dan README lengkapnya ada di repo publik.";
+  } else {
+    repoLink.hidden = true;
+    repoLink.removeAttribute("href");
+    note.textContent = "Tangkapan layar asli dari portofolio Ramadhany. Sistemnya dipakai internal, jadi tidak ada demo publik.";
+  }
   const tagList = document.getElementById("panel-tags");
   tagList.replaceChildren(
     ...stop.stack.map((label) => {

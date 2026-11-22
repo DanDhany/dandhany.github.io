@@ -4,8 +4,6 @@ import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 export const START_Z = 12;
 export const STOP_FIRST = -80;
 export const STOP_GAP = 108;
-export const STOP_COUNT = 7;
-export const ROAD_END = -930;
 
 export function stopZ(index) {
   return STOP_FIRST - index * STOP_GAP;
@@ -176,16 +174,23 @@ export function createWorld(canvas, stops) {
 
   /* --------------------------------------------------------------- ground */
 
+  /* The strip grows with the number of restos listed in the page. */
+  const lastStopZ = stopZ(stops.length - 1);
+  const roadNear = 60;
+  const roadFar = lastStopZ - 190;
+  const roadLength = roadNear - roadFar;
+  const roadMid = (roadNear + roadFar) / 2;
+
   const groundMat = new THREE.MeshStandardMaterial({ color: 0x120d1d, roughness: 1 });
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(1600, 1500), groundMat);
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(1600, roadLength + 500), groundMat);
   ground.rotation.x = -Math.PI / 2;
-  ground.position.set(0, -0.08, -420);
+  ground.position.set(0, -0.08, roadMid);
   scene.add(ground);
 
   const beachMat = new THREE.MeshStandardMaterial({ color: 0x3a2c44, roughness: 0.95 });
-  const beach = new THREE.Mesh(new THREE.PlaneGeometry(19.4, 1200), beachMat);
+  const beach = new THREE.Mesh(new THREE.PlaneGeometry(19.4, roadLength + 200), beachMat);
   beach.rotation.x = -Math.PI / 2;
-  beach.position.set(-16.3, 0, -420);
+  beach.position.set(-16.3, 0, roadMid);
   scene.add(beach);
 
   const roadMap = paint(256, 1024, (ctx, w, h) => {
@@ -204,7 +209,7 @@ export function createWorld(canvas, stops) {
   });
   roadMap.wrapS = THREE.RepeatWrapping;
   roadMap.wrapT = THREE.RepeatWrapping;
-  roadMap.repeat.set(1, 26);
+  roadMap.repeat.set(1, Math.round(roadLength / 38.5));
 
   const roadMat = new THREE.MeshStandardMaterial({
     map: roadMap,
@@ -212,14 +217,14 @@ export function createWorld(canvas, stops) {
     roughness: 0.42,
     metalness: 0.24,
   });
-  const road = new THREE.Mesh(new THREE.PlaneGeometry(13, 1000), roadMat);
+  const road = new THREE.Mesh(new THREE.PlaneGeometry(13, roadLength), roadMat);
   road.rotation.x = -Math.PI / 2;
-  road.position.set(0, 0.02, -420);
+  road.position.set(0, 0.02, roadMid);
   scene.add(road);
 
   /* ---------------------------------------------------------------- ocean */
 
-  const oceanGeo = new THREE.PlaneGeometry(520, 1300, 44, 32);
+  const oceanGeo = new THREE.PlaneGeometry(520, roadLength + 400, 44, 32);
   const oceanMat = new THREE.MeshStandardMaterial({
     color: 0x153c54,
     roughness: 0.2,
@@ -227,7 +232,7 @@ export function createWorld(canvas, stops) {
   });
   const ocean = new THREE.Mesh(oceanGeo, oceanMat);
   ocean.rotation.x = -Math.PI / 2;
-  ocean.position.set(-286, -0.16, -460);
+  ocean.position.set(-286, -0.16, roadMid);
   scene.add(ocean);
 
   const oceanBase = oceanGeo.attributes.position.array.slice();
@@ -255,9 +260,9 @@ export function createWorld(canvas, stops) {
     fog: false,
     toneMapped: false,
   });
-  const glitter = new THREE.Mesh(new THREE.PlaneGeometry(80, 620), glitterMat);
+  const glitter = new THREE.Mesh(new THREE.PlaneGeometry(80, roadLength * 0.55), glitterMat);
   glitter.rotation.x = -Math.PI / 2;
-  glitter.position.set(-148, 0.04, -520);
+  glitter.position.set(-148, 0.04, roadMid - 20);
   scene.add(glitter);
 
   /* ------------------------------------------------------------- lighting */
@@ -323,7 +328,7 @@ export function createWorld(canvas, stops) {
   }
 
   const palmPositions = [];
-  for (let z = 40; z > ROAD_END; z -= 24) {
+  for (let z = roadNear; z > roadFar; z -= 24) {
     const jitter = (Math.random() - 0.5) * 12;
     palmPositions.push([-8.6 - Math.random() * 4.5, z + jitter, 0.9 + Math.random() * 0.5]);
     if (Math.random() > 0.35) {
@@ -694,14 +699,14 @@ export function createWorld(canvas, stops) {
       toneMapped: false,
     })
   );
-  endSign.position.set(9.5, 4.6, -812);
+  endSign.position.set(9.5, 4.6, lastStopZ - 84);
   endSign.rotation.y = -0.55;
   endSign.userData = { contact: true };
   scene.add(endSign);
   pickables.push(endSign);
 
   const endPole = new THREE.Mesh(new THREE.BoxGeometry(0.3, 5, 0.3), gatePole);
-  endPole.position.set(9.5, 2.2, -812.2);
+  endPole.position.set(9.5, 2.2, lastStopZ - 84.2);
   scene.add(endPole);
 
   const endGlowMat = new THREE.MeshBasicMaterial({
@@ -713,7 +718,7 @@ export function createWorld(canvas, stops) {
     toneMapped: false,
   });
   const endGlow = new THREE.Mesh(new THREE.PlaneGeometry(14, 9), endGlowMat);
-  endGlow.position.set(9.5, 4.6, -812.4);
+  endGlow.position.set(9.5, 4.6, lastStopZ - 84.4);
   endGlow.rotation.y = -0.55;
   scene.add(endGlow);
   glowSprites.push({ mat: endGlowMat, base: 0.45 });
