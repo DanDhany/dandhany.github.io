@@ -44,6 +44,7 @@ const stops = articles.map((el, i) => {
     src: img.getAttribute("src"),
     alt: img.alt,
     repo: el.dataset.repo || "",
+    card: el.dataset.card || "",
     side: el.dataset.side || "",
     distance: START_Z - stopZ(i),
   };
@@ -101,6 +102,11 @@ function setPanelFields(stop) {
     repoLink.textContent = `github.com/DanDhany/${stop.repo}`;
     repoLink.hidden = false;
     note.textContent = "Kartu repo dari GitHub. Kode, riwayat, dan README lengkapnya ada di repo publik.";
+  } else if (stop.card) {
+    repoLink.hidden = true;
+    repoLink.removeAttribute("href");
+    figureTag.textContent = "Kartu proyek";
+    note.textContent = "Kartu proyek. Aplikasinya berjalan lokal dan tidak ada tangkapan layar yang tersimpan.";
   } else {
     repoLink.hidden = true;
     repoLink.removeAttribute("href");
