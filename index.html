@@ -1,683 +1,347 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ramadhany Krismaliq Sjamdra - Fullstack Developer</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
-        * {
-            font-family: 'Inter', sans-serif;
-        }
-        
-        #canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-        
-        .snap-container {
-            scroll-snap-type: y mandatory;
-            overflow-y: scroll;
-            height: 100vh;
-            scroll-behavior: smooth;
-        }
-        
-        .snap-section {
-            scroll-snap-align: start;
-            scroll-snap-stop: always;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem 0;
-        }
-        
-        .project-overlay {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .project-section:hover .project-overlay {
-            background: rgba(0, 0, 0, 0.3);
-        }
-        
-        .nav-dot {
-            transition: all 0.3s ease;
-        }
-        
-        .nav-dot.active {
-            background: white;
-            width: 32px;
-        }
-        
-        .glass {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .text-glow {
-            text-shadow: 0 0 40px rgba(139, 92, 246, 0.3);
-        }
-        
-        .project-bg {
-            position: absolute;
-            inset: 0;
-            background-size: cover;
-            background-position: center;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .project-section:hover .project-bg {
-            transform: scale(1.05);
-        }
-
-        @media (max-width: 768px) {
-            .snap-section {
-                scroll-snap-align: start;
-                min-height: auto;
-                padding: 3rem 0;
-            }
-            
-            .snap-container {
-                scroll-snap-type: none;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ramadhany Krismaliq Sjamdra · Fullstack Developer</title>
+  <meta name="description" content="Portofolio Ramadhany Krismaliq Sjamdra, fullstack developer Laravel di Sidoarjo. Tujuh proyek sebagai resto di satu jalan pesisir yang bisa disusuri dengan Three.js.">
+  <meta name="theme-color" content="#0a0812">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@500;600&family=Barlow:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-black text-white overflow-hidden">
-    <div id="canvas-container"></div>
-    
-    <!-- Navigation Dots -->
-    <div class="fixed right-4 md:right-8 top-1/2 transform -translate-y-1/2 z-50 flex flex-col gap-3 md:gap-4">
-        <div class="nav-dot active w-2 h-2 bg-white/40 rounded-full cursor-pointer hover:bg-white" data-section="0"></div>
-        <div class="nav-dot w-2 h-2 bg-white/40 rounded-full cursor-pointer hover:bg-white" data-section="1"></div>
-        <div class="nav-dot w-2 h-2 bg-white/40 rounded-full cursor-pointer hover:bg-white" data-section="2"></div>
-        <div class="nav-dot w-2 h-2 bg-white/40 rounded-full cursor-pointer hover:bg-white" data-section="3"></div>
-        <div class="nav-dot w-2 h-2 bg-white/40 rounded-full cursor-pointer hover:bg-white" data-section="4"></div>
-        <div class="nav-dot w-2 h-2 bg-white/40 rounded-full cursor-pointer hover:bg-white" data-section="5"></div>
-        <div class="nav-dot w-2 h-2 bg-white/40 rounded-full cursor-pointer hover:bg-white" data-section="6"></div>
-        <div class="nav-dot w-2 h-2 bg-white/40 rounded-full cursor-pointer hover:bg-white" data-section="7"></div>
-        <div class="nav-dot w-2 h-2 bg-white/40 rounded-full cursor-pointer hover:bg-white" data-section="8"></div>
-        <div class="nav-dot w-2 h-2 bg-white/40 rounded-full cursor-pointer hover:bg-white" data-section="9"></div>
-        <div class="nav-dot w-2 h-2 bg-white/40 rounded-full cursor-pointer hover:bg-white" data-section="10"></div>
-    </div>
-    
-    <div class="snap-container" id="main-container">
-        <!-- Hero Section -->
-        <section class="snap-section relative" data-section-id="0">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-12 max-w-7xl w-full">
-                <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                    <div class="space-y-4 md:space-y-6 text-center lg:text-left">
-                        <div class="inline-flex items-center gap-2 glass px-4 py-2 rounded-full text-xs sm:text-sm">
-                            <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                            <span class="text-gray-300">Available for projects</span>
-                        </div>
-                        <h1 class="text-4xl sm:text-5xl lg:text-7xl font-semibold tracking-tight text-glow leading-tight">
-                            Ramadhany Krismaliq Sjamdra
-                        </h1>
-                        <p class="text-xl sm:text-2xl text-violet-400 font-medium">
-                            Fullstack Developer
-                        </p>
-                        <p class="text-base sm:text-xl text-gray-400 leading-relaxed max-w-lg mx-auto lg:mx-0">
-                            I'm a fullstack web developer specializing in Laravel, server maintenance, and modern web technologies
-                        </p>
-                        <div class="flex flex-wrap gap-3 sm:gap-4 pt-4 justify-center lg:justify-start">
-                            <a href="#projects" class="px-4 sm:px-6 py-2 sm:py-3 bg-white text-black rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center gap-2 text-sm sm:text-base">
-                                View Projects
-                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                            </a>
-                            <a href="#contact" class="px-4 sm:px-6 py-2 sm:py-3 glass rounded-lg font-medium hover:bg-white/10 transition-colors flex items-center gap-2 text-sm sm:text-base">
-                                Get in Touch
-                                <i data-lucide="mail" class="w-4 h-4"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="glass rounded-2xl p-6 md:p-8 space-y-6">
-                        <div class="flex items-center gap-4">
-                            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-violet-500 to-purple-600 rounded-full flex items-center justify-center text-xl sm:text-2xl font-semibold">
-                                RKS
-                            </div>
-                            <div>
-                                <h3 class="text-lg sm:text-xl font-semibold">Ramadhany Krismaliq S.</h3>
-                                <p class="text-sm sm:text-base text-gray-400">Fullstack Web Developer</p>
-                            </div>
-                        </div>
-                        <div class="space-y-3 sm:space-y-4">
-                            <div class="flex items-center gap-3 text-sm sm:text-base text-gray-300">
-                                <i data-lucide="map-pin" class="w-4 h-4 sm:w-5 sm:h-5 text-violet-400 flex-shrink-0"></i>
-                                <span class="break-words">Sidoarjo, East Java, Indonesia</span>
-                            </div>
-                            <div class="flex items-center gap-3 text-sm sm:text-base text-gray-300">
-                                <i data-lucide="briefcase" class="w-4 h-4 sm:w-5 sm:h-5 text-violet-400 flex-shrink-0"></i>
-                                <span>IT Expert Officer</span>
-                            </div>
-                            <div class="flex items-center gap-3 text-sm sm:text-base text-gray-300">
-                                <i data-lucide="code-2" class="w-4 h-4 sm:w-5 sm:h-5 text-violet-400 flex-shrink-0"></i>
-                                <span>Laravel, Docker, MySQL</span>
-                            </div>
-                        </div>
-                        <div class="pt-4 border-t border-white/10">
-                            <div class="flex gap-3 sm:gap-4">
-                                <a href="https://github.com/DanDhany" target="_blank" class="w-10 h-10 glass rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors">
-                                    <i data-lucide="github" class="w-5 h-5"></i>
-                                </a>
-                                <a href="https://www.linkedin.com/in/ramadhanyks/" target="_blank" class="w-10 h-10 glass rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors">
-                                    <i data-lucide="linkedin" class="w-5 h-5"></i>
-                                </a>
-                                <a href="mailto:rino.ramadhani@gmail.com" class="w-10 h-10 glass rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors">
-                                    <i data-lucide="mail" class="w-5 h-5"></i>
-                                </a>
-                                <a href="tel:+62085155336566" class="w-10 h-10 glass rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors">
-                                    <i data-lucide="phone" class="w-5 h-5"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Skills Section -->
-        <section class="snap-section relative" data-section-id="1">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-12 max-w-7xl w-full">
-                <div class="text-center mb-8 md:mb-16">
-                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-3 md:mb-4">Technical Expertise</h2>
-                    <p class="text-gray-400 text-base sm:text-lg">Technologies and tools I work with daily</p>
-                </div>
-                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                    <div class="glass rounded-2xl p-6 md:p-8 space-y-4 hover:bg-white/10 transition-colors">
-                        <div class="w-12 h-12 bg-violet-500/20 rounded-lg flex items-center justify-center">
-                            <i data-lucide="code-2" class="w-6 h-6 text-violet-400"></i>
-                        </div>
-                        <h3 class="text-xl md:text-2xl font-semibold">Hard Skills</h3>
-                        <ul class="space-y-2 md:space-y-3 text-sm md:text-base text-gray-400">
-                            <li class="flex items-start gap-2">
-                                <div class="w-1.5 h-1.5 bg-violet-400 rounded-full mt-2 flex-shrink-0"></div>
-                                <span>Fullstack Development (Laravel)</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <div class="w-1.5 h-1.5 bg-violet-400 rounded-full mt-2 flex-shrink-0"></div>
-                                <span>Server Maintenance</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <div class="w-1.5 h-1.5 bg-violet-400 rounded-full mt-2 flex-shrink-0"></div>
-                                <span>Containerization (Docker)</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <div class="w-1.5 h-1.5 bg-violet-400 rounded-full mt-2 flex-shrink-0"></div>
-                                <span>Database Management (MariaDB)</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <div class="w-1.5 h-1.5 bg-violet-400 rounded-full mt-2 flex-shrink-0"></div>
-                                <span>Version Control (Git)</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="glass rounded-2xl p-6 md:p-8 space-y-4 hover:bg-white/10 transition-colors">
-                        <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                            <i data-lucide="globe" class="w-6 h-6 text-blue-400"></i>
-                        </div>
-                        <h3 class="text-xl md:text-2xl font-semibold">Languages</h3>
-                        <ul class="space-y-2 md:space-y-3 text-sm md:text-base text-gray-400">
-                            <li class="flex items-start gap-2">
-                                <div class="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-                                <span>Indonesian - Native or Bilingual</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <div class="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-                                <span>English - Professional</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="glass rounded-2xl p-6 md:p-8 space-y-4 hover:bg-white/10 transition-colors sm:col-span-2 lg:col-span-1">
-                        <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-                            <i data-lucide="graduation-cap" class="w-6 h-6 text-green-400"></i>
-                        </div>
-                        <h3 class="text-xl md:text-2xl font-semibold">Education</h3>
-                        <ul class="space-y-2 md:space-y-3 text-sm md:text-base text-gray-400">
-                            <li class="flex items-start gap-2">
-                                <div class="w-1.5 h-1.5 bg-green-400 rounded-full mt-2 flex-shrink-0"></div>
-                                <div>
-                                    <p class="text-white">STIKOM Surabaya</p>
-                                    <p class="text-xs md:text-sm">Information System (2016-2020)</p>
-                                </div>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <div class="w-1.5 h-1.5 bg-green-400 rounded-full mt-2 flex-shrink-0"></div>
-                                <div>
-                                    <p class="text-white">SMK Negeri 2 Buduran</p>
-                                    <p class="text-xs md:text-sm">Multimedia (2013-2016)</p>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Projects Header Section -->
-        <section class="snap-section relative" data-section-id="2" id="projects">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-12 max-w-7xl text-center">
-                <h2 class="text-4xl sm:text-5xl lg:text-7xl font-semibold tracking-tight mb-4 md:mb-6 text-glow">Featured Projects</h2>
-                <p class="text-base sm:text-xl text-gray-400 mb-6 md:mb-8">Showcase of my latest work</p>
-                <div class="flex items-center justify-center gap-3 text-gray-400 animate-bounce mt-8 md:mt-12">
-                    <i data-lucide="mouse-pointer-2" class="w-4 h-4 sm:w-5 sm:h-5"></i>
-                    <span class="text-xs sm:text-sm">Scroll to explore projects</span>
-                    <i data-lucide="arrow-down" class="w-4 h-4 sm:w-5 sm:h-5"></i>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Project 1 - SIPENO -->
-        <section class="snap-section relative project-section" data-section-id="3">
-            <div class="project-bg" style="background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1920&h=1080&fit=crop');"></div>
-            <div class="project-overlay absolute inset-0 bg-black/60"></div>
-            <div class="container mx-auto px-4 sm:px-6 lg:px-12 max-w-7xl relative z-10 w-full">
-                <div class="glass rounded-2xl p-6 md:p-10 max-w-4xl mx-auto">
-                    <div class="space-y-4 md:space-y-6">
-                        <div class="inline-flex items-center gap-2 glass px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs sm:text-sm">
-                            <span class="text-violet-300">Project 01</span>
-                        </div>
-                        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight leading-tight">SIPENO - Sistem Perjalanan Dinas</h2>
-                        <p class="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed">
-                            A web-based system developed for the General Bureau of the Regional Secretariat of East Java Province to streamline the creation and monthly recapitulation of official travel accountability documents, including Assignment Orders, Official Notes, Official Travel Orders, and detailed expense reports for each trip.
-                        </p>
-                        <div class="flex flex-wrap gap-2 md:gap-3">
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-violet-500/20 text-violet-300 rounded-full text-xs sm:text-sm border border-violet-500/30">Laravel 8</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-blue-500/20 text-blue-300 rounded-full text-xs sm:text-sm border border-blue-500/30">Bootstrap</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-green-500/20 text-green-300 rounded-full text-xs sm:text-sm border border-green-500/30">MySQL</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-orange-500/20 text-orange-300 rounded-full text-xs sm:text-sm border border-orange-500/30">phpOffice</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-pink-500/20 text-pink-300 rounded-full text-xs sm:text-sm border border-pink-500/30">Calendar API</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+<body data-panel="closed">
 
-        <!-- Project 2 - Website Biro Umum -->
-        <section class="snap-section relative project-section" data-section-id="4">
-            <div class="project-bg" style="background-image: url('https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1920&h=1080&fit=crop');"></div>
-            <div class="project-overlay absolute inset-0 bg-black/60"></div>
-            <div class="container mx-auto px-4 sm:px-6 lg:px-12 max-w-7xl relative z-10 w-full">
-                <div class="glass rounded-2xl p-6 md:p-10 max-w-4xl mx-auto">
-                    <div class="space-y-4 md:space-y-6">
-                        <div class="inline-flex items-center gap-2 glass px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs sm:text-sm">
-                            <span class="text-blue-300">Project 02</span>
-                        </div>
-                        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight leading-tight">Website Biro Umum</h2>
-                        <p class="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed">
-                            A comprehensive website that enables the regional secretariat and other governmental organizations to access the latest bureau information and securely download supporting documents such as regional regulations and community satisfaction survey results.
-                        </p>
-                        <div class="flex flex-wrap gap-2 md:gap-3">
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-violet-500/20 text-violet-300 rounded-full text-xs sm:text-sm border border-violet-500/30">Laravel 8</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-blue-500/20 text-blue-300 rounded-full text-xs sm:text-sm border border-blue-500/30">Bootstrap</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-green-500/20 text-green-300 rounded-full text-xs sm:text-sm border border-green-500/30">MySQL</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-orange-500/20 text-orange-300 rounded-full text-xs sm:text-sm border border-orange-500/30">Adobe PDF API</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+  <a class="skip" href="#proyek">Lewati ke daftar proyek</a>
 
-        <!-- Project 3 - PerformAPP360 -->
-        <section class="snap-section relative project-section" data-section-id="5">
-            <div class="project-bg" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&h=1080&fit=crop');"></div>
-            <div class="project-overlay absolute inset-0 bg-black/60"></div>
-            <div class="container mx-auto px-4 sm:px-6 lg:px-12 max-w-7xl relative z-10 w-full">
-                <div class="glass rounded-2xl p-6 md:p-10 max-w-4xl mx-auto">
-                    <div class="space-y-4 md:space-y-6">
-                        <div class="inline-flex items-center gap-2 glass px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs sm:text-sm">
-                            <span class="text-green-300">Project 03</span>
-                        </div>
-                        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight leading-tight">PerformAPP360</h2>
-                        <p class="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed">
-                            Designed and developed a web-based performance appraisal information system utilizing 360-degree feedback from direct supervisors, enabling multi-assessor input across multiple criteria and sub-criteria. Integrated interactive graphs for easy analysis of employee performance trends, and automated the recap of average scores for each employee or division.
-                        </p>
-                        <div class="flex flex-wrap gap-2 md:gap-3">
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-violet-500/20 text-violet-300 rounded-full text-xs sm:text-sm border border-violet-500/30">PHP Native</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-blue-500/20 text-blue-300 rounded-full text-xs sm:text-sm border border-blue-500/30">Bootstrap</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-green-500/20 text-green-300 rounded-full text-xs sm:text-sm border border-green-500/30">MySQL</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-yellow-500/20 text-yellow-300 rounded-full text-xs sm:text-sm border border-yellow-500/30">jQuery</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+  <header class="topbar">
+    <a class="brand" href="#atas"><b>DANDHANY</b><span>Web Developer</span></a>
+    <nav class="topnav" aria-label="Navigasi utama">
+      <a href="#atas">Jalan</a>
+      <a href="#proyek">Proyek</a>
+      <a href="#tentang">Tentang</a>
+      <a href="#kontak">Kontak</a>
+    </nav>
+  </header>
 
-        <!-- Project 4 - Presensi Syahid -->
-        <section class="snap-section relative project-section" data-section-id="6">
-            <div class="project-bg" style="background-image: url('https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1920&h=1080&fit=crop');"></div>
-            <div class="project-overlay absolute inset-0 bg-black/60"></div>
-            <div class="container mx-auto px-4 sm:px-6 lg:px-12 max-w-7xl relative z-10 w-full">
-                <div class="glass rounded-2xl p-6 md:p-10 max-w-4xl mx-auto">
-                    <div class="space-y-4 md:space-y-6">
-                        <div class="inline-flex items-center gap-2 glass px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs sm:text-sm">
-                            <span class="text-orange-300">Project 04</span>
-                        </div>
-                        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight leading-tight">Presensi Syahid</h2>
-                        <p class="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed">
-                            A mobile attendance app designed to replace conventional checkclock systems and streamline employee attendance processes. Implemented features enabling employees to independently submit leave requests and access monthly attendance recaps. Enabled admins to efficiently compile attendance, leave, and permit data for each employee and manually manage special days.
-                        </p>
-                        <div class="flex flex-wrap gap-2 md:gap-3">
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-violet-500/20 text-violet-300 rounded-full text-xs sm:text-sm border border-violet-500/30">PHP Native</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-blue-500/20 text-blue-300 rounded-full text-xs sm:text-sm border border-blue-500/30">Bootstrap</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-green-500/20 text-green-300 rounded-full text-xs sm:text-sm border border-green-500/30">MySQL</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-yellow-500/20 text-yellow-300 rounded-full text-xs sm:text-sm border border-yellow-500/30">jQuery</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-teal-500/20 text-teal-300 rounded-full text-xs sm:text-sm border border-teal-500/30">Android (Java)</span>
-                        </div>
-                        <div class="flex flex-wrap gap-2 text-xs sm:text-sm text-gray-400">
-                            <div class="flex items-center gap-1.5">
-                                <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
-                                <span>Mobile (Front End)</span>
-                            </div>
-                            <div class="flex items-center gap-1.5">
-                                <i data-lucide="monitor" class="w-3.5 h-3.5"></i>
-                                <span>Desktop (Back End)</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+  <main>
+    <section class="hero" id="atas" data-started="false" aria-labelledby="nama">
+      <!-- Scene fills the viewport edge to edge, no frame, no card. -->
+      <canvas class="hero-scene" id="scene" aria-hidden="true"></canvas>
+      <div class="hero-scrim" aria-hidden="true"></div>
 
-        <!-- Project 5 - Newtown App -->
-        <section class="snap-section relative project-section" data-section-id="7">
-            <div class="project-bg" style="background-image: url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1920&h=1080&fit=crop');"></div>
-            <div class="project-overlay absolute inset-0 bg-black/60"></div>
-            <div class="container mx-auto px-4 sm:px-6 lg:px-12 max-w-7xl relative z-10 w-full">
-                <div class="glass rounded-2xl p-6 md:p-10 max-w-4xl mx-auto">
-                    <div class="space-y-4 md:space-y-6">
-                        <div class="inline-flex items-center gap-2 glass px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs sm:text-sm">
-                            <span class="text-pink-300">Project 05</span>
-                        </div>
-                        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight leading-tight">Newtown App</h2>
-                        <p class="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed">
-                            A Point of Sales web desktop application for UMKM building shops, featuring sales and purchase transaction recording, stock, goods, customer, and supplier management, and capable of printing transaction notes and stock reports.
-                        </p>
-                        <div class="flex flex-wrap gap-2 md:gap-3">
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-violet-500/20 text-violet-300 rounded-full text-xs sm:text-sm border border-violet-500/30">PHP Native</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-blue-500/20 text-blue-300 rounded-full text-xs sm:text-sm border border-blue-500/30">Bootstrap</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-green-500/20 text-green-300 rounded-full text-xs sm:text-sm border border-green-500/30">MySQL</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-yellow-500/20 text-yellow-300 rounded-full text-xs sm:text-sm border border-yellow-500/30">jQuery</span>
-                        </div>
-                        <div class="flex items-center gap-1.5 text-xs sm:text-sm text-gray-400">
-                            <i data-lucide="monitor" class="w-3.5 h-3.5"></i>
-                            <span>Web Desktop Application</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+      <div class="hero-copy">
+        <p class="eyebrow">Portofolio · Sidoarjo, Jawa Timur</p>
+        <h1 id="nama">Ramadhany<br>Krismaliq<br><em>Sjamdra</em></h1>
+        <p class="hero-role">Fullstack developer · Laravel, server, database</p>
+        <p class="hero-lede">Tujuh proyek berdiri sebagai resto di satu jalan pesisir. Nyalakan mesin, susuri jalannya, dan berhenti di tiap bangunan untuk melihat apa yang saya bangun.</p>
+        <div class="hero-actions">
+          <a class="btn-primary" href="#proyek" id="start">Nyalakan mesin</a>
+          <a class="btn-ghost" href="#proyek">Lihat daftar proyek</a>
+        </div>
+      </div>
 
-        <!-- Project 6 - Fooder -->
-        <section class="snap-section relative project-section" data-section-id="8">
-            <div class="project-bg" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&h=1080&fit=crop');"></div>
-            <div class="project-overlay absolute inset-0 bg-black/60"></div>
-            <div class="container mx-auto px-4 sm:px-6 lg:px-12 max-w-7xl relative z-10 w-full">
-                <div class="glass rounded-2xl p-6 md:p-10 max-w-4xl mx-auto">
-                    <div class="space-y-4 md:space-y-6">
-                        <div class="inline-flex items-center gap-2 glass px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs sm:text-sm">
-                            <span class="text-red-300">Project 06</span>
-                        </div>
-                        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight leading-tight">Fooder</h2>
-                        <p class="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed">
-                            A desktop-based restaurant management application that enables customers to place orders independently via computers integrated at each table. Streamlined kitchen operations by allowing customer orders to be sent directly to chefs, ensuring prompt meal preparation. Facilitated efficient transaction processing, as customers simply present order receipts to the cashier upon completion.
-                        </p>
-                        <div class="flex flex-wrap gap-2 md:gap-3">
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-orange-500/20 text-orange-300 rounded-full text-xs sm:text-sm border border-orange-500/30">Java</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-green-500/20 text-green-300 rounded-full text-xs sm:text-sm border border-green-500/30">MySQL</span>
-                        </div>
-                        <div class="flex items-center gap-1.5 text-xs sm:text-sm text-gray-400">
-                            <i data-lucide="monitor" class="w-3.5 h-3.5"></i>
-                            <span>Desktop Application</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+      <div class="hud hud-objective">
+        <div class="hud-row">
+          <span>Resto</span>
+          <span class="hud-count"><b id="obj-index">01</b> / 07</span>
+        </div>
+        <p class="hud-sign" id="obj-sign">DINAS</p>
+        <p class="hud-line" id="obj-line">Papan nama pertama ada di sisi kiri jalan.</p>
+      </div>
 
-        <!-- Project 7 - Mediafood -->
-        <section class="snap-section relative project-section" data-section-id="9">
-            <div class="project-bg" style="background-image: url('https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=1920&h=1080&fit=crop');"></div>
-            <div class="project-overlay absolute inset-0 bg-black/60"></div>
-            <div class="container mx-auto px-4 sm:px-6 lg:px-12 max-w-7xl relative z-10 w-full">
-                <div class="glass rounded-2xl p-6 md:p-10 max-w-4xl mx-auto">
-                    <div class="space-y-4 md:space-y-6">
-                        <div class="inline-flex items-center gap-2 glass px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs sm:text-sm">
-                            <span class="text-amber-300">Project 07</span>
-                        </div>
-                        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight leading-tight">Mediafood</h2>
-                        <p class="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed">
-                            An enhanced version of Fooder, enabling customers to order independently using their personal cell phones through a barcode scanning system, eliminating the need for restaurants to provide multiple devices per table. Introduced a feature for waiters to track orders pending in the kitchen, streamlining order management.
-                        </p>
-                        <div class="flex flex-wrap gap-2 md:gap-3">
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-violet-500/20 text-violet-300 rounded-full text-xs sm:text-sm border border-violet-500/30">PHP Native</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-blue-500/20 text-blue-300 rounded-full text-xs sm:text-sm border border-blue-500/30">Bootstrap</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-green-500/20 text-green-300 rounded-full text-xs sm:text-sm border border-green-500/30">MySQL</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-yellow-500/20 text-yellow-300 rounded-full text-xs sm:text-sm border border-yellow-500/30">jQuery</span>
-                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-teal-500/20 text-teal-300 rounded-full text-xs sm:text-sm border border-teal-500/30">Android (Java)</span>
-                        </div>
-                        <div class="flex flex-wrap gap-2 text-xs sm:text-sm text-gray-400">
-                            <div class="flex items-center gap-1.5">
-                                <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
-                                <span>Mobile (Front End)</span>
-                            </div>
-                            <div class="flex items-center gap-1.5">
-                                <i data-lucide="monitor" class="w-3.5 h-3.5"></i>
-                                <span>Desktop (Back End)</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Contact Section -->
-        <section class="snap-section relative" data-section-id="10" id="contact">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-12 max-w-7xl w-full">
-                <div class="text-center mb-6 md:mb-8">
-                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-3 md:mb-4">Let's Work Together</h2>
-                    <p class="text-gray-400 text-base sm:text-lg">Have a project in mind? Let's make it happen</p>
-                </div>
-                <div class="glass rounded-2xl p-6 md:p-10">
-                    <div class="grid lg:grid-cols-2 gap-6 md:gap-8">
-                        <div class="space-y-4 md:space-y-6">
-                            <div class="space-y-2">
-                                <label class="text-xs sm:text-sm text-gray-400">Full Name</label>
-                                <input type="text" placeholder="Your Name" class="w-full px-4 py-2.5 md:py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-violet-500 transition-colors text-sm md:text-base">
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-xs sm:text-sm text-gray-400">Email Address</label>
-                                <input type="email" placeholder="your@email.com" class="w-full px-4 py-2.5 md:py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-violet-500 transition-colors text-sm md:text-base">
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-xs sm:text-sm text-gray-400">Project Details</label>
-                                <textarea rows="5" placeholder="Tell me about your project..." class="w-full px-4 py-2.5 md:py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-violet-500 transition-colors resize-none text-sm md:text-base"></textarea>
-                            </div>
-                            <button class="w-full px-6 py-3 md:py-4 bg-white text-black rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 text-sm md:text-base">
-                                Send Message
-                                <i data-lucide="send" class="w-4 h-4 md:w-5 md:h-5"></i>
-                            </button>
-                        </div>
-                        
-                        <div class="flex flex-col justify-between space-y-6">
-                            <div class="space-y-4 md:space-y-6">
-                                <div class="flex items-start gap-3 md:gap-4">
-                                    <div class="w-10 h-10 md:w-12 md:h-12 bg-violet-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                                        <i data-lucide="mail" class="w-5 h-5 md:w-6 md:h-6 text-violet-400"></i>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs sm:text-sm text-gray-400 mb-1">Email</p>
-                                        <p class="font-medium text-sm sm:text-base md:text-lg break-all">rino.ramadhani@gmail.com</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-3 md:gap-4">
-                                    <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                                        <i data-lucide="phone" class="w-5 h-5 md:w-6 md:h-6 text-blue-400"></i>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs sm:text-sm text-gray-400 mb-1">Phone</p>
-                                        <p class="font-medium text-sm sm:text-base md:text-lg">+62 851-5533-6566</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-3 md:gap-4">
-                                    <div class="w-10 h-10 md:w-12 md:h-12 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                                        <i data-lucide="map-pin" class="w-5 h-5 md:w-6 md:h-6 text-green-400"></i>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs sm:text-sm text-gray-400 mb-1">Location</p>
-                                        <p class="font-medium text-sm sm:text-base md:text-lg">Sidoarjo, East Java</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="pt-6 border-t border-white/10">
-                                <p class="text-xs sm:text-sm text-gray-400 mb-3 md:mb-4">Connect with me</p>
-                                <div class="flex gap-3">
-                                    <a href="https://github.com/DanDhany" target="_blank" class="w-10 h-10 md:w-12 md:h-12 glass rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors">
-                                        <i data-lucide="github" class="w-4 h-4 md:w-5 md:h-5"></i>
-                                    </a>
-                                    <a href="https://www.linkedin.com/in/ramadhanyks/" target="_blank" class="w-10 h-10 md:w-12 md:h-12 glass rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors">
-                                        <i data-lucide="linkedin" class="w-4 h-4 md:w-5 md:h-5"></i>
-                                    </a>
-                                    <a href="mailto:rino.ramadhani@gmail.com" class="w-10 h-10 md:w-12 md:h-12 glass rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors">
-                                        <i data-lucide="mail" class="w-4 h-4 md:w-5 md:h-5"></i>
-                                    </a>
-                                    <a href="tel:+62085155336566" class="w-10 h-10 md:w-12 md:h-12 glass rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors">
-                                        <i data-lucide="phone" class="w-4 h-4 md:w-5 md:h-5"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
+      <div class="hud hud-radio">
+        <div class="hud-row">
+          <span>Radio</span>
+          <span id="radio-mood">Matahari terbenam</span>
+        </div>
+        <div class="radio-list" role="group" aria-label="Pilih waktu lewat radio">
+          <button class="radio" type="button" data-mood="0" aria-pressed="true">
+            <span class="radio-freq">88.1</span><span>Shore</span>
+          </button>
+          <button class="radio" type="button" data-mood="1" aria-pressed="false">
+            <span class="radio-freq">96.4</span><span>Palm Noir</span>
+          </button>
+          <button class="radio" type="button" data-mood="2" aria-pressed="false">
+            <span class="radio-freq">101.7</span><span>Night Shift</span>
+          </button>
+        </div>
+      </div>
 
-    <script>
-        // Initialize Lucide icons
-        lucide.createIcons({
-            attrs: {
-                'stroke-width': 1.5
-            }
-        });
-        
-        // Three.js Scene Setup
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
-        
-        // Create particles
-        const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = window.innerWidth < 768 ? 1500 : 3000;
-        const posArray = new Float32Array(particlesCount * 3);
-        
-        for(let i = 0; i < particlesCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 100;
-        }
-        
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        
-        const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.05,
-            color: 0x8b5cf6,
-            transparent: true,
-            opacity: 0.8,
-            blending: THREE.AdditiveBlending
-        });
-        
-        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-        scene.add(particlesMesh);
-        
-        // Create geometric shapes
-        const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
-        const material = new THREE.MeshBasicMaterial({
-            color: 0x8b5cf6,
-            wireframe: true,
-            transparent: true,
-            opacity: 0.1
-        });
-        const torusKnot = new THREE.Mesh(geometry, material);
-        scene.add(torusKnot);
-        
-        camera.position.z = 30;
-        
-        let scrollY = 0;
-        const container = document.getElementById('main-container');
-        
-        container.addEventListener('scroll', () => {
-            scrollY = container.scrollTop;
-            updateActiveNavDot();
-        });
-        
-        // Navigation dots functionality
-        const navDots = document.querySelectorAll('.nav-dot');
-        const sections = document.querySelectorAll('.snap-section');
-        
-        navDots.forEach((dot, index) => {
-            dot.addEventListener('click', () => {
-                sections[index].scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-        
-        function updateActiveNavDot() {
-            const scrollPosition = container.scrollTop;
-            const windowHeight = window.innerHeight;
-            const currentSection = Math.round(scrollPosition / windowHeight);
-            
-            navDots.forEach((dot, index) => {
-                if (index === currentSection) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
-        }
-        
-        // Animation loop
-        function animate() {
-            requestAnimationFrame(animate);
-            
-            const scroll = scrollY * 0.001;
-            
-            // Rotate particles
-            particlesMesh.rotation.y = scroll * 0.5;
-            particlesMesh.rotation.x = scroll * 0.3;
-            
-            // Animate torus knot
-            torusKnot.rotation.x = scroll * 0.8;
-            torusKnot.rotation.y = scroll * 1.2;
-            torusKnot.position.z = -20 + (scroll * 5);
-            
-            // Parallax effect
-            camera.position.y = -scroll * 3;
-            
-            renderer.render(scene, camera);
-        }
-        
-        animate();
-        
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-        
-        // Smooth scroll initialization
-        updateActiveNavDot();
-    </script>
+      <div class="hud hud-radar">
+        <canvas id="radar" width="176" height="176" role="img" aria-label="Radar jalan. Titik menandai resto di depan. Gunakan daftar proyek untuk melompat ke resto tertentu."></canvas>
+        <div class="dash">
+          <span id="speed">0</span><span>km/j</span>
+          <span class="odo" id="odo">0.00 km</span>
+        </div>
+      </div>
+
+      <div class="hud hud-prompt" id="prompt">
+        <button type="button" id="enter"><span class="key">E</span> Masuk ke <b id="prompt-sign">DINAS</b></button>
+      </div>
+
+      <div class="pedals" aria-label="Kendali kendaraan">
+        <button class="pedal" type="button" data-pedal="gas" aria-label="Gas">Gas</button>
+        <button class="pedal" type="button" data-pedal="brake" aria-label="Rem">Rem</button>
+        <button class="pedal" type="button" data-pedal="left" aria-label="Belok kiri">Kiri</button>
+        <button class="pedal" type="button" data-pedal="right" aria-label="Belok kanan">Kanan</button>
+      </div>
+
+      <p class="hud-help" id="help">W / S gas dan rem · A / D belok · E masuk resto · Esc tutup panel</p>
+    </section>
+
+    <section class="section section-index" id="proyek" aria-labelledby="judul-proyek">
+      <div class="section-inner">
+        <div class="section-head">
+          <p class="marker"><span class="marker-num">01</span> Indeks proyek</p>
+          <h2 id="judul-proyek">Tujuh bangunan di sepanjang jalan</h2>
+          <p class="section-lede">Tiap baris adalah satu resto. Tekan tombolnya dan kamera membawa Anda ke bangunan itu, lalu panel detailnya terbuka.</p>
+        </div>
+
+        <ol class="index-list">
+          <li>
+            <article class="stop-row" data-project data-sign="DINAS" data-accent="#FF2F7E" data-image="assets/projects/sipeno.jpg">
+              <div class="row-thumb">
+                <img src="assets/projects/sipeno.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar SIPENO: surat tugas, rincian biaya, dan rekap perjalanan dinas.">
+              </div>
+              <div class="row-main">
+                <p class="row-kicker">01 · Laravel 8</p>
+                <h3>SIPENO <span>Sistem Perjalanan Dinas</span></h3>
+                <p class="row-tagline">Surat tugas dan rincian biaya, rapi dalam satu meja.</p>
+                <p class="row-desc">Sistem web untuk Biro Umum Sekretariat Daerah Provinsi Jawa Timur. Mengurus pembuatan dan rekapitulasi bulanan dokumen pertanggungjawaban perjalanan dinas: surat tugas, nota dinas, surat perintah perjalanan dinas, dan rincian biaya tiap perjalanan.</p>
+                <ul class="tags">
+                  <li>Laravel 8</li><li>Bootstrap</li><li>MySQL</li><li>PhpOffice</li><li>Calendar API</li>
+                </ul>
+              </div>
+              <div class="row-go">
+                <button class="btn-plate" type="button" data-drive="0">Kemudikan ke sini</button>
+                <p class="row-note">Resto 01</p>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="stop-row" data-project data-sign="BIRO" data-accent="#FFB03A" data-image="assets/projects/biro-umum.jpg">
+              <div class="row-thumb">
+                <img src="assets/projects/biro-umum.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar situs Biro Umum: halaman informasi dan daftar dokumen.">
+              </div>
+              <div class="row-main">
+                <p class="row-kicker">02 · Laravel 8</p>
+                <h3>Website Biro Umum <span>Informasi dan dokumen daerah</span></h3>
+                <p class="row-tagline">Informasi biro dan dokumen resmi, tinggal unduh.</p>
+                <p class="row-desc">Situs tempat sekretariat daerah dan instansi lain membaca informasi terbaru biro, sekaligus mengunduh dokumen pendukung seperti peraturan daerah dan hasil survei kepuasan masyarakat.</p>
+                <ul class="tags">
+                  <li>Laravel 8</li><li>Bootstrap</li><li>MySQL</li><li>Adobe PDF API</li>
+                </ul>
+              </div>
+              <div class="row-go">
+                <button class="btn-plate" type="button" data-drive="1">Kemudikan ke sini</button>
+                <p class="row-note">Resto 02</p>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="stop-row" data-project data-sign="360 GRILL" data-accent="#12C2B0" data-image="assets/projects/performapp360.jpg">
+              <div class="row-thumb">
+                <img src="assets/projects/performapp360.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar PerformAPP360: dasbor penilaian, angket, dan grafik kinerja.">
+              </div>
+              <div class="row-main">
+                <p class="row-kicker">03 · PHP native</p>
+                <h3>PerformAPP360 <span>Penilaian kinerja 360 derajat</span></h3>
+                <p class="row-tagline">Penilaian dari segala arah, direkap otomatis.</p>
+                <p class="row-desc">Sistem informasi penilaian kinerja dengan umpan balik 360 derajat dari atasan langsung. Banyak penilai, banyak kriteria dan subkriteria, dengan grafik interaktif untuk membaca tren kinerja serta rekap nilai rata-rata per karyawan dan per divisi.</p>
+                <ul class="tags">
+                  <li>PHP native</li><li>Bootstrap</li><li>MySQL</li><li>jQuery</li>
+                </ul>
+              </div>
+              <div class="row-go">
+                <button class="btn-plate" type="button" data-drive="2">Kemudikan ke sini</button>
+                <p class="row-note">Resto 03</p>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="stop-row" data-project data-sign="ABSEN" data-accent="#FF7A2B" data-image="assets/projects/presensi-syahid.jpg">
+              <div class="row-thumb">
+                <img src="assets/projects/presensi-syahid.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar Presensi Syahid: dasbor admin dan aplikasi absensi Android.">
+              </div>
+              <div class="row-main">
+                <p class="row-kicker">04 · PHP native</p>
+                <h3>Presensi Syahid <span>Absensi karyawan</span></h3>
+                <p class="row-tagline">Absen dari ponsel, rekap langsung jadi.</p>
+                <p class="row-desc">Aplikasi absensi pengganti mesin checklock. Karyawan mengajukan izin dan melihat rekap absensi bulanan dari ponsel, sementara admin menyusun data absensi, izin, dan cuti tiap karyawan serta mengatur hari khusus.</p>
+                <ul class="tags">
+                  <li>PHP native</li><li>Bootstrap</li><li>MySQL</li><li>jQuery</li><li>Android (Java)</li>
+                </ul>
+              </div>
+              <div class="row-go">
+                <button class="btn-plate" type="button" data-drive="3">Kemudikan ke sini</button>
+                <p class="row-note">Resto 04</p>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="stop-row" data-project data-sign="NEWTOWN" data-accent="#FF2F7E" data-image="assets/projects/newtown.jpg">
+              <div class="row-thumb">
+                <img src="assets/projects/newtown.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar Newtown App: dasbor kasir, laporan penjualan, dan laporan stok.">
+              </div>
+              <div class="row-main">
+                <p class="row-kicker">05 · PHP native</p>
+                <h3>Newtown App <span>Kasir toko bangunan</span></h3>
+                <p class="row-tagline">Toko bangunan: jual, beli, stok, cetak nota.</p>
+                <p class="row-desc">Aplikasi point of sale desktop untuk toko bangunan UMKM. Mencatat transaksi penjualan dan pembelian, mengelola stok, barang, pelanggan, dan pemasok, lalu mencetak nota transaksi serta laporan stok.</p>
+                <ul class="tags">
+                  <li>PHP native</li><li>Bootstrap</li><li>MySQL</li><li>jQuery</li>
+                </ul>
+              </div>
+              <div class="row-go">
+                <button class="btn-plate" type="button" data-drive="4">Kemudikan ke sini</button>
+                <p class="row-note">Resto 05</p>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="stop-row" data-project data-sign="FOODER" data-accent="#F6E7CE" data-image="assets/projects/fooder.jpg">
+              <div class="row-thumb">
+                <img src="assets/projects/fooder.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar Fooder: menu pelanggan dan halaman pesanan restoran.">
+              </div>
+              <div class="row-main">
+                <p class="row-kicker">06 · Java</p>
+                <h3>Fooder <span>Pesanan dari meja</span></h3>
+                <p class="row-tagline">Pesan dari meja, langsung ke dapur.</p>
+                <p class="row-desc">Aplikasi manajemen restoran desktop. Pelanggan memesan sendiri lewat komputer di tiap meja, pesanan langsung masuk ke koki, dan pelanggan cukup membawa struk ke kasir untuk membayar.</p>
+                <ul class="tags">
+                  <li>Java</li><li>MySQL</li>
+                </ul>
+              </div>
+              <div class="row-go">
+                <button class="btn-plate" type="button" data-drive="5">Kemudikan ke sini</button>
+                <p class="row-note">Resto 06</p>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="stop-row" data-project data-sign="MEDIAFOOD" data-accent="#12C2B0" data-image="assets/projects/mediafood.jpg">
+              <div class="row-thumb">
+                <img src="assets/projects/mediafood.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Tangkapan layar Mediafood: pesanan dari ponsel dan halaman pesanan masuk.">
+              </div>
+              <div class="row-main">
+                <p class="row-kicker">07 · PHP native</p>
+                <h3>Mediafood <span>Pesan lewat barcode</span></h3>
+                <p class="row-tagline">Pindai barcode, pesan dari ponsel sendiri.</p>
+                <p class="row-desc">Versi lanjutan dari Fooder. Pelanggan memesan lewat ponsel masing-masing dengan memindai barcode di meja, jadi restoran tidak perlu menyediakan satu perangkat per meja. Pelayan juga bisa memantau pesanan yang masih menunggu di dapur.</p>
+                <ul class="tags">
+                  <li>PHP native</li><li>Bootstrap</li><li>MySQL</li><li>jQuery</li><li>Android (Java)</li>
+                </ul>
+              </div>
+              <div class="row-go">
+                <button class="btn-plate" type="button" data-drive="6">Kemudikan ke sini</button>
+                <p class="row-note">Resto 07</p>
+              </div>
+            </article>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section section-about" id="tentang" aria-labelledby="judul-tentang">
+      <div class="section-inner">
+        <p class="marker"><span class="marker-num">02</span> Tentang</p>
+        <h2 id="judul-tentang">Yang saya kerjakan di balik layar</h2>
+
+        <div class="about-grid">
+          <div class="about-bio">
+            <figure class="about-portrait">
+              <img src="assets/me.jpg" width="600" height="800" loading="lazy" decoding="async" alt="Foto formal Ramadhany Krismaliq Sjamdra dari CV.">
+              <figcaption>Dari CV, arsip pribadi</figcaption>
+            </figure>
+            <div class="about-text">
+              <p class="about-lead">Saya membangun sistem web dari sisi database sampai tombol terakhir. Sehari-hari memegang Laravel, PHP, dan MySQL, merawat server, dan menulis aplikasi Android atau desktop ketika pekerjaannya menuntut.</p>
+              <p>Sebagian besar proyek di halaman ini adalah sistem internal untuk pemerintahan dan UMKM: perjalanan dinas, absensi, penilaian kinerja, sampai kasir toko bangunan. Pekerjaannya lebih banyak soal alur kerja yang benar daripada tampilan yang ramai.</p>
+              <p>Berdasarkan di Sidoarjo, Jawa Timur. Bekerja sebagai IT Expert Officer, sebelumnya di Biro Umum Sekretariat Daerah Provinsi Jawa Timur.</p>
+            </div>
+          </div>
+
+          <div class="about-facts">
+            <h3>Perangkat kerja</h3>
+            <ul class="fact-list">
+              <li><span>Laravel dan PHP</span><small>Sistem internal</small></li>
+              <li><span>MySQL dan MariaDB</span><small>Basis data</small></li>
+              <li><span>Docker</span><small>Kontainerisasi</small></li>
+              <li><span>Bootstrap dan jQuery</span><small>Antarmuka</small></li>
+              <li><span>Java</span><small>Android dan desktop</small></li>
+              <li><span>Git</span><small>Kontrol versi</small></li>
+              <li><span>Perawatan server</span><small>Deploy dan operasional</small></li>
+            </ul>
+
+            <h3>Pendidikan</h3>
+            <ul class="fact-list">
+              <li><span>STIKOM Surabaya</span><small>Sistem Informasi, 2016–2020</small></li>
+              <li><span>SMK Negeri 2 Buduran</span><small>Multimedia, 2013–2016</small></li>
+            </ul>
+
+            <h3>Bahasa</h3>
+            <ul class="fact-list">
+              <li><span>Indonesia</span><small>Penutur asli</small></li>
+              <li><span>Inggris</span><small>Profesional</small></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-contact" id="kontak" aria-labelledby="judul-kontak">
+      <div class="section-inner">
+        <p class="marker"><span class="marker-num">03</span> Kontak</p>
+        <h2 id="judul-kontak">Ada yang perlu dibangun?</h2>
+        <p class="contact-lede">Kirim surel atau telepon langsung. Saya di Sidoarjo, terbuka untuk pekerjaan jarak jauh maupun di tempat.</p>
+
+        <div class="contact-actions">
+          <a class="btn-primary" href="mailto:rino.ramadhani@gmail.com">rino.ramadhani@gmail.com</a>
+          <button class="btn-plate" type="button" id="copy-mail" data-mail="rino.ramadhani@gmail.com">Salin alamat surel</button>
+          <a class="btn-plate" href="tel:+6285155336566">+62 851-5533-6566</a>
+        </div>
+
+        <ul class="contact-links">
+          <li><a href="https://github.com/DanDhany" target="_blank" rel="noopener">GitHub / DanDhany</a></li>
+          <li><a href="https://www.linkedin.com/in/ramadhanyks/" target="_blank" rel="noopener">LinkedIn / ramadhanyks</a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <aside class="panel" id="panel" role="dialog" aria-modal="false" aria-labelledby="panel-title" hidden>
+    <button class="panel-x" type="button" id="panel-close" aria-label="Tutup panel">Tutup</button>
+    <div class="panel-figure"><img id="panel-img" alt="" width="1440" height="1080"></div>
+    <p class="panel-kicker" id="panel-kicker">Resto 01</p>
+    <h2 id="panel-title">SIPENO</h2>
+    <p class="panel-sub" id="panel-sub">Sistem Perjalanan Dinas</p>
+    <p class="panel-tagline" id="panel-tagline"></p>
+    <p class="panel-desc" id="panel-desc"></p>
+    <p class="panel-side" id="panel-side"></p>
+    <ul class="tags" id="panel-tags"></ul>
+    <p class="panel-note">Tangkapan layar asli dari portofolio Ramadhany. Sistemnya dipakai internal, jadi tidak ada demo publik.</p>
+  </aside>
+
+  <footer class="site-foot">
+    <span>Ramadhany Krismaliq Sjamdra · Sidoarjo, Jawa Timur</span>
+    <span>Dibangun dengan Three.js · 2026</span>
+  </footer>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>
