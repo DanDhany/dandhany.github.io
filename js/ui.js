@@ -122,17 +122,24 @@
   /* Mail copy lives here so it also works without the 3D scene. */
   const copyBtn = document.getElementById("copy-mail");
   if (copyBtn) {
+    /* The translator module loads after this file, so read it on demand. */
+    const label = (key, fallback) => (window.i18n ? window.i18n.t(key) : fallback);
     copyBtn.addEventListener("click", async () => {
       const mail = copyBtn.dataset.mail;
       try {
         await navigator.clipboard.writeText(mail);
-        copyBtn.textContent = "Surel tersalin";
+        copyBtn.textContent = label("copy.done", "Surel tersalin");
       } catch (error) {
         copyBtn.textContent = mail;
       }
       window.setTimeout(() => {
-        copyBtn.textContent = "Salin alamat surel";
+        copyBtn.textContent = label("copy.idle", "Salin alamat surel");
       }, 2400);
+    });
+    document.addEventListener("portfolio:lang", () => {
+      if (copyBtn.textContent !== copyBtn.dataset.mail) {
+        copyBtn.textContent = label("copy.idle", "Salin alamat surel");
+      }
     });
   }
 })();

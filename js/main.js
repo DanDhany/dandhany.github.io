@@ -1,4 +1,5 @@
 import { createWorld, START_Z, stopZ } from "./world.js";
+import { t } from "./i18n.js";
 
 const hero = document.querySelector(".hero");
 const canvas = document.getElementById("scene");
@@ -17,7 +18,6 @@ const radioMood = document.getElementById("radio-mood");
 const panel = document.getElementById("panel");
 const panelClose = document.getElementById("panel-close");
 
-const MOOD_LABELS = ["Matahari terbenam", "Biru malam", "Neon penuh"];
 const MAX_SPEED = 30;
 const STOP_AHEAD = 32;
 
@@ -45,9 +45,28 @@ const stops = articles.map((el, i) => {
   };
 });
 
+/* Copy is read from the markup, so a language switch only needs a re-read
+   instead of a second translation table for the panel and the HUD. */
+function readStopsText() {
+  stops.forEach((stop) => {
+    const h3 = stop.el.querySelector("h3");
+    const sub = h3.querySelector("span");
+    const img = stop.el.querySelector(".row-thumb img");
+    stop.name = h3.childNodes[0].textContent.trim();
+    stop.sub = sub ? sub.textContent.trim() : "";
+    stop.tagline = stop.el.querySelector(".row-tagline").textContent.trim();
+    stop.desc = stop.el.querySelector(".row-desc").textContent.trim();
+    stop.stack = Array.from(stop.el.querySelectorAll(".tags li")).map((li) => li.textContent.trim());
+    stop.alt = img.alt;
+  });
+}
+
 
 const state = {
   started: false,
+  panelIndex: null,
+  mood: 0,
+  moodPicked: false,
   distance: 0,
   speed: 0,
   lateral: 0,
@@ -82,7 +101,10 @@ if (objTotal) objTotal.textContent = pad2(stops.length);
 function setPanelFields(stop) {
   document.getElementById("panel-img").src = stop.src;
   document.getElementById("panel-img").alt = stop.alt;
-  document.getElementById("panel-kicker").textContent = `Resto ${pad2(stop.index + 1)} / ${pad2(stops.length)}`;
+  document.getElementById("panel-kicker").textContent = t("panel.kicker", {
+    n: pad2(stop.index + 1),
+    total: pad2(stops.length),
+  });
   document.getElementById("panel-title").textContent = stop.name;
   document.getElementById("panel-sub").textContent = stop.sub;
   document.getElementById("panel-tagline").textContent = stop.tagline;
@@ -91,21 +113,21 @@ function setPanelFields(stop) {
   const repoLink = document.getElementById("panel-link");
   const note = document.getElementById("panel-note");
   const figureTag = document.getElementById("panel-figure-tag");
-  figureTag.textContent = stop.repo ? "Repo GitHub" : "Tangkapan layar";
+  figureTag.textContent = stop.repo ? t("panel.figure.repo") : t("panel.figure.shot");
   if (stop.repo) {
     repoLink.href = `https://github.com/DanDhany/${stop.repo}`;
     repoLink.textContent = `github.com/DanDhany/${stop.repo}`;
     repoLink.hidden = false;
-    note.textContent = "Kartu repo dari GitHub. Kode, riwayat, dan README lengkapnya ada di repo publik.";
+    note.textContent = t("panel.note.repo");
   } else if (stop.card) {
     repoLink.hidden = true;
     repoLink.removeAttribute("href");
-    figureTag.textContent = "Kartu proyek";
-    note.textContent = "Kartu proyek. Aplikasinya berjalan lokal dan tidak ada tangkapan layar yang tersimpan.";
+    figureTag.textContent = t("panel.figure.card");
+    note.textContent = t("panel.note.card");
   } else {
     repoLink.hidden = true;
     repoLink.removeAttribute("href");
-    note.textContent = "Tangkapan layar asli dari portofolio Ramadhany. Sistemnya dipakai internal, jadi tidak ada demo publik.";
+    note.textContent = t("panel.note.internal");
   }
   const tagList = document.getElementById("panel-tags");
   tagList.replaceChildren(
@@ -123,6 +145,7 @@ function openPanel(index) {
   /* Reading a resto should not send the car rolling down the road. */
   state.parked = true;
   state.speed = 0;
+  state.panelIndex = index;
   setPanelFields(stop);
   lastFocus = document.activeElement;
   panel.hidden = false;
@@ -134,6 +157,7 @@ function openPanel(index) {
 function closePanel() {
   if (panel.hidden) return;
   panel.hidden = true;
+  state.panelIndex = null;
   document.body.dataset.panel = "closed";
   if (lastFocus && typeof lastFocus.focus === "function") {
     lastFocus.focus({ preventScroll: true });
@@ -215,7 +239,7 @@ function focusStop(index, zoom = true) {
     if (world && world.camera.aspect < 0.9) explore.dist *= 1.3;
     explore.yaw = (i % 2 === 0 ? -1 : 1) * 0.18;
   }
-  setExploreName(`Resto ${pad2(i + 1)} · ${stop.name}`);
+  setExploreName(t("explore.stop", { n: pad2(i + 1), name: stop.name }));
 }
 
 function showMap() {
@@ -232,7 +256,7 @@ function showMap() {
   }
   world.camera.far = Math.max(world.camera.far, explore.dist * 3);
   world.camera.updateProjectionMatrix();
-  setExploreName("Peta jalan · geser untuk menyusuri");
+  setExploreName(t("explore.map"));
 }
 
 function enterExplore(index) {
@@ -490,12 +514,12 @@ function updateHud() {
   objSign.textContent = stop.sign;
 
   if (dy < -12) {
-    objLine.textContent = "Ujung jalan. Papan HUBUNGI SAYA ada di sisi kanan.";
+    objLine.textContent = t("hud.end");
   } else if (state.promptIndex !== null) {
     objLine.textContent = stop.tagline;
   } else {
-    const side = index % 2 === 0 ? "kiri" : "kanan";
-    objLine.textContent = `${Math.max(0, Math.round(dy))} m lagi, papan nama di sisi ${side} jalan.`;
+    const side = index % 2 === 0 ? t("side.left") : t("side.right");
+    objLine.textContent = t("hud.distance", { m: Math.max(0, Math.round(dy)), side });
   }
 
   const promptIndex = dy > 1 && dy < 46 ? index : null;
@@ -805,8 +829,29 @@ document.querySelectorAll(".radio").forEach((btn) => {
     document.querySelectorAll(".radio").forEach((other) => {
       other.setAttribute("aria-pressed", String(other === btn));
     });
-    radioMood.textContent = MOOD_LABELS[index] || MOOD_LABELS[0];
+    state.mood = index;
+    state.moodPicked = true;
+    radioMood.textContent = t(`mood.${index}`);
   });
+});
+
+/* --------------------------------------------------------------- language */
+
+document.addEventListener("portfolio:lang", () => {
+  readStopsText();
+  updateHud();
+  /* The untouched label is a plain text node the translator already handles. */
+  if (state.moodPicked) radioMood.textContent = t(`mood.${state.mood}`);
+  if (state.panelIndex !== null && !panel.hidden) {
+    setPanelFields(stops[state.panelIndex]);
+  }
+  const focus = stops[explore.focus];
+  if (focus) {
+    setExploreName(
+      explore.map ? t("explore.map") : t("explore.stop", { n: pad2(explore.focus + 1), name: focus.name })
+    );
+  }
+  if (world) world.setLanguage();
 });
 
 /* ------------------------------------------------------------ visibility */
@@ -843,7 +888,7 @@ async function boot() {
     updateHud();
   } catch (error) {
     document.body.classList.add("no-webgl");
-    startBtn.textContent = "Lihat daftar proyek";
+    startBtn.textContent = t("start.fallback");
     console.warn("Scene 3D tidak bisa dimulai:", error);
   }
   last = performance.now();

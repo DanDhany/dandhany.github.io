@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
+import { t } from "./i18n.js";
 
 export const START_Z = 12;
 export const STOP_FIRST = -80;
@@ -368,6 +369,10 @@ export function createWorld(canvas, stops) {
 
   const glowSprites = [];
   const pickables = [];
+  /* Signboards carry language, so they are kept around for a repaint. */
+  const signBoards = [];
+  let gateBoard = null;
+  let endBoard = null;
 
   const stripeMap = paint(160, 80, (ctx, w, h) => {
     ctx.fillStyle = "#f6e7ce";
@@ -431,7 +436,7 @@ export function createWorld(canvas, stops) {
       ctx.fillStyle = accent;
       ctx.font = '600 34px "Barlow Condensed", "Arial Narrow", sans-serif';
       ctx.letterSpacing = "8px";
-      ctx.fillText(`RESTO ${String(index + 1).padStart(2, "0")}`, w / 2, h - 44);
+      ctx.fillText(t("world.stop", { n: String(index + 1).padStart(2, "0") }), w / 2, h - 44);
     });
   }
 
@@ -488,6 +493,7 @@ export function createWorld(canvas, stops) {
     sign.userData = { project: i };
     group.add(sign);
     pickables.push(sign);
+    signBoards.push({ mesh: sign, name: stop.sign, accent, index: i });
 
     const glowTex = glowTexture(accent);
     const glowMat = new THREE.MeshBasicMaterial({
@@ -686,19 +692,24 @@ export function createWorld(canvas, stops) {
   gate.add(beam);
   const gateSign = new THREE.Mesh(
     new THREE.PlaneGeometry(11, 3.4),
-    new THREE.MeshBasicMaterial({ map: bigSign("JALAN PESISIR", "#FF2F7E", "DANDHANY · FULLSTACK DEVELOPER"), toneMapped: false })
+    new THREE.MeshBasicMaterial({
+      map: bigSign(t("world.gate"), "#FF2F7E", t("world.gateSub")),
+      toneMapped: false,
+    })
   );
   gateSign.position.set(0, 8.2, 0.24);
   gate.add(gateSign);
+  gateBoard = gateSign;
   scene.add(gate);
 
   const endSign = new THREE.Mesh(
     new THREE.PlaneGeometry(11, 3.4),
     new THREE.MeshBasicMaterial({
-      map: bigSign("HUBUNGI SAYA", "#12C2B0", "ADA PROYEK? KLIK PAPAN INI"),
+      map: bigSign(t("world.end"), "#12C2B0", t("world.endSub")),
       toneMapped: false,
     })
   );
+  endBoard = endSign;
   endSign.position.set(9.5, 4.6, lastStopZ - 84);
   endSign.rotation.y = -0.55;
   endSign.userData = { contact: true };
@@ -1032,6 +1043,28 @@ export function createWorld(canvas, stops) {
     return Math.max(1, Math.min(dpr, cap));
   }
 
+  /* Repaint every signboard when the reader flips the language switch. */
+  function setLanguage() {
+    signBoards.forEach((board) => {
+      const map = signTexture(board.name, board.accent, board.index);
+      board.mesh.material.map.dispose();
+      board.mesh.material.map = map;
+      board.mesh.material.needsUpdate = true;
+    });
+    if (gateBoard) {
+      const map = bigSign(t("world.gate"), "#FF2F7E", t("world.gateSub"));
+      gateBoard.material.map.dispose();
+      gateBoard.material.map = map;
+      gateBoard.material.needsUpdate = true;
+    }
+    if (endBoard) {
+      const map = bigSign(t("world.end"), "#12C2B0", t("world.endSub"));
+      endBoard.material.map.dispose();
+      endBoard.material.map = map;
+      endBoard.material.needsUpdate = true;
+    }
+  }
+
   function resize() {
     const w = canvas.clientWidth || window.innerWidth;
     const h = canvas.clientHeight || window.innerHeight;
@@ -1051,6 +1084,7 @@ export function createWorld(canvas, stops) {
     pick,
     resize,
     setMood,
+    setLanguage,
     moods: MOODS,
     startZ: START_Z,
     stopZ,

@@ -1519,6 +1519,39 @@ main {
   color: var(--ink);
 }
 
+/* Language switch, sitting beside the Menu button in the top right. */
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  border: 1px solid var(--rule-strong);
+}
+
+.lang-btn {
+  font-family: var(--cond);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  line-height: 1;
+  padding: 8px 9px;
+  color: var(--sand-dim);
+}
+
+.lang-btn + .lang-btn {
+  border-left: 1px solid var(--rule-strong);
+}
+
+.lang-btn:hover,
+.lang-btn:focus-visible {
+  color: var(--sand);
+  background: rgba(246, 231, 206, 0.1);
+}
+
+.lang-btn.is-active {
+  color: var(--ink);
+  background: var(--sand);
+}
+
 .pause {
   position: fixed;
   inset: 0;
