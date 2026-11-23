@@ -686,7 +686,7 @@ export function createWorld(canvas, stops) {
   gate.add(beam);
   const gateSign = new THREE.Mesh(
     new THREE.PlaneGeometry(11, 3.4),
-    new THREE.MeshBasicMaterial({ map: bigSign("JALAN PESISIR", "#FF2F7E", "DANDHANY · WEB DEVELOPER"), toneMapped: false })
+    new THREE.MeshBasicMaterial({ map: bigSign("JALAN PESISIR", "#FF2F7E", "DANDHANY · FULLSTACK DEVELOPER"), toneMapped: false })
   );
   gateSign.position.set(0, 8.2, 0.24);
   gate.add(gateSign);
@@ -964,12 +964,18 @@ export function createWorld(canvas, stops) {
     underGlowMat.opacity = 0.36 + Math.sin(elapsed * 3.1) * 0.05;
 
     /* Chase camera: behind and above the car, swinging around it when the car
-       pulls up to a resto. */
-    const camDist = 7.2 + Math.min(2.2, speed * 0.06);
-    camOffset.set(0, 2.55, camDist).applyAxisAngle(UP, lookYaw);
-    camera.position.set(car.position.x + camOffset.x, camOffset.y, carZ + camOffset.z);
-    lookPoint.set(0, 0.85, -8).applyAxisAngle(UP, lookYaw);
-    camera.lookAt(car.position.x + lookPoint.x, 1.05, carZ + lookPoint.z);
+       pulls up to a resto. An explore camera can take over instead. */
+    if (state.camera) {
+      const cam = state.camera;
+      camera.position.set(cam.x, cam.y, cam.z);
+      camera.lookAt(cam.tx, cam.ty, cam.tz);
+    } else {
+      const camDist = 7.2 + Math.min(2.2, speed * 0.06);
+      camOffset.set(0, 2.55, camDist).applyAxisAngle(UP, lookYaw);
+      camera.position.set(car.position.x + camOffset.x, camOffset.y, carZ + camOffset.z);
+      lookPoint.set(0, 0.85, -8).applyAxisAngle(UP, lookYaw);
+      camera.lookAt(car.position.x + lookPoint.x, 1.05, carZ + lookPoint.z);
+    }
 
     const fov = 60 + Math.min(9, speed * 0.26);
     if (Math.abs(camera.fov - fov) > 0.1) {
@@ -1015,9 +1021,21 @@ export function createWorld(canvas, stops) {
     return hits.length ? hits[0].object.userData : null;
   }
 
+  /* Large canvases get a lower pixel ratio so 4K and ultrawide screens stay
+     smooth, while phone and laptop screens keep their full sharpness. */
+  function pixelRatio(w, h) {
+    const dpr = window.devicePixelRatio || 1;
+    const physical = w * h * dpr * dpr;
+    let cap = 2;
+    if (physical > 9000000) cap = 1;
+    else if (physical > 5200000) cap = 1.5;
+    return Math.max(1, Math.min(dpr, cap));
+  }
+
   function resize() {
     const w = canvas.clientWidth || window.innerWidth;
     const h = canvas.clientHeight || window.innerHeight;
+    renderer.setPixelRatio(pixelRatio(w, h));
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();

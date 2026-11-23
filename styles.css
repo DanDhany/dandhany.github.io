@@ -17,7 +17,7 @@
   --rule: rgba(246, 231, 206, 0.2);
   --rule-strong: rgba(246, 231, 206, 0.4);
   --g: clamp(14px, 3.4vw, 44px);
-  --topbar: 58px;
+  --topbar: calc(58px + env(safe-area-inset-top, 0px));
   --display: "Anton", "Arial Narrow", "Helvetica Neue", sans-serif;
   --cond: "Barlow Condensed", "Arial Narrow", sans-serif;
   --body: "Barlow", "Helvetica Neue", Arial, sans-serif;
@@ -1195,7 +1195,7 @@ body[data-panel="open"] .hero .pedals {
 
 @media (max-width: 760px) {
   :root {
-    --topbar: 54px;
+    --topbar: calc(54px + env(safe-area-inset-top, 0px));
   }
 
   .brand span {
@@ -1722,4 +1722,476 @@ main {
 .pause-scroll .section-contact .contact-links a {
   color: var(--sand);
   border-bottom-color: var(--rule-strong);
+}
+
+/* ------------------------------------------------------------- explore */
+
+.mode-switch {
+  position: absolute;
+  z-index: 6;
+  top: calc(var(--topbar) + 14px);
+  right: var(--g);
+}
+
+.mode-btn {
+  padding: 9px 14px;
+  border: 1px solid var(--rule-strong);
+  background: rgba(10, 8, 18, 0.78);
+  color: var(--sand);
+  font-family: var(--cond);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.74rem;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.mode-btn:hover,
+.mode-btn:focus-visible {
+  border-color: var(--sea);
+  color: var(--sea);
+}
+
+.explore-bar {
+  position: absolute;
+  z-index: 7;
+  left: var(--g);
+  bottom: var(--g);
+  width: min(560px, calc(100vw - var(--g) * 2));
+  padding: 12px 14px;
+  background: rgba(10, 8, 18, 0.86);
+  border: 1px solid var(--rule);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.explore-bar[hidden] {
+  display: none;
+}
+
+.explore-name {
+  font-family: var(--cond);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  color: var(--sea);
+  margin-bottom: 8px;
+}
+
+.explore-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.explore-actions button {
+  padding: 7px 10px;
+  border: 1px solid var(--rule);
+  color: var(--sand);
+  font-family: var(--cond);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+}
+
+.explore-actions button:hover,
+.explore-actions button:focus-visible {
+  border-color: var(--rose);
+  color: var(--rose);
+}
+
+.explore-actions [data-explore="drive"] {
+  border-color: var(--rose);
+  background: var(--rose);
+  color: var(--ink);
+}
+
+.explore-hint {
+  margin-top: 9px;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: var(--sand-dim);
+}
+
+/* Exploring hides the driving chrome so the world has room. */
+body[data-mode="explore"] .hero .hero-copy,
+body[data-mode="explore"] .hero .hud-objective,
+body[data-mode="explore"] .hero .hud-radio,
+body[data-mode="explore"] .hero .hud-radar,
+body[data-mode="explore"] .hero .hud-prompt,
+body[data-mode="explore"] .hero .hud-help,
+body[data-mode="explore"] .hero .pedals {
+  display: none;
+}
+
+body[data-mode="explore"] .hero-scrim {
+  opacity: 0.15;
+}
+
+.hero-scrim {
+  transition: opacity 0.5s ease;
+}
+
+@media (max-width: 720px) {
+  .explore-bar {
+    left: var(--g);
+    right: var(--g);
+    width: auto;
+  }
+
+  .mode-switch {
+    top: auto;
+    bottom: calc(var(--g) + 8px);
+    right: var(--g);
+  }
+
+  body[data-mode="drive"] .mode-switch {
+    bottom: calc(var(--g) + 210px);
+  }
+}
+
+/* ==========================================================================
+   RESPONSIVE PASS
+   Satu lapisan skala cair untuk semua resolusi: ponsel kecil, ponsel besar,
+   tablet, laptop, desktop lebar, ultrawide, 4K, serta layar pendek mendatar.
+   ========================================================================== */
+
+/* Nothing may push past the viewport edge, and long words may break. */
+.stop-row > *,
+.about-grid > *,
+.fact-list li > *,
+.contact-actions > *,
+.explore-actions > *,
+.panel > * {
+  min-width: 0;
+}
+
+.row-main h3,
+.panel h2,
+.panel-sub,
+.panel-desc,
+.contact-lede,
+.site-foot span,
+.btn-primary,
+.panel-link {
+  overflow-wrap: anywhere;
+}
+
+/* Notch and rounded corner safe areas. */
+.topbar,
+.pause-bar,
+.pause-scroll .section {
+  padding-left: max(var(--g), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--g), env(safe-area-inset-right, 0px));
+}
+
+.hud-radio,
+.hud-radar,
+.explore-bar {
+  bottom: calc(var(--g) + env(safe-area-inset-bottom, 0px));
+}
+
+/* The phone layout anchors the radar under the top bar instead. */
+@media (max-width: 760px) {
+  .hud-radar {
+    bottom: auto;
+  }
+}
+
+.panel {
+  right: max(var(--g), env(safe-area-inset-right, 0px));
+  max-height: calc(100svh - var(--topbar) - 32px);
+}
+
+/* ---------------------------------------------- large desktop to ultrawide */
+
+@media (min-width: 1600px) {
+  :root {
+    --g: clamp(44px, 3vw, 76px);
+  }
+
+  body {
+    font-size: 1.05rem;
+  }
+
+  .section-inner {
+    max-width: 1320px;
+  }
+
+  .hero-copy {
+    max-width: 880px;
+  }
+
+  .hud-objective {
+    width: 340px;
+    padding: 14px 16px 15px;
+  }
+
+  .hud-sign {
+    font-size: 1.95rem;
+  }
+
+  .hud-radio {
+    width: 370px;
+  }
+
+  .hud-radar {
+    width: 210px;
+  }
+
+  .panel {
+    width: 470px;
+  }
+
+  .explore-bar {
+    width: 620px;
+  }
+
+  .pedals {
+    grid-template-columns: repeat(2, 62px);
+  }
+
+  .pedal {
+    min-height: 62px;
+  }
+}
+
+@media (min-width: 2200px) {
+  body {
+    font-size: 1.12rem;
+  }
+
+  .section-inner {
+    max-width: 1500px;
+  }
+
+  .hero-copy {
+    max-width: 1000px;
+  }
+
+  .hud-radar {
+    width: 240px;
+  }
+
+  .hud-objective {
+    width: 380px;
+  }
+
+  .panel {
+    width: 520px;
+  }
+}
+
+/* ------------------------------------- tablets and narrow desktop windows */
+
+/* Coarse pointers show the pedals; keep them clear of the radar at widths
+   above the phone layout. */
+@media (min-width: 761px) and (pointer: coarse), (min-width: 761px) and (max-width: 860px) {
+  .pedals {
+    bottom: calc(var(--g) + 252px);
+  }
+}
+
+@media (pointer: coarse) {
+  .explore-actions button,
+  .mode-btn,
+  .panel-x,
+  .menu-btn,
+  .pause-close,
+  .pause-tabs [data-menu-tab] {
+    min-height: 44px;
+  }
+}
+
+/* ------------------------------------------------------------ small phones */
+
+@media (max-width: 560px) {
+  .topnav {
+    gap: 10px;
+  }
+
+  /* The Menu button already reaches every section, so the three links go. */
+  .topnav a {
+    display: none;
+  }
+
+  .brand {
+    font-size: 1.14rem;
+  }
+
+  .hero-copy {
+    top: calc(var(--topbar) + 3vh);
+  }
+
+  .hero h1 {
+    font-size: clamp(2.35rem, 11.5vw, 3.4rem);
+  }
+
+  .hero-role {
+    letter-spacing: 0.12em;
+  }
+
+  .contact-actions .btn-primary {
+    flex: 1 1 100%;
+    text-align: center;
+    letter-spacing: 0.08em;
+    font-size: 0.86rem;
+  }
+}
+
+@media (max-width: 720px) {
+  /* Put the explore toggle above the radio on the free left edge, clear of
+     the pedals on the right and the entry prompt in the middle. */
+  .mode-switch,
+  body[data-mode="drive"] .mode-switch {
+    top: auto;
+    left: 10px;
+    right: auto;
+    bottom: calc(var(--g) + 118px);
+  }
+
+  .panel {
+    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (max-width: 400px) {
+  .hero h1 {
+    font-size: clamp(2.1rem, 12vw, 2.9rem);
+  }
+
+  .hero-lede {
+    max-width: 32ch;
+  }
+
+  .btn-primary {
+    font-size: 0.84rem;
+    letter-spacing: 0.1em;
+  }
+
+  .hud-objective {
+    padding: 8px 10px;
+  }
+
+  .radio {
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+  }
+
+  .fact-list li {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fact-list small {
+    text-align: left;
+  }
+
+  .pause-tabs [data-menu-tab] {
+    padding: 8px 6px;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+  }
+
+  .section h2 {
+    max-width: none;
+  }
+
+  .site-foot {
+    flex-direction: column;
+  }
+}
+
+/* ------------------------------------------------- short landscape screens */
+
+/* A short viewport cannot hold the objective card, the entry prompt, the
+   radar and the pedals at once without overlap. The objective already lives
+   in the pause menu, so the driving chrome keeps the corners and the prompt
+   moves to the top left. */
+@media (orientation: landscape) and (max-height: 560px) {
+  .hud-objective {
+    display: none;
+  }
+
+  .hero[data-started="true"] .hud-prompt.is-on,
+  .hud-prompt {
+    left: var(--g);
+    right: auto;
+    top: calc(var(--topbar) + 8px);
+    bottom: auto;
+    width: auto;
+    max-width: calc(100vw - 2 * var(--g));
+    transform: none;
+    justify-content: flex-start;
+  }
+
+  .hud-radar {
+    top: calc(var(--topbar) + 8px);
+    bottom: auto;
+    right: 8px;
+    width: 100px;
+  }
+
+  .hud-radio {
+    width: 210px;
+    left: 8px;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .pedals {
+    left: auto;
+    right: 8px;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    transform: none;
+    grid-template-columns: repeat(2, 46px);
+    grid-template-areas:
+      "gas brake"
+      "left right";
+  }
+
+  .pedal {
+    min-height: 46px;
+    font-size: 0.7rem;
+  }
+
+  .mode-switch,
+  body[data-mode="drive"] .mode-switch {
+    top: auto;
+    left: auto;
+    right: 8px;
+    bottom: calc(8px + 112px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .explore-bar {
+    width: min(430px, calc(100vw - 2 * var(--g)));
+    padding: 9px 11px;
+  }
+
+  .explore-hint {
+    display: none;
+  }
+}
+
+/* Very short windows: the intro copy drops its optional lines so the start
+   button always stays above the fold. */
+@media (max-height: 430px) {
+  .eyebrow,
+  .hero-lede {
+    display: none;
+  }
+
+  .hero-copy {
+    top: calc(var(--topbar) + 10px);
+  }
+
+  .hero h1 {
+    font-size: clamp(1.7rem, 4.6vw, 2.5rem);
+  }
+
+  .hero-role {
+    margin-top: 6px;
+  }
+
+  .hero-actions {
+    margin-top: 10px;
+  }
 }

@@ -2,21 +2,21 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Ramadhany Krismaliq Sjamdra · Fullstack Developer</title>
-  <meta name="description" content="Portofolio Ramadhany Krismaliq Sjamdra, IT di instansi pemerintah dan fullstack developer Laravel. Delapan belas proyek sebagai resto di satu jalan pesisir yang bisa disusuri dengan Three.js.">
+  <meta name="description" content="Portofolio Ramadhany Krismaliq Sjamdra, IT di instansi pemerintah dan fullstack developer Laravel. Lima belas proyek sebagai resto di satu jalan pesisir yang bisa disusuri dengan Three.js.">
   <meta name="theme-color" content="#0a0812">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@500;600&family=Barlow:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body data-panel="closed" data-menu="closed">
+<body data-panel="closed" data-menu="closed" data-mode="drive">
 
   <a class="skip" href="#proyek" data-menu-link="proyek">Lewati ke daftar proyek</a>
 
   <header class="topbar">
-    <a class="brand" href="#atas"><b>DANDHANY</b><span>Web Developer</span></a>
+    <a class="brand" href="#atas"><b>DANDHANY</b><span>Fullstack Developer</span></a>
     <nav class="topnav" aria-label="Navigasi utama">
       <a href="#proyek" data-menu-link="proyek">Proyek</a>
       <a href="#tentang" data-menu-link="tentang">Tentang</a>
@@ -35,7 +35,7 @@
         <p class="eyebrow">Portofolio · Sidoarjo, Jawa Timur</p>
         <h1 id="nama">Ramadhany<br>Krismaliq<br><em>Sjamdra</em></h1>
         <p class="hero-role">IT di instansi pemerintah · Laravel, server, database</p>
-        <p class="hero-lede">Delapan belas proyek berdiri sebagai resto di satu jalan pesisir. Nyalakan mesin dan susuri jalannya, atau buka menu kalau ingin membaca semuanya tanpa mengemudi.</p>
+        <p class="hero-lede">Lima belas proyek berdiri sebagai resto di satu jalan pesisir. Nyalakan mesin dan susuri jalannya, atau buka menu kalau ingin membaca semuanya tanpa mengemudi.</p>
         <div class="hero-actions">
           <a class="btn-primary" href="#proyek" id="start">Nyalakan mesin</a>
           <a class="btn-ghost" href="#proyek" data-menu-link="proyek">Buka menu</a>
@@ -45,7 +45,7 @@
       <div class="hud hud-objective">
         <div class="hud-row">
           <span>Resto</span>
-          <span class="hud-count"><b id="obj-index">01</b> / <span id="obj-total">18</span></span>
+          <span class="hud-count"><b id="obj-index">01</b> / <span id="obj-total">15</span></span>
         </div>
         <p class="hud-sign" id="obj-sign">DINAS</p>
         <p class="hud-line" id="obj-line">Papan nama pertama ada di sisi kiri jalan.</p>
@@ -88,7 +88,24 @@
         <button class="pedal" type="button" data-pedal="right" aria-label="Belok kanan">Kanan</button>
       </div>
 
-      <p class="hud-help" id="help">W / S gas dan rem · A / D belok · E masuk resto · Seret untuk melihat · Esc menu</p>
+      <p class="hud-help" id="help">W / S gas dan rem · A / D belok · E masuk resto · Esc menu</p>
+
+      <div class="mode-switch">
+        <button class="mode-btn" type="button" id="explore-enter">Jelajah bebas</button>
+      </div>
+
+      <div class="explore-bar" id="explore-bar" hidden>
+        <p class="explore-name" id="explore-name">Mode jelajah</p>
+        <div class="explore-actions">
+          <button type="button" data-explore="prev" aria-label="Resto sebelumnya">‹</button>
+          <button type="button" data-explore="next" aria-label="Resto berikutnya">›</button>
+          <button type="button" data-explore="map">Peta jalan</button>
+          <button type="button" data-explore="out" aria-label="Perkecil">Zoom −</button>
+          <button type="button" data-explore="in" aria-label="Perbesar">Zoom +</button>
+          <button type="button" data-explore="drive">Berkendara</button>
+        </div>
+        <p class="explore-hint">Geser untuk menggeser, Shift geser untuk memutar, roda untuk zoom. Klik bangunan untuk membuka detailnya.</p>
+      </div>
     </section>
   </main>
 
@@ -108,7 +125,7 @@
         <div class="section-inner">
           <div class="section-head">
             <p class="marker"><span class="marker-num">01</span> Indeks proyek</p>
-            <h2 id="judul-proyek">Delapan belas bangunan di sepanjang jalan</h2>
+            <h2 id="judul-proyek">Lima belas bangunan di sepanjang jalan</h2>
             <p class="section-lede">Tiap baris adalah satu resto. Tekan tombolnya, menu menutup, dan mobil membawa Anda ke bangunan itu. Panel detailnya terbuka sendiri setelah tiba.</p>
           </div>
 
@@ -324,17 +341,17 @@
             </li>
 
             <li>
-              <article class="stop-row" data-project data-sign="DOCKER" data-accent="#FF2F7E" data-image="assets/projects/docker-dev-base.jpg" data-repo="docker-dev-base">
+              <article class="stop-row" data-project data-sign="SWITCH" data-accent="#F6E7CE" data-image="assets/projects/php-switcher.jpg" data-repo="windows-php-switcher">
                 <div class="row-thumb">
-                  <img src="assets/projects/docker-dev-base.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub Docker Dev Base.">
+                  <img src="assets/projects/php-switcher.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub PHP Version Switcher.">
                 </div>
                 <div class="row-main">
-                  <p class="row-kicker">11 · Docker Compose</p>
-                  <h3>Docker Dev Base <span>Kerangka server PHP</span></h3>
-                  <p class="row-tagline">Kerangka Docker Compose untuk server PHP.</p>
-                  <p class="row-desc">Template docker-compose untuk menyiapkan jaringan kontainer pengembangan dan produksi: Nginx atau Apache, PHP, MySQL atau PostgreSQL, Adminer, Filebrowser, dan Mailpit untuk menangkap surel saat pengujian.</p>
+                  <p class="row-kicker">11 · Batch</p>
+                  <h3>PHP Switcher <span>Ganti versi PHP di Windows</span></h3>
+                  <p class="row-tagline">Ganti versi PHP di Windows dengan satu perintah.</p>
+                  <p class="row-desc">Utilitas command line untuk berpindah versi PHP di Windows tanpa mengatur environment variable secara manual. Berguna saat beberapa proyek menuntut versi PHP berbeda di satu komputer.</p>
                   <ul class="tags">
-                    <li>Docker Compose</li><li>PHP</li><li>Nginx</li><li>MySQL</li><li>PostgreSQL</li>
+                    <li>Batch</li><li>Windows</li><li>PHP</li>
                   </ul>
                 </div>
                 <div class="row-go">
@@ -344,18 +361,19 @@
               </article>
             </li>
 
+
             <li>
-              <article class="stop-row" data-project data-sign="SWITCH" data-accent="#F6E7CE" data-image="assets/projects/php-switcher.jpg" data-repo="windows-php-switcher">
+              <article class="stop-row" data-project data-sign="MATERI" data-accent="#FF7A2B" data-image="assets/projects/materi-ai.jpg" data-repo="materi-ai">
                 <div class="row-thumb">
-                  <img src="assets/projects/php-switcher.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub PHP Version Switcher.">
+                  <img src="assets/projects/materi-ai.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub Materi AI.">
                 </div>
                 <div class="row-main">
-                  <p class="row-kicker">12 · Batch</p>
-                  <h3>PHP Switcher <span>Ganti versi PHP di Windows</span></h3>
-                  <p class="row-tagline">Ganti versi PHP di Windows dengan satu perintah.</p>
-                  <p class="row-desc">Utilitas command line untuk berpindah versi PHP di Windows tanpa mengatur environment variable secara manual. Berguna saat beberapa proyek menuntut versi PHP berbeda di satu komputer.</p>
+                  <p class="row-kicker">12 · HTML</p>
+                  <h3>Materi AI <span>Presentasi AI vs Guru</span></h3>
+                  <p class="row-tagline">Satu halaman untuk menjelaskan AI kepada guru.</p>
+                  <p class="row-desc">Situs presentasi satu halaman berisi materi pengantar kecerdasan buatan untuk guru: apa yang bisa dibantu AI, apa yang tetap tugas manusia, dan contoh pemakaiannya di kelas. Tanpa server, cukup dibuka di browser.</p>
                   <ul class="tags">
-                    <li>Batch</li><li>Windows</li><li>PHP</li>
+                    <li>HTML</li><li>CSS</li><li>Presentasi</li>
                   </ul>
                 </div>
                 <div class="row-go">
@@ -366,17 +384,17 @@
             </li>
 
             <li>
-              <article class="stop-row" data-project data-sign="NEWSIMA" data-accent="#12C2B0" data-image="assets/projects/newsima.jpg" data-repo="newsima">
+              <article class="stop-row" data-project data-sign="TES" data-accent="#FF2F7E" data-image="assets/projects/tes-teknis.jpg" data-repo="TesTeknisTA">
                 <div class="row-thumb">
-                  <img src="assets/projects/newsima.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub Newsima.">
+                  <img src="assets/projects/tes-teknis.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub Tes Teknis TA.">
                 </div>
                 <div class="row-main">
-                  <p class="row-kicker">13 · Laravel</p>
-                  <h3>Newsima <span>Pengajuan dan pemantauan magang</span></h3>
-                  <p class="row-tagline">Peserta magang, lembaga, dan nota dinas dalam satu alur.</p>
-                  <p class="row-desc">Sistem web untuk mengelola pengajuan dan pemantauan peserta magang: data lembaga pendidikan, data peserta, bidang penempatan, balasan pengajuan, nota dinas, sampai laporan akhir. Akses diatur per peran dan menunya bisa disesuaikan dari panel admin.</p>
+                  <p class="row-kicker">13 · Vue 3</p>
+                  <h3>Tes Teknis TA <span>Uji teknis frontend</span></h3>
+                  <p class="row-tagline">Uji teknis Vue 3, dari komponen sampai build.</p>
+                  <p class="row-desc">Repo uji teknis frontend dengan Vue 3 dan Vue CLI: komponen, struktur proyek, dan proses build produksi. Dipakai untuk menunjukkan cara kerja saya saat mengerjakan tugas teknis berbatas waktu.</p>
                   <ul class="tags">
-                    <li>Laravel</li><li>Blade</li><li>MySQL</li><li>TinyMCE</li><li>DataTables</li>
+                    <li>Vue 3</li><li>Vue CLI</li><li>JavaScript</li>
                   </ul>
                 </div>
                 <div class="row-go">
@@ -387,17 +405,17 @@
             </li>
 
             <li>
-              <article class="stop-row" data-project data-sign="SIMARU" data-accent="#FFB03A" data-image="assets/projects/simaru.jpg" data-repo="simaru-docker">
+              <article class="stop-row" data-project data-sign="WEB" data-accent="#F6E7CE" data-image="assets/projects/portoweb.jpg" data-repo="ramadhany_portoweb">
                 <div class="row-thumb">
-                  <img src="assets/projects/simaru.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub Simaru.">
+                  <img src="assets/projects/portoweb.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub Portofolio Lama.">
                 </div>
                 <div class="row-main">
-                  <p class="row-kicker">14 · Laravel API</p>
-                  <h3>Simaru <span>Pemesanan ruangan</span></h3>
-                  <p class="row-tagline">Ruangan, fasilitas, dan jadwal pakai dalam satu API.</p>
-                  <p class="row-desc">API pemesanan ruangan untuk beberapa divisi: katalog ruangan dan fasilitasnya, jadwal booking beserta statusnya, umpan balik pengguna, dan autentikasi berbasis peran. Dijalankan dengan Docker supaya lingkungannya sama di tiap mesin.</p>
+                  <p class="row-kicker">14 · HTML/CSS</p>
+                  <h3>Portofolio Lama <span>Versi pertama situs ini</span></h3>
+                  <p class="row-tagline">Versi pertama portofolio, sebelum dirombak.</p>
+                  <p class="row-desc">Situs portofolio versi pertama: halaman statis dengan CSS dan JavaScript, lampiran CV serta portofolio PDF, dan deploy lewat GitHub Pages. Versi yang sekarang menggantikannya dengan dunia 3D.</p>
                   <ul class="tags">
-                    <li>Laravel</li><li>REST API</li><li>Docker</li><li>MySQL</li><li>SB Admin 2</li>
+                    <li>HTML</li><li>CSS</li><li>JavaScript</li><li>GitHub Pages</li>
                   </ul>
                 </div>
                 <div class="row-go">
@@ -408,75 +426,12 @@
             </li>
 
             <li>
-              <article class="stop-row" data-project data-sign="MATERI" data-accent="#FF7A2B" data-image="assets/projects/materi-ai.jpg" data-repo="materi-ai">
-                <div class="row-thumb">
-                  <img src="assets/projects/materi-ai.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub Materi AI.">
-                </div>
-                <div class="row-main">
-                  <p class="row-kicker">15 · HTML</p>
-                  <h3>Materi AI <span>Presentasi AI vs Guru</span></h3>
-                  <p class="row-tagline">Satu halaman untuk menjelaskan AI kepada guru.</p>
-                  <p class="row-desc">Situs presentasi satu halaman berisi materi pengantar kecerdasan buatan untuk guru: apa yang bisa dibantu AI, apa yang tetap tugas manusia, dan contoh pemakaiannya di kelas. Tanpa server, cukup dibuka di browser.</p>
-                  <ul class="tags">
-                    <li>HTML</li><li>CSS</li><li>Presentasi</li>
-                  </ul>
-                </div>
-                <div class="row-go">
-                  <button class="btn-plate" type="button" data-drive="14">Kemudikan ke sini</button>
-                  <p class="row-note">Resto 15</p>
-                </div>
-              </article>
-            </li>
-
-            <li>
-              <article class="stop-row" data-project data-sign="TES" data-accent="#FF2F7E" data-image="assets/projects/tes-teknis.jpg" data-repo="TesTeknisTA">
-                <div class="row-thumb">
-                  <img src="assets/projects/tes-teknis.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub Tes Teknis TA.">
-                </div>
-                <div class="row-main">
-                  <p class="row-kicker">16 · Vue 3</p>
-                  <h3>Tes Teknis TA <span>Uji teknis frontend</span></h3>
-                  <p class="row-tagline">Uji teknis Vue 3, dari komponen sampai build.</p>
-                  <p class="row-desc">Repo uji teknis frontend dengan Vue 3 dan Vue CLI: komponen, struktur proyek, dan proses build produksi. Dipakai untuk menunjukkan cara kerja saya saat mengerjakan tugas teknis berbatas waktu.</p>
-                  <ul class="tags">
-                    <li>Vue 3</li><li>Vue CLI</li><li>JavaScript</li>
-                  </ul>
-                </div>
-                <div class="row-go">
-                  <button class="btn-plate" type="button" data-drive="15">Kemudikan ke sini</button>
-                  <p class="row-note">Resto 16</p>
-                </div>
-              </article>
-            </li>
-
-            <li>
-              <article class="stop-row" data-project data-sign="WEB" data-accent="#F6E7CE" data-image="assets/projects/portoweb.jpg" data-repo="ramadhany_portoweb">
-                <div class="row-thumb">
-                  <img src="assets/projects/portoweb.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu repo GitHub Portofolio Lama.">
-                </div>
-                <div class="row-main">
-                  <p class="row-kicker">17 · HTML/CSS</p>
-                  <h3>Portofolio Lama <span>Versi pertama situs ini</span></h3>
-                  <p class="row-tagline">Versi pertama portofolio, sebelum dirombak.</p>
-                  <p class="row-desc">Situs portofolio versi pertama: halaman statis dengan CSS dan JavaScript, lampiran CV serta portofolio PDF, dan deploy lewat GitHub Pages. Versi yang sekarang menggantikannya dengan dunia 3D.</p>
-                  <ul class="tags">
-                    <li>HTML</li><li>CSS</li><li>JavaScript</li><li>GitHub Pages</li>
-                  </ul>
-                </div>
-                <div class="row-go">
-                  <button class="btn-plate" type="button" data-drive="16">Kemudikan ke sini</button>
-                  <p class="row-note">Resto 17</p>
-                </div>
-              </article>
-            </li>
-
-            <li>
               <article class="stop-row" data-project data-card="1" data-sign="MEDIC" data-accent="#12C2B0" data-image="assets/projects/medic-store.jpg">
                 <div class="row-thumb">
                   <img src="assets/projects/medic-store.jpg" width="1440" height="1080" loading="lazy" decoding="async" alt="Kartu proyek Medic Store App.">
                 </div>
                 <div class="row-main">
-                  <p class="row-kicker">18 · MS Access</p>
+                  <p class="row-kicker">15 · MS Access</p>
                   <h3>Medic Store App <span>Kasir apotek</span></h3>
                   <p class="row-tagline">Kasir apotek, dibangun dengan Microsoft Access.</p>
                   <p class="row-desc">Aplikasi point of sales desktop untuk apotek yang dibangun dengan Microsoft Access. Salah satu proyek awal, sebelum saya berpindah ke PHP dan Laravel.</p>
@@ -485,8 +440,8 @@
                   </ul>
                 </div>
                 <div class="row-go">
-                  <button class="btn-plate" type="button" data-drive="17">Kemudikan ke sini</button>
-                  <p class="row-note">Resto 18</p>
+                  <button class="btn-plate" type="button" data-drive="14">Kemudikan ke sini</button>
+                  <p class="row-note">Resto 15</p>
                 </div>
               </article>
             </li>
@@ -607,6 +562,7 @@
     <p class="panel-note" id="panel-note">Tangkapan layar asli dari portofolio Ramadhany. Sistemnya dipakai internal, jadi tidak ada demo publik.</p>
   </aside>
 
+  <script src="js/ui.js" defer></script>
   <script type="importmap">
     {
       "imports": {

@@ -16,11 +16,6 @@ const radar = document.getElementById("radar");
 const radioMood = document.getElementById("radio-mood");
 const panel = document.getElementById("panel");
 const panelClose = document.getElementById("panel-close");
-const copyBtn = document.getElementById("copy-mail");
-const pause = document.getElementById("pause");
-const pauseScroll = document.getElementById("pause-scroll");
-const menuClose = document.getElementById("menu-close");
-const menuTabs = Array.from(document.querySelectorAll(".pause-tabs [data-menu-tab]"));
 
 const MOOD_LABELS = ["Matahari terbenam", "Biru malam", "Neon penuh"];
 const MAX_SPEED = 30;
@@ -146,78 +141,7 @@ function closePanel() {
 }
 
 panelClose.addEventListener("click", closePanel);
-
-/* ------------------------------------------------------------- pause menu */
-
-let menuIsOpen = false;
-const MENU_SECTIONS = ["proyek", "tentang", "kontak"];
-
-function setMenuTab(name) {
-  menuTabs.forEach((tab) => {
-    tab.setAttribute("aria-selected", String(tab.dataset.menuTab === name));
-  });
-  const section = document.getElementById(name);
-  if (section) {
-    pauseScroll.scrollTop = Math.max(0, section.offsetTop - 6);
-  }
-}
-
-function openMenu(name = "proyek") {
-  closePanel();
-  if (!menuIsOpen) {
-    lastFocus = document.activeElement;
-  }
-  menuIsOpen = true;
-  state.parked = true;
-  state.speed = 0;
-  pause.hidden = false;
-  document.body.dataset.menu = "open";
-  setMenuTab(name);
-  menuClose.focus({ preventScroll: true });
-}
-
-function closeMenu(options = {}) {
-  if (!menuIsOpen) return;
-  const restore = options.restoreFocus !== false;
-  menuIsOpen = false;
-  pause.hidden = true;
-  document.body.dataset.menu = "closed";
-  if (restore && lastFocus && typeof lastFocus.focus === "function") {
-    lastFocus.focus({ preventScroll: true });
-  }
-}
-
-menuClose.addEventListener("click", () => closeMenu());
-
-menuTabs.forEach((tab) => {
-  tab.addEventListener("click", () => setMenuTab(tab.dataset.menuTab));
-});
-
-document.querySelectorAll("[data-menu-link]").forEach((link) => {
-  link.addEventListener("click", (event) => {
-    event.preventDefault();
-    openMenu(link.dataset.menuLink);
-  });
-});
-
-/* The tab that matches the section under the menu bar stays lit. */
-pauseScroll.addEventListener("scroll", () => {
-  const top = pauseScroll.scrollTop + 90;
-  let active = MENU_SECTIONS[0];
-  MENU_SECTIONS.forEach((name) => {
-    const section = document.getElementById(name);
-    if (section && section.offsetTop <= top) {
-      active = name;
-    }
-  });
-  /* The last section is too short to reach the top, so it owns the bottom. */
-  if (pauseScroll.scrollTop + pauseScroll.clientHeight >= pauseScroll.scrollHeight - 6) {
-    active = MENU_SECTIONS[MENU_SECTIONS.length - 1];
-  }
-  menuTabs.forEach((tab) => {
-    tab.setAttribute("aria-selected", String(tab.dataset.menuTab === active));
-  });
-});
+document.addEventListener("portfolio:closepanel", closePanel);
 
 /* ------------------------------------------------------------- start car */
 
@@ -236,11 +160,139 @@ startBtn.addEventListener("click", (event) => {
   event.preventDefault();
   /* Without a scene the menu is still the full way in. */
   if (!world) {
-    openMenu("proyek");
+    window.pauseMenu?.open("proyek");
     return;
   }
   startEngine();
 });
+
+/* ------------------------------------------------------------- explore */
+
+const explore = {
+  active: false,
+  map: false,
+  x: 0,
+  z: 0,
+  yaw: 0,
+  pitch: 0.62,
+  dist: 90,
+  focus: 0,
+  savedFog: null,
+  savedFar: 1200,
+};
+
+const exploreEnter = document.getElementById("explore-enter");
+const exploreBar = document.getElementById("explore-bar");
+const exploreName = document.getElementById("explore-name");
+
+function exploreCamera() {
+  const cp = Math.cos(explore.pitch);
+  return {
+    x: explore.x + Math.sin(explore.yaw) * cp * explore.dist,
+    y: Math.sin(explore.pitch) * explore.dist + 2.5,
+    z: explore.z + Math.cos(explore.yaw) * cp * explore.dist,
+    tx: explore.x,
+    ty: 1.4,
+    tz: explore.z,
+  };
+}
+
+function setExploreName(text) {
+  if (exploreName) exploreName.textContent = text;
+}
+
+function focusStop(index, zoom = true) {
+  const i = clamp(Math.round(index), 0, stops.length - 1);
+  const stop = stops[i];
+  explore.focus = i;
+  explore.x = (i % 2 === 0 ? -1 : 1) * 9;
+  explore.z = START_Z - stop.distance;
+  if (zoom) {
+    explore.map = false;
+    explore.pitch = 0.5;
+    explore.dist = 78;
+    /* Portrait screens see less width, so the camera pulls back a little. */
+    if (world && world.camera.aspect < 0.9) explore.dist *= 1.3;
+    explore.yaw = (i % 2 === 0 ? -1 : 1) * 0.18;
+  }
+  setExploreName(`Resto ${pad2(i + 1)} · ${stop.name}`);
+}
+
+function showMap() {
+  if (!world) return;
+  explore.map = true;
+  explore.pitch = 0.92;
+  explore.yaw = 0;
+  explore.x = 0;
+  explore.z = START_Z - stops[explore.focus].distance + 120;
+  explore.dist = 620;
+  if (world.camera.aspect < 1) explore.dist *= 1.3;
+  if (world.scene.fog) {
+    world.scene.fog.density = 0.00042;
+  }
+  world.camera.far = Math.max(world.camera.far, explore.dist * 3);
+  world.camera.updateProjectionMatrix();
+  setExploreName("Peta jalan · geser untuk menyusuri");
+}
+
+function enterExplore(index) {
+  if (!world) {
+    window.pauseMenu?.open("proyek");
+    return;
+  }
+  window.pauseMenu?.close({ restoreFocus: false });
+  closePanel();
+  if (!explore.active) {
+    explore.savedFog = world.scene.fog ? { density: world.scene.fog.density } : null;
+    if (world.scene.fog) world.scene.fog.density = 0.0008;
+    explore.savedFar = world.camera.far;
+  }
+  explore.active = true;
+  state.parked = true;
+  state.speed = 0;
+  state.autopilot = null;
+  document.body.dataset.mode = "explore";
+  if (exploreBar) exploreBar.hidden = false;
+  if (exploreEnter) exploreEnter.hidden = true;
+  focusStop(Number.isInteger(index) ? index : nextStopIndex());
+}
+
+function exitExplore() {
+  if (!explore.active) return;
+  explore.active = false;
+  explore.map = false;
+  document.body.dataset.mode = "drive";
+  if (exploreBar) exploreBar.hidden = true;
+  if (exploreEnter) exploreEnter.hidden = false;
+  state.parked = true;
+  state.speed = 0;
+  if (!world) return;
+  if (world.scene.fog && explore.savedFog) {
+    world.scene.fog.density = explore.savedFog.density;
+  }
+  world.camera.far = explore.savedFar || 1200;
+  world.camera.updateProjectionMatrix();
+}
+
+function zoomExplore(factor) {
+  explore.dist = clamp(explore.dist * factor, 16, 6000);
+  if (explore.map && explore.dist < 420) explore.map = false;
+}
+
+if (exploreEnter) exploreEnter.addEventListener("click", () => enterExplore());
+document.querySelectorAll("[data-explore]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const action = btn.dataset.explore;
+    if (action === "drive") exitExplore();
+    else if (action === "map") showMap();
+    else if (action === "in") zoomExplore(0.8);
+    else if (action === "out") zoomExplore(1.25);
+    else if (action === "next") focusStop(explore.focus + 1);
+    else if (action === "prev") focusStop(explore.focus - 1);
+  });
+});
+
+window.portfolio3d = { driveTo, enterExplore, exitExplore, focusStop, showMap };
 
 /* --------------------------------------------------------------- driving */
 
@@ -251,12 +303,12 @@ function driveTo(index, openOnArrival = true) {
   const stop = stops[index];
   if (!stop) return;
   if (!world) {
-    openMenu("proyek");
+    window.pauseMenu?.open("proyek");
     return;
   }
 
   closePanel();
-  closeMenu({ restoreFocus: false });
+  window.pauseMenu?.close({ restoreFocus: false });
   startEngine();
   state.parked = false;
   state.lookTarget = 0;
@@ -468,7 +520,32 @@ function frame(now) {
   const dt = Math.min(0.05, Math.max(0, (now - last) / 1000));
   last = now;
 
-  if (!world || !state.heroActive || document.hidden || menuIsOpen) {
+  if (!world || !state.heroActive || document.hidden || document.body.dataset.menu === "open") {
+    return;
+  }
+
+  if (explore.active) {
+    const step = explore.dist * 0.9 * dt;
+    const sin = Math.sin(explore.yaw);
+    const cos = Math.cos(explore.yaw);
+    let mx = 0;
+    let mz = 0;
+    if (keys.w || keys.arrowup) mz -= step;
+    if (keys.s || keys.arrowdown) mz += step;
+    if (keys.a || keys.arrowleft) mx -= step;
+    if (keys.d || keys.arrowright) mx += step;
+    explore.x += mx * cos - mz * sin;
+    explore.z += mx * sin + mz * cos;
+    world.update(dt, {
+      distance: state.distance,
+      lateral: state.lateral,
+      speed: 0,
+      steer: 0,
+      reduced: state.reduced,
+      lookYaw: 0,
+      camera: exploreCamera(),
+    });
+    world.renderer.render(world.scene, world.camera);
     return;
   }
 
@@ -517,18 +594,27 @@ window.addEventListener("keydown", (event) => {
   if (key === "escape") {
     if (!panel.hidden) {
       closePanel();
-      return;
     }
-    if (menuIsOpen) {
-      closeMenu();
-      return;
-    }
-    openMenu("proyek");
     return;
   }
 
-  if (menuIsOpen) {
+  if (document.body.dataset.menu === "open") {
     return;
+  }
+
+  if (explore.active) {
+    if (key === "+" || key === "=") {
+      zoomExplore(0.85);
+      return;
+    }
+    if (key === "-") {
+      zoomExplore(1.18);
+      return;
+    }
+    if (key === "p") {
+      showMap();
+      return;
+    }
   }
 
   if ((key === "e" || key === "enter") && state.promptIndex !== null) {
@@ -543,7 +629,7 @@ window.addEventListener("keydown", (event) => {
   if (!state.heroActive) {
     return;
   }
-  if (!state.started) {
+  if (!state.started && !explore.active) {
     return;
   }
   if (key.startsWith("arrow")) {
@@ -583,15 +669,17 @@ document.querySelectorAll("[data-pedal]").forEach((btn) => {
 /* Steering by dragging the scene, plus click on a neon sign to enter. */
 let dragId = null;
 let dragX = 0;
+let dragY = 0;
 let downX = 0;
 let downY = 0;
 
 canvas.addEventListener("pointerdown", (event) => {
-  if (!state.started) {
+  if (!state.started && !explore.active) {
     return;
   }
   dragId = event.pointerId;
   dragX = event.clientX;
+  dragY = event.clientY;
   downX = event.clientX;
   downY = event.clientY;
   if (canvas.setPointerCapture) {
@@ -604,7 +692,22 @@ canvas.addEventListener("pointermove", (event) => {
     return;
   }
   const dx = event.clientX - dragX;
+  const dy = event.clientY - dragY;
   dragX = event.clientX;
+  dragY = event.clientY;
+  if (explore.active) {
+    if (event.shiftKey) {
+      explore.yaw -= dx * 0.006;
+      explore.pitch = clamp(explore.pitch + dy * 0.005, 0.18, 1.49);
+    } else {
+      const scale = explore.dist * 0.0016;
+      const sin = Math.sin(explore.yaw);
+      const cos = Math.cos(explore.yaw);
+      explore.x -= (dx * cos - dy * sin) * scale;
+      explore.z -= (dx * sin + dy * cos) * scale;
+    }
+    return;
+  }
   if (state.parked) {
     /* Stopped at a resto: dragging looks around the building instead of
        steering, so the place can be explored without moving the car. */
@@ -621,12 +724,23 @@ function endDrag(event) {
   }
   const moved = Math.hypot(event.clientX - downX, event.clientY - downY);
   dragId = null;
+  if (explore.active) {
+    if (moved < 8 && world) {
+      const hit = world.pick(event.clientX, event.clientY);
+      if (hit && typeof hit.project === "number") {
+        openPanel(hit.project);
+      } else if (hit && hit.contact) {
+        window.pauseMenu?.open("kontak");
+      }
+    }
+    return;
+  }
   if (moved < 8 && world) {
     const hit = world.pick(event.clientX, event.clientY);
     if (hit && typeof hit.project === "number") {
       openPanel(hit.project);
     } else if (hit && hit.contact) {
-      openMenu("kontak");
+      window.pauseMenu?.open("kontak");
     }
   }
 }
@@ -637,8 +751,19 @@ canvas.addEventListener("pointercancel", () => {
 });
 
 canvas.addEventListener("click", () => {
+  if (explore.active) return;
   startEngine();
 });
+
+canvas.addEventListener(
+  "wheel",
+  (event) => {
+    if (!explore.active) return;
+    event.preventDefault();
+    zoomExplore(event.deltaY > 0 ? 1.12 : 0.89);
+  },
+  { passive: false }
+);
 
 /* Radar blips: tap a square to drive there. */
 radar.addEventListener("click", (event) => {
@@ -684,21 +809,6 @@ document.querySelectorAll(".radio").forEach((btn) => {
   });
 });
 
-if (copyBtn) {
-  copyBtn.addEventListener("click", async () => {
-    const mail = copyBtn.dataset.mail;
-    try {
-      await navigator.clipboard.writeText(mail);
-      copyBtn.textContent = "Surel tersalin";
-    } catch (error) {
-      copyBtn.textContent = mail;
-    }
-    window.setTimeout(() => {
-      copyBtn.textContent = "Salin alamat surel";
-    }, 2400);
-  });
-}
-
 /* ------------------------------------------------------------ visibility */
 
 window.addEventListener("resize", () => {
@@ -706,6 +816,15 @@ window.addEventListener("resize", () => {
     world.resize();
   }
 });
+
+/* Mobile browsers resize the visual viewport when the address bar hides. */
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", () => {
+    if (world) {
+      world.resize();
+    }
+  });
+}
 
 document.addEventListener("visibilitychange", () => {
   last = performance.now();
